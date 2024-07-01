@@ -32,6 +32,7 @@ export const fileUploadEndpoints = {
 export const adminEndpoints = {
   addProduct_API: BASE_URL + "/addproduct",
   getModerationProduct_API: BASE_URL + "/moderation",
+  moderationProduct_Statusupdate_API: BASE_URL + "/moderation",
   getOrders_API: BASE_URL + "/orders",
   getMyProducts_API: BASE_URL + "/my-products",
   getFavourites_API: BASE_URL + "/fovourites",

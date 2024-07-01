@@ -233,11 +233,11 @@ function CreateProduct() {
                   </div>
                   <div className='mt-8 flex flex-col max-w-72'>
                     <label className='text-primary text-lg font-semibold mb-4 ml-4'>Category <span>*</span></label>
-                    <Dropdown lists={lists} defaultValue={"Category"} label={"Category"} onChange={handleChange} onClear={handleClearDropdown} />
+                    <Dropdown lists={lists} defaultValue={"Category"} label={"Category"} onChange={handleChange} setCategory={setCategory} category={category} onClear={handleClearDropdown} />
                   </div>
                   <div className='mt-8 flex flex-col '>
                     <label className='text-primary text-lg font-semibold mb-4 ml-4'>Description <span>*</span></label>
-                    <TextEditor style={{ outerWidth: "100%" }} onEditorChange={handleTextEditor} defaultValue={''} />
+                    <TextEditor style={{ outerWidth: "100%" }} onEditorChange={handleTextEditor} defaultValue={''}/>
                   </div>
                   <div className='mt-8 flex flex-col '>
                     <label className='text-primary text-lg font-semibold mb-4 ml-4'>Gallery <span>*</span></label>

@@ -1,14 +1,14 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { CrossIcon } from './Icons';
 
-const Dropdown = ({ defaultValue, children, onChange, onClear, required, lists, search }) => {
+const Dropdown = ({ defaultValue, children, setCategory, category, onChange, onClear, required, lists, search }) => {
     const dropdownRef = useRef(null)
-    const [sortValue, setSortvalue] = useState('');
+    // const [sortValue, setSortvalue] = useState('');
     const [filteredList, setFilteredList] = useState(lists);
 
 
     const handleChange = (e, value) => {
-        setSortvalue(value)
+        setCategory(value)
         onChange(value)
         dropdownRef.current.children[1].style.display = 'none'
     };
@@ -34,7 +34,7 @@ const Dropdown = ({ defaultValue, children, onChange, onClear, required, lists, 
 
     const handleClear = (e) => {
         e.stopPropagation()
-        setSortvalue('');
+        setCategory('');
         onChange('')
         onClear && onClear('')
     }
@@ -47,8 +47,8 @@ const Dropdown = ({ defaultValue, children, onChange, onClear, required, lists, 
     return (
         <div ref={dropdownRef} className='relative' >
             <div className='border border-[#D5E3EE] flex justify-between items-center p-4 gap-4 rounded-md' onClick={handleToggle}>
-                <div className='min-w-48 text-base font-medium text-[#3F5263] select-none'>{sortValue !== '' ? sortValue : defaultValue}</div>
-                {sortValue !== '' ? <CrossIcon onClick={handleClear} /> : <div>
+                <div className='min-w-48 text-base font-medium text-[#3F5263] select-none'>{category !== '' ? category : defaultValue}</div>
+                {category !== '' ? <CrossIcon onClick={handleClear} /> : <div>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width={7}

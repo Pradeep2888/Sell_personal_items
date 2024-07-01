@@ -109,6 +109,8 @@ model ListedItem {
     desription String?
     category   String             @db.VarChar(100)
     expires    DateTime?
+    likes      Likes[]            
+    views      Views[]
     images     Images[]
     createdAt  DateTime           @default(now())
     updatedAt  DateTime           @updatedAt
@@ -116,12 +118,39 @@ model ListedItem {
     status     ListedItem_Status? @default(Draft)
     user       Users              @relation(fields: [userId], references: [id])
     userId     Int
+    comments   Comment[]
 }
 
 enum ListedItem_Status {
     Active
     Pending
     Draft
+}
+
+model Views {
+    id         Int        @id @default(autoincrement())
+    userId     Int
+    postId     Int
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    listedItem ListedItem @relation(fields: [postId], references: [post_id])
+}
+
+model Likes {
+    id                Int         @id @default(autoincrement())
+    user_id           Int
+    post_id           Int
+    createdAt         DateTime    @default(now())
+    modifiedAt        DateTime    @updatedAt
+    ListedItem        ListedItem? @relation(fields: [listedItemPost_id], references: [post_id])
+    listedItemPost_id Int?
+}
+
+model Comment {
+    id                Int         @id @default(autoincrement())
+    content           String
+    ListedItem        ListedItem? @relation(fields: [listedItemPost_id], references: [post_id])
+    listedItemPost_id Int?
 }
 
 // listedItems images

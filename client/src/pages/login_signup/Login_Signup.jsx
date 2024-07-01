@@ -95,7 +95,7 @@ function Login_Signup() {
         let res = await LOGIN(formdata);
         setLoading(false)
         console.log(res);
-        if (res.status === 'success') {
+        if (res?.status === 'success') {
             Cookies.set('_session', res.token)
             navigate("/panel/my-products");
             toast.success("Login successful.");
@@ -109,7 +109,7 @@ function Login_Signup() {
         let res = await SIGNUP({ ...formdata, userType: sortValue, countryCode: "+91" });
         setLoading(false)
         console.log(res);
-        if (res.status === 'success') {
+        if (res?.status === 'success') {
             Cookies.set('_session', res.token)
             navigate("/panel/my-products");
             toast.success("Signup successful.");

@@ -18,7 +18,11 @@ export function getFormData(formRef) {
 
 export const getFormatedDate = (date) => {
   if (date) {
-    return date.split("T");
+    return date.split("T")[0];
   }
   return null;
+};
+
+export const getArrayLength = (array) => {
+  return array.length;
 };

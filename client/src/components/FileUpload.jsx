@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { CrossIcon, UploadImageIcon, } from './Icons'
+import { IMAGEURL } from '../utils/constants';
 
 function FileUpload({ onUploadFile, handleRemove, type, files, setFiles, name, id, progress }) {
 
@@ -59,7 +60,7 @@ function FileUpload({ onUploadFile, handleRemove, type, files, setFiles, name, i
             {files.length > 0 && <div className='w-full relative flex justify-start items-center gap-5 mb-5'>
                 {files.map((file, i) =>
                     <div key={i} className='relative  '>
-                        <img src={file.liveUrl ? file.liveUrl : file.url} alt="Preview" className='size-48 rounded border' />
+                        <img src={file.liveUrl ? IMAGEURL + file.liveUrl : IMAGEURL + file.url} alt="Preview" className='size-48 rounded border' />
                         <span onClick={(e) => handleRemove(e, i)} className='absolute cursor-pointer top-3 right-3 p-2 size-5 flex justify-center items-center bg-secondary text-base font-medium rounded-full text-white'>X</span>
                         {file.progress > 0 && <progress value={file.progress} max="100" />}
                     </div>

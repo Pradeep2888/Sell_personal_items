@@ -4,17 +4,26 @@ import ProductFilter from './components/ProductFilter'
 import { AdminIcon } from '../../../components/Icons'
 import MensWhiteShoes300x267 from '../../../assets/Mens-White-Shoes-300x267.jpg'
 import ErrorUi from '../../../components/ErrorUi'
-import { GET_MODERATION_PRODUCT } from '../../../services/operations/adminApi'
+import { GET_MODERATION_PRODUCT, MODERATION_PRODUCT_STATUSUPDATE } from '../../../services/operations/adminApi'
 import { useQuery } from '@tanstack/react-query';
 import { IMAGEURL, getFormatedDate } from '../../../utils/constants'
 import NoRecords from './components/NoRecords'
+import { toast } from 'sonner'
 
 function ModerateProducts() {
-  const dropdownRef = useRef(null);
-
-
+  const [refresh, setRefresh] = useState(false)
+  const handleStatus = async (product_id, status) => {
+    let res = await MODERATION_PRODUCT_STATUSUPDATE({ product_id, status });
+    if (res.status) {
+      // window.location.reload()
+      setTimeout(() => {
+        setRefresh(!refresh)
+      }, 1000)
+      toast.success(res.message)
+    }
+  }
   const { isPending, error, data } = useQuery({
-    queryKey: ['getplans'],
+    queryKey: ['GET_MODERATION_PRODUCT', refresh],
     queryFn: async () => await GET_MODERATION_PRODUCT()
   });
 
@@ -26,7 +35,8 @@ function ModerateProducts() {
     return <ErrorUi error={error.name} />
   }
 
-  const draftProducts = data?.products.filter((item) => item.status === 'Draft')
+
+  const draftProducts = data?.products?.filter((item) => item.status === 'Draft')
 
 
   return (
@@ -53,8 +63,7 @@ function ModerateProducts() {
                     <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>Actions</div>
                   </div>
                   {data.products.map((item) =>
-
-                    <div key={item.id} className='grid grid-cols-12 border-b border-[#D5E3EE]'>
+                    <div key={item.post_id} className='grid grid-cols-12 border-b border-[#D5E3EE]'>
                       <div className='col-span-6 border-r  border-[#D5E3EE]'>
                         <div className='grid grid-cols-3'>
                           <div className='col-span-1 flex justify-center items-center overflow-hidden p-4'>
@@ -78,12 +87,12 @@ function ModerateProducts() {
                           <div className='rounded-full bg-[#F2F4F8] size-12 flex justify-center items-center '>
                             <AdminIcon color={"#D5E3EE"} />
                           </div>
-                          <p>{item.user.name}</p>
+                          <p className='text-primary font-semibold'>{item.user.name}</p>
                         </div>
                       </div>
                       <div className='col-span-2 flex justify-center items-center border-r border-[#D5E3EE]'>
                         <div className='flex justify-center items-center '>
-                          <p className='py-1 px-4 rounded-md bg-active text-center text-white'>{item.status}</p>
+                          <p className={`py-1 px-4 rounded-md font-semibold  ${item.status === 'Active' ? "bg-active text-white" : "bg-[#D5E3EE] text-primary"} text-center `}>{item.status}</p>
                         </div>
                       </div>
                       <div className='col-span-2 relative p-4 flex justify-center items-center'>
@@ -107,8 +116,9 @@ function ModerateProducts() {
                           </div>
                           <div className='hidden min-w-40 group-hover:block dropdownlist w-full border border-[#D5E3EE] px-5 py-2 absolute z-10 bg-white rounded-md'>
                             <ul>
+                              {item.status === 'Draft' && <li onClick={() => handleStatus(item.post_id, 'Active')} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out`} >Approve</li>}
                               <li className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out`} >Edit</li>
-                              <li className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out`} >Switch to Draft</li>
+                              {item.status === 'Active' && <li onClick={() => handleStatus(item.post_id, "Draft")} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out`} >Switch to Draft</li>}
                               <li className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out`} >Delete</li>
                             </ul>
                           </div>

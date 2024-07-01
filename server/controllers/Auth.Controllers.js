@@ -23,7 +23,7 @@ export const createSendToken = (user, statusCode, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     sameSite: "strict",
-    maxAge: 24*3600000, // 1 day in milliseconds
+    maxAge: 24 * 3600000, // 1 day in milliseconds
     secure: process.env.NODE_ENV === "production", // Only set secure cookie in production
   });
 
@@ -134,7 +134,7 @@ export const userLogin = CatchAsync(async (req, res, next) => {
   // Check if password is correct
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (!passwordMatch) {
-    res.clearCookie('token');
+    res.clearCookie("token");
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
@@ -207,6 +207,7 @@ export const getValidUser = (req, res, next) => {
 
 export const userLogout = CatchAsync(async (req, res, next) => {
   res.clearCookie("token");
+  res.clearCookie("_session");
   res.status(200).json({
     status: 200,
     message: "Logged out successfully",

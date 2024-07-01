@@ -10,7 +10,9 @@ import {
   addMembership,
   deleteUploads,
   getModerationProductsforAdmin,
+  getMyProducts,
   postProduct,
+  updateModerationProductStatus,
   uploads,
 } from "../controllers/User.Controllers.js";
 import { getPlans } from "../controllers/Membership.Controller.js";
@@ -47,6 +49,9 @@ router.route("/uploads/:file").delete(authenticateUser, deleteUploads);
 // for products
 router
   .route("/moderation")
-  .get(authenticateUser, getModerationProductsforAdmin);
+  .get(authenticateUser, getModerationProductsforAdmin)
+  .put(authenticateUser, updateModerationProductStatus);
+router.route("/my-products").get(authenticateUser, getMyProducts);
+// .put(authenticateUser, updateModerationProductStatus);
 
 export default router;

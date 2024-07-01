@@ -74,7 +74,7 @@ export const postProduct = CatchAsync(async (req, res, next) => {
       image: itm.url,
       listedItem_id: product.post_id,
     }));
-    console.log(product, newImages);
+    // console.log(product, newImages);
     const productImages = await prisma.images.createMany({
       data: [...newImages],
     });
@@ -104,3 +104,43 @@ export const getModerationProductsforAdmin = CatchAsync(
     res.status(200).json({ status: true, products });
   }
 );
+
+export const updateModerationProductStatus = CatchAsync(
+  async (req, res, next) => {
+    const { product_id, status } = req.body;
+    const product = await prisma.listedItem.update({
+      where: {
+        post_id: product_id,
+      },
+      data: {
+        status: status,
+      },
+    });
+    res.status(200).json({
+      status: true,
+      message: `Product is ${
+        status === "Draft" ? "moved to draft" : "Approved"
+      } successfully.`,
+    });
+  }
+);
+
+export const getMyProducts = CatchAsync(async (req, res, next) => {
+  const { id } = req.user;
+  const products = await prisma.listedItem.findMany({
+    where: {
+      userId: id,
+    },
+    include: {
+      images: true,
+      comments: true,
+      views: true,
+      likes: true,
+    },
+  });
+
+  res.status(200).json({
+    status: true,
+    products,
+  });
+});
