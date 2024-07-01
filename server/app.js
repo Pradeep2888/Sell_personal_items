@@ -31,7 +31,6 @@ app.use(
       "https://sellpersonalitems.thepreview.pro",
       "http://localhost:5173/memberships",
     ],
-    "Access-Control-Allow-Credentials":true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     exposedHeaders: ["Set-Cookie"],
