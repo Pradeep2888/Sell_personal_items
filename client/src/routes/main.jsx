@@ -21,6 +21,7 @@ import Donation from "../pages/Donation/Donation";
 import Protected from "../components/Protected";
 import Unauthorised from "../components/Unauthorised";
 import ErrorUi from "../components/ErrorUi";
+import ProductDetails from "../pages/admin_panel/sections/ProductDetails";
 
 
 
@@ -107,12 +108,20 @@ const routes = [
                         element: <ModerateProducts />
                     },
                     {
+                        path: 'moderation/edit',
+                        element: <ProductDetails />
+                    },
+                    {
                         path: 'orders',
                         element: <Orders />
                     },
                     {
                         path: 'my-products',
                         element: <MyProducts />
+                    },
+                    {
+                        path: 'my-products/edit',
+                        element: <ProductDetails />
                     },
                     {
                         path: 'favorites',

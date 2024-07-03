@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
-const TextEditor = ({ onEditorChange, defaultValue }) => {
-    const editorRef = useRef(null);
+const TextEditor = ({ onEditorChange, content,defaultValue }) => {
+    // const editorRef = useRef(null);
 
-    useEffect(() => {
-        if (editorRef.current) {
-            editorRef.current.editorRef.current.getElement().parentElement.parentElement.querySelector('label').remove()
-        }
-    }, []);
+console.log(defaultValue);
+
+    // useEffect(() => {
+    //     if (editorRef.current) {
+    //         editorRef.current.editorRef.current.getElement().parentElement.parentElement.querySelector('label').remove()
+    //     }
+    // }, []);
     return (
         <Editor
             apiKey='gp78fb80jalu5f9xswhktxj4bkggr08lj5i9vxgzi2i9fe7d'
@@ -24,7 +26,8 @@ const TextEditor = ({ onEditorChange, defaultValue }) => {
                 ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
             }}
             initialValue={defaultValue}
-            onInit={(evt, editor) => editorRef.current = editor}
+            value={content}
+            // onInit={(evt, editor) => editorRef.current = editor}
             onEditorChange={onEditorChange}
         />
     );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import NoRecords from './components/NoRecords'
 import { AdminIcon, DeleteIcon, EditIcon, LikeIcon, MobileIcon, ViewIcon } from '../../../components/Icons'
 import Topsection from './components/Topsection'
@@ -6,30 +6,58 @@ import ProductFilter from './components/ProductFilter'
 import MensWhiteShoes300x267 from '../../../assets/Mens-White-Shoes-300x267.jpg'
 import { useQuery } from '@tanstack/react-query'
 import ErrorUi from '../../../components/ErrorUi'
-import { GET_MY_PRODUCT } from '../../../services/operations/adminApi'
+import { GET_MY_PRODUCT, DELETE_MY_PRODUCT } from '../../../services/operations/adminApi'
 import { IMAGEURL, getFormatedDate } from '../../../utils/constants'
+import { toast } from 'sonner'
+import { GridLoadingUI } from './ModerateProducts'
 
 function MyProducts() {
 
-
-  const [refresh, setRefresh] = useState(false)
-
+  const [refresh, setRefresh] = useState(false);
+  const [search, setSearch] = useState('');
+  const [activeFilter, setActiveFilter] = useState(null);
+  // const [refresh, setRefresh] = useState(false)
+  const handleRefresh = () => {
+    setTimeout(() => {
+      setRefresh(!refresh)
+    }, 1000)
+  }
   const { isPending, error, data } = useQuery({
     queryKey: ['GET_MODERATION_PRODUCT', refresh],
     queryFn: async () => await GET_MY_PRODUCT()
   });
 
+  const allProductsCount = useMemo(() => data?.products?.length, [data?.products?.length]);
+  const draftProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Draft')?.length, [data?.products?.length]);
+  const activeProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Active')?.length, [data?.products?.length]);
+  const pendingProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Pending')?.length, [data?.products?.length]);
+
+
+
   if (isPending) {
-    return <LoadingUI />
+    return <GridLoadingUI />
   }
 
   if (error) {
     return <ErrorUi error={error.name} />
   }
 
-  const handlePromote = () => {
-    setRefresh(!refresh)
+  const handleDelete = async (id) => {
+    let status = confirm("Do you want to delete this product?");
+    if (status) {
+      let res = await DELETE_MY_PRODUCT(id);
+      if (res?.status === 200) {
+        toast.success('Product deleted successfully')
+      }
+      handleRefresh()
+    }
+  }
 
+  const handlePromote = () => {
+    // setRefresh(!refresh)
+  };
+
+  const handleEdit = async () => {
   }
 
   // const draftProducts = data?.products?.filter((item) => item.status === 'Draft')
@@ -51,10 +79,10 @@ function MyProducts() {
                   <div className=''>
                     <Topsection title={"My Products"} />
                     <div className='bg-[#FDFDFE]  p-10 mt-10'>
-                      <ProductFilter />
+                      <ProductFilter setActiveFilter={setActiveFilter} activeFilter={activeFilter} draft={draftProductsCount} All={allProductsCount} Active={activeProductsCount} Pending={pendingProductsCount} />
                     </div>
                     <div className='bg-white border border-[#F2F4F8] rounded relative'>
-                      {data?.products.map((item) => <div key={item.post_id} className='grid grid-cols-12'>
+                      {data?.products.filter((item) => activeFilter ? item.status === activeFilter : item).map((item) => <div key={item.post_id} className='grid grid-cols-12'>
                         <div className='col-span-10 border-r border-[#F2F4F8]'>
                           <div className='grid grid-cols-3'>
                             <div className='col-span-1 flex justify-center items-center overflow-hidden p-4'>
@@ -91,8 +119,8 @@ function MyProducts() {
 
                         <div className='col-span-2 relative p-4 flex justify-between items-start flex-col'>
                           <ul>
-                            <li className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><EditIcon />Edit</li>
-                            <li className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><DeleteIcon />Delete</li>
+                            <li onClick={() => handleEdit(item.post_id)} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><EditIcon />Edit</li>
+                            <li onClick={() => handleDelete(item.post_id)} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><DeleteIcon />Delete</li>
                           </ul>
                           <div className='mx-auto'>
                             <button onClick={() => handlePromote(item.post_id, 'Pending')} className='bg-helper text-white font-semibold'>

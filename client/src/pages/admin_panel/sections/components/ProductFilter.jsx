@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-function ProductFilter({ draft, All, Active, Pending }) {
+function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFilter }) {
 
     const dropdownRef = useRef(null)
     const [sortValue, setSortvalue] = useState('Newest')
@@ -28,18 +28,18 @@ function ProductFilter({ draft, All, Active, Pending }) {
     return (
         <div className='flex justify-between items-center'>
             <div className='flex justify-start items-center gap-3'>
-                <div className='flex justify-center items-center text-[#374B5C] font-medium bg-[#FFB300] px-4 py-4 rounded cursor-pointer'>
+                {All > 0 && <div onClick={() => setActiveFilter(null)} className={`flex justify-center items-center text-[#374B5C] font-medium ${activeFilter === null ? "bg-secondary" : "bg-[#D5E3EE]"}  px-4 py-4 rounded cursor-pointer`}>
                     All <span className='flex justify-center items-center rounded-full size-4 p-3 bg-white ml-2'>{All}</span>
-                </div>
-                <div className='flex justify-center items-center text-[#374B5C] font-medium  bg-[#D5E3EE] px-4 py-4 rounded cursor-pointer'>
+                </div>}
+                {Active > 0 && <div onClick={() => setActiveFilter('Active')} className={`flex justify-center items-center text-[#374B5C] font-medium ${activeFilter === 'Active' ? "bg-secondary" : "bg-[#D5E3EE]"}  px-4 py-4 rounded cursor-pointer`}>
                     Active <span className='flex justify-center items-center rounded-full size-4 p-3 bg-white ml-2'>{Active}</span>
-                </div>
-                <div className='flex justify-center items-center text-[#374B5C] font-medium  bg-[#D5E3EE] px-4 py-4 rounded cursor-pointer'>
+                </div>}
+                {Pending > 0 && <div onClick={() => setActiveFilter('Pending')} className={`flex justify-center items-center text-[#374B5C] font-medium ${activeFilter === 'Pending' ? "bg-secondary" : "bg-[#D5E3EE]"}  px-4 py-4 rounded cursor-pointer`}>
                     Pending <span className='flex justify-center items-center rounded-full size-4 p-3 bg-white ml-2'>{Pending}</span>
-                </div>
-                <div className='flex justify-center items-center text-[#374B5C] font-medium  bg-[#D5E3EE] px-4 py-4 rounded cursor-pointer'>
+                </div>}
+                {draft > 0 && <div onClick={() => setActiveFilter('Draft')} className={`flex justify-center items-center text-[#374B5C] font-medium ${activeFilter === 'Draft' ? "bg-secondary" : "bg-[#D5E3EE]"}  px-4 py-4 rounded cursor-pointer`}>
                     Draft <span className='flex justify-center items-center rounded-full size-4 p-3 bg-white ml-2'>{draft}</span>
-                </div>
+                </div>}
             </div>
             <div className='flex gap-3'>
                 <div className='flex items-center justify-between gap-4'>

@@ -8,7 +8,8 @@ export default {
         ["light"]: "#73818c",
         ["secondary"]: "#FFB300",
         ["helper"]: "#537cd9",
-        ["bdr"]:"#D5E3EE"
+        ["bdr"]:"#D5E3EE",
+        ["loader"]:"#F3F4F6",
       },
       backgroundColor: {
         ["btn-primay"]: "#ffb300",

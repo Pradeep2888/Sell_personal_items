@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+// import './App.css'
 import './index.css'
 import { BrowserRouter, useRoutes } from 'react-router-dom'
 import { BackdropLoader, BackdropLoaderProvider } from './components/backdropLoader/BackdropLoader.jsx'
@@ -22,7 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </BackdropLoaderProvider>
 
         {/* <BackdropLoader /> */}
-        <Toaster position="top-center" theme='light' richColors  />
+        <Toaster position="top-center" theme='light' richColors />
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>,

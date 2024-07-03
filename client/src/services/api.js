@@ -1,7 +1,7 @@
 const isProd =
   import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/v1"
-    : "https://sellpersonalitem.vercel.app/api/v1";
+    : "https://sell-personal-items-server.vercel.app/api/v1";
 
 // const isProd = "https://reviewsix.vercel.app/api/v1"
 
@@ -11,6 +11,7 @@ const BASE_URL = isProd;
 export const endpoints = {
   LOGIN_API: BASE_URL + "/login",
   AUTHENTICATE_USER_API: BASE_URL + "/authenticate",
+  GETUSER: BASE_URL + "/getValidUser",
   LOGOUT_USER_API: BASE_URL + "/logout",
   SIGNIN_API: BASE_URL + "/signup",
   UPDATE_PASSOWRD_API: BASE_URL + "/updatePassword",

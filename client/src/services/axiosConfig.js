@@ -9,10 +9,19 @@ export const apiConnector = (method, url, bodyData, headers, params) => {
     method,
     url,
     data: JSON.stringify(bodyData) || null,
-    headers: { "Content-Type": "application/json" },
-    params: params || null,
+    headers: headers
+      ? headers
+      : {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Access-Control-Allow-Headers":
+            "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+        },
+
+    params: params ? params : null,
     // credentials: "include",
-    withCredentials: true
+    withCredentials: true,
   };
 
   return axiosInstance(config);

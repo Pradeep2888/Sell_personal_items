@@ -1,5 +1,6 @@
 import React, { ReactNode, useCallback, useContext, useState } from "react";
 
+
 // Create a context for managing loading state
 const BackdropLoaderContext = React.createContext({
     loading: false,
@@ -46,3 +47,20 @@ export const BackdropLoaderProvider = ({ children }) => {
         </BackdropLoaderContext.Provider>
     );
 };
+
+
+
+export const GlobalLoader = () => {
+    return (
+        <section className="dots-container">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+        </section>
+    )
+}
+
+
+// const Loader

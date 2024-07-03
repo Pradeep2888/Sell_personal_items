@@ -18,7 +18,7 @@ function Services() {
         <div className='w-full relative bg-white mb-20'>
             <div className='mx-auto grid lg:grid-cols-2 lg:gap-6 max-w-7xl mt-32 mb-20 px-10 lg:px-0'>
                 <div className='flex flex-col items-center justify-center gap-8'>
-                    <Link to={'/login'} className='flex flex-col justify-center items-center p-4 border gap-4 rounded-md '>
+                    <Link to={loggedIn ? '/panel/create' : "/login-register?tab=login"} className='flex flex-col justify-center items-center p-4 border gap-4 rounded-md '>
                         <img src={SELLYOURPRODUCTS} alt="" />
                         <h1 className='text-lg font-bold  text-center'>SELL YOUR PRODUCTS</h1>
                         <p className='text-center'>{`Ready to sell your products? It's as easy as 1-2-3! Simply take a snap of your items, set a price, and post it with a click-all in less than 60 seconds!`}</p>
@@ -33,7 +33,7 @@ function Services() {
                     <img src={belowbanner} alt='below-banner' />
                 </div> */}
                 <div className='flex flex-col items-center justify-center gap-8'>
-                    <Link to={'/memberships'} className='flex flex-col justify-center items-center p-4 border gap-4 rounded-md'>
+                    <Link to={loggedIn ? '/memberships' : "/login-register?tab=login"} className='flex flex-col justify-center items-center p-4 border gap-4 rounded-md'>
                         <img src={REGISTERMEMBERSHIP} alt="" />
                         <h1 className='text-lg font-bold '>REGISTER/MEMBERSHIP</h1>
                         <p className='text-center'>{`We value our early registered members and offer our lowest membership fee for the first 90 days. After that, it's free!`}</p>

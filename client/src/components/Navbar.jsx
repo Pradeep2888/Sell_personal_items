@@ -1,20 +1,23 @@
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../assets/Logo-6.png'
 import { AddIcon, AdminIcon, LikeIcon, LoginIcon, MessageIcon, ModerateIcon, OrdersIcon, SettingIcon } from './Icons'
-import { Cookies, useCookies } from 'react-cookie';
+
 import { useAuthStore } from '../store/AuthStore';
 import { LOGOUTUSER } from '../services/operations/authApi';
 import { toast } from 'sonner';
+import Cookies from 'js-cookie'
 
 // const cookies = new Cookies();
 const Navbar = () => {
 
-    const [cookies, setCookie] = useCookies();
     const navigate = useNavigate()
 
 
-    const authorised = useAuthStore(state => state.authorised)
+    // const loggedIn = useAuthStore(state => state.loggedIn)
+    // const loggedIn = Cookies.get("_session")
+    const loggedIn = useAuthStore(state => state.loggedIn)
     const logout = useAuthStore(state => state.logout)
+    // console.log(loggedIn);
 
     const handleLogout = async () => {
         const res = await LOGOUTUSER();
@@ -63,11 +66,11 @@ const Navbar = () => {
                 <div className='hidden lg:block'>
                     <div className="flex items-center justify-end gap-4 w-full">
                         <div className='account flex justify-center items-center gap-4 relative group'>
-                            <Link to={authorised ? '/panel' : '/login-register'} className='flex justify-center items-center relative overflow-hidden transition-all text-nowrap font-medium py-4 h-[50px] w-[50px] rounded-full border border-primary'>
+                            <Link to={loggedIn ? '/panel' : '/login-register'} className='flex justify-center items-center relative overflow-hidden transition-all text-nowrap font-medium py-4 h-[50px] w-[50px] rounded-full border border-primary'>
                                 <AdminIcon className={'stroke-primary'} />
                             </Link>
 
-                            {!authorised ?
+                            {!loggedIn ?
                                 <>
                                     <Link to={'/login-register?tab=login'} className='text-nowrap font-medium py-4 text-primary'>
                                         Log In

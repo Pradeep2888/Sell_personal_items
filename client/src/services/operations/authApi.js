@@ -1,11 +1,19 @@
 import { endpoints } from "../api";
 import responseHanlder from "../apiUtils";
 
-const { LOGIN_API, SIGNIN_API, AUTHENTICATE_USER_API, LOGOUT_USER_API } =
-  endpoints;
+const {
+  LOGIN_API,
+  SIGNIN_API,
+  AUTHENTICATE_USER_API,
+  LOGOUT_USER_API,
+  GETUSER,
+} = endpoints;
 
 export const LOGIN = async (formdata) => {
   return await responseHanlder("POST", LOGIN_API, formdata, true, null);
+};
+export const GET_VALID_USER = async () => {
+  return await responseHanlder("GET", GETUSER, null, true, null);
 };
 export const SIGNUP = async (signupformdata) => {
   return await responseHanlder("POST", SIGNIN_API, signupformdata, true, null);

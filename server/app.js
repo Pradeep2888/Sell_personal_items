@@ -9,6 +9,7 @@ import globalErrorHandlers from "./controllers/Error.Controllers.js";
 import userRoutes from "./routes/UserRoutes.js";
 import AppError from "./utils/appError.js";
 import multer from "multer";
+import { sql } from '@vercel/postgres';
 
 const app = express();
 
@@ -25,18 +26,34 @@ app.use(express.json());
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
+app.use(cookieParser(cookie_secret));
+
+// const allowedOrigins = [
+//   "https://sellpersonalitems.thepreview.pro",
+//   // 'https://anotherdomain.com',
+//   "http://localhost:5173",
+// ];
+
 app.use(
   cors({
     origin: [
+      "https://thepreview.pro",
       "https://sellpersonalitems.thepreview.pro",
-      "http://localhost:5173/memberships",
+      "http://localhost:5173",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-    exposedHeaders: ["Set-Cookie"],
+    // exposedHeaders: ["Set-Cookie"],
   })
 );
-app.set("trust proxy", 1);
+// app.use(function (request, response, next) {
+//   response.header("Access-Control-Allow-Origin", "*");
+//   response.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
+// app.set("trust proxy", 1);
 // app.use(session({
 //   secret: process.env.sessionSecret, // your secret key to check session
 //   resave: false,
@@ -47,8 +64,6 @@ app.set("trust proxy", 1);
 //           },
 //   store: store
 // }));
-
-app.use(cookieParser(cookie_secret));
 
 // multer configuration
 
@@ -81,10 +96,15 @@ app.all("*", (req, res, next) => {
 // global error handling
 app.use(globalErrorHandlers);
 
+
+ 
+
+
 // Start the server
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...\nurl: http://localhost:${port}`);
 });
+
 
 // Handle unhandled rejections
 process.on("unhandledRejection", (err) => {

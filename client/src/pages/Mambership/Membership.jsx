@@ -7,8 +7,6 @@ import ErrorUi from '../../components/ErrorUi';
 
 
 function Membership() {
-
-
     const { isPending, error, data } = useQuery({
         queryKey: ['getplans'],
         queryFn: async () => await GETPLANS()

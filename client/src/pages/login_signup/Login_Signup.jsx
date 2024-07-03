@@ -6,7 +6,7 @@ import { LOGIN, SIGNUP } from '../../services/operations/authApi';
 import { BASEURL, getFormData } from '../../utils/constants';
 import Cookies from 'js-cookie';
 import { toast } from 'sonner';
-import { useGlobalState } from '../../store/AuthStore';
+import { useAuthStore, useGlobalState } from '../../store/AuthStore';
 
 
 
@@ -25,6 +25,7 @@ function Login_Signup() {
     const [sortValue, setSortvalue] = useState("Recipient")
     const loading = useGlobalState(state => state.loading);
     const setLoading = useGlobalState(state => state.setLoading);
+    const login = useAuthStore(state => state.login);
 
 
     const handleChange = (value) => {
@@ -96,7 +97,8 @@ function Login_Signup() {
         setLoading(false)
         console.log(res);
         if (res?.status === 'success') {
-            Cookies.set('_session', res.token)
+            login(res.data)
+            Cookies.set('_session', res.token, { expires: 24 * 3600000, })
             navigate("/panel/my-products");
             toast.success("Login successful.");
         }
@@ -110,7 +112,8 @@ function Login_Signup() {
         setLoading(false)
         console.log(res);
         if (res?.status === 'success') {
-            Cookies.set('_session', res.token)
+            login(res.data)
+            Cookies.set('_session', res.token, { expires: 24 * 3600000,})
             navigate("/panel/my-products");
             toast.success("Signup successful.");
         }
