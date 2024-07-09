@@ -22,26 +22,8 @@ import Protected from "../components/Protected";
 import Unauthorised from "../components/Unauthorised";
 import ErrorUi from "../components/ErrorUi";
 import ProductDetails from "../pages/admin_panel/sections/ProductDetails";
+import ProductPage from "../pages/admin_panel/sections/ProductPage";
 
-
-
-
-
-// eslint-disable-next-line react-refresh/only-export-components
-// const PrivateRoutes = ({ children }) => {
-//     const state = JSON.parse(localStorage.getItem("authStore")! ?? {});
-//     const navigate = useNavigate();
-
-//     useEffect(() => {
-//         if (!state.state.userToken) {
-//             navigate(BASEROUTE + "/sign-in");
-//         } else if (window.location.pathname === BASEROUTE + "/sign-in") {
-//             navigate(BASEROUTE);
-//         }
-//     }, [state.state.userToken, navigate]);
-
-//     return <>{children}</>;
-// };
 
 const routes = [
     {
@@ -118,6 +100,10 @@ const routes = [
                     {
                         path: 'my-products',
                         element: <MyProducts />
+                    },
+                    {
+                        path: 'my-products/:slug',
+                        element: <ProductPage />
                     },
                     {
                         path: 'my-products/edit',

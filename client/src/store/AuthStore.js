@@ -1,31 +1,49 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 import Cookies from "js-cookie";
-const loggedIn = Cookies.get("token");
+const token = localStorage.getItem("_sell_Token");
+// // const user = localStorage.getItem("user");
+const _token = token ? true : false;
+
+// console.log(_token,"token");
+
 export const useAuthStore = create(
   devtools(
     persist(
-    (set) => ({
-      loggedIn: loggedIn ? true : false,
-      authorised: false,
-      userData: {},
-      login: (userData) => {
-        set((state) => ({ loggedIn: true, userData }));
-      },
-      authorise: () => set({ authorised: true }),
-      unauthorise: () => set({ authorised: false }),
-      logout: () => set({ loggedIn: false, authorised: false, userData: {} }),
-    }),
-    { name: "user" }
+      (set) => ({
+        // loggedIn: token ? true : false,
+        authorised: false,
+        userData: null,
+        setUserData: (userData) => set({ userData }),
+        authorise: () => set({ authorised: true }),
+        unauthorise: () => set({ authorised: false }),
+      }),
+      {
+        name: "user",
+        partialize: (state) =>
+          Object.fromEntries(
+            Object.entries(state).filter(
+              ([key]) => !["loggedIn", "authorised"].includes(key)
+            )
+          ),
+      }
     )
   )
 );
 
 export const useGlobalState = create(
   devtools((set) => ({
+    loggedIn: _token,
     loading: false,
     error: false,
+    login: (userData) => {
+      set((state) => ({ loggedIn: true }));
+    },
+    logout: () => {
+      localStorage.removeItem('_sell_Token')
+      set({ loggedIn: false });
+    },
     setLoading: (loading) => set({ loading }),
     setError: (error) => set({ error }),
   }))

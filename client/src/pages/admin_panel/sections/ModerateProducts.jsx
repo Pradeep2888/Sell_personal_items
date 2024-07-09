@@ -16,7 +16,7 @@ function ModerateProducts() {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState(null);
   const navigate = useNavigate();
- 
+  const [SearchParams, SetSearchParams] = useSearchParams({});
 
   const handleStatus = async (product_id, status) => {
     let res = await MODERATION_PRODUCT_STATUSUPDATE({ product_id, status });
@@ -27,10 +27,14 @@ function ModerateProducts() {
       }, 1000)
       toast.success(res.message)
     }
-  }
+  };
+
+  const sortValue = SearchParams.get('sort')
+  const searchQuery = SearchParams.get('searchQuery')
+
   const { isPending, error, data } = useQuery({
-    queryKey: ['GET_MODERATION_PRODUCT', refresh],
-    queryFn: async () => await GET_MODERATION_PRODUCT()
+    queryKey: ['GET_MODERATION_PRODUCT', refresh, sortValue, searchQuery],
+    queryFn: async () => await GET_MODERATION_PRODUCT({ sort: SearchParams.get('sort'), searchQuery })
   });
 
   const draftProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Draft')?.length, [data?.products?.length]);
@@ -46,8 +50,6 @@ function ModerateProducts() {
   }
 
 
-  const draftProducts = data?.products?.filter((item) => item.status === 'Draft');
-
   const handleDelete = async (id) => {
     let res = window.confirm("Are you sure you want to delete this product?");
     if (res) {
@@ -62,7 +64,7 @@ function ModerateProducts() {
 
   const handleEdit = async (id) => {
     // setSearchParams((search)=>({...search,id:id,type:"moderation"}))
-    await navigate(location.pathname + "/edit" + `?id=${id}&type=moderation`)
+    await navigate(location.pathname + "/edit" + `?id=${id}&type=moderation`, { state: location.pathname, replace: true })
   }
 
 
@@ -72,25 +74,25 @@ function ModerateProducts() {
       <div className="max-w-[1200px] mx-auto py-14">
         <div className='relative'>
           {
-            data.products.length < 1 ?
 
-              <div className='relative bg-white border border-[#D5E3EE] rounded flex justify-center items-center min-h-80'>
-                <NoRecords title={"No Moderations"} />
-              </div> :
 
-              <div className=''>
-                <Topsection title={"Moderation"} />
-                <div className='bg-[#FDFDFE]  p-10 mt-10'>
-                  <ProductFilter setActiveFilter={setActiveFilter} activeFilter={activeFilter} draft={draftProductsCount} All={data?.products.length} Active={activeProductsCount} Pending={pendingProductsCount} />
+            <div className=''>
+              <Topsection title={"Moderation"} />
+              <div className='bg-[#FDFDFE]  p-10 mt-10'>
+                <ProductFilter setActiveFilter={setActiveFilter} activeFilter={activeFilter} draft={draftProductsCount} All={data?.products.length} Active={activeProductsCount} Pending={pendingProductsCount} />
+              </div>
+              <div className='bg-white border border-[#D5E3EE] rounded relative'>
+                <div className='grid grid-cols-12 border-b border-[#D5E3EE]'>
+                  <div className='col-span-6 p-6 text-[#374B5C] text-lg font-medium'>Product</div>
+                  <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>User</div>
+                  <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>Status</div>
+                  <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>Actions</div>
                 </div>
-                <div className='bg-white border border-[#D5E3EE] rounded relative'>
-                  <div className='grid grid-cols-12 border-b border-[#D5E3EE]'>
-                    <div className='col-span-6 p-6 text-[#374B5C] text-lg font-medium'>Product</div>
-                    <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>User</div>
-                    <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>Status</div>
-                    <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>Actions</div>
-                  </div>
-                  {data?.products?.filter((item) => activeFilter ? item.status === activeFilter : item).map((item, index) =>
+                {data.products.length < 1 ?
+
+                  <div className='relative bg-white border border-[#D5E3EE] rounded flex justify-center items-center min-h-80'>
+                    <NoRecords title={"No Moderations"} />
+                  </div> : data?.products?.filter((item) => activeFilter ? item.status === activeFilter : item).map((item, index) =>
                     <div key={item.post_id} className='grid grid-cols-12 border-b border-[#D5E3EE]'>
                       <div className='col-span-6 border-r  border-[#D5E3EE]'>
                         <div className='grid grid-cols-3'>
@@ -157,11 +159,11 @@ function ModerateProducts() {
                       </div>
                     </div>
                   )}
-                </div>
-                <div className='mt-4'>
-                  <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>3</span> of <span className='text-[#374B5C] font-semibold'>6</span> results</p>
-                </div>
               </div>
+              <div className='mt-4'>
+                {/* <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>3</span> of <span className='text-[#374B5C] font-semibold'>6</span> results</p> */}
+              </div>
+            </div>
           }
         </div>
       </div>

@@ -78,3 +78,95 @@ const Dropdown = ({ defaultValue, children, setCategory, category, onChange, onC
 }
 
 export default memo(Dropdown)
+
+
+
+
+export const DropdownComponent = ({ options, onChange, value }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const dropdownRef = useRef(null);
+
+    // Function to handle clicks outside the dropdown
+    const handleOutsideClick = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    };
+
+    // Effect to add click event listener on mount
+    useEffect(() => {
+        document.addEventListener('click', handleOutsideClick);
+
+        // Cleanup the event listener on unmount
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, []);
+
+   
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleOptionClick = (option) => {
+        setSelectedOption(option);
+        onChange(option.value);
+        setIsOpen(false); // Close the dropdown after selecting an option
+    };
+
+    useEffect(() => {
+        if(value===''||value===null){
+            setSelectedOption(null)
+        }
+    }, [value])
+    return (
+        <div ref={dropdownRef} className="relative inline-block text-left w-full ">
+            {/* Dropdown button */}
+            <div className='w-full'>
+                <button
+                    type="button"
+                    className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-primary "
+                    onClick={toggleDropdown}
+                >
+                    <span>{selectedOption ? selectedOption.label : 'Select an option'}</span>
+                    {/* Dropdown arrow */}
+                    <svg
+                        className="-mr-1 ml-2 h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M10 12a1 1 0 01-.707-.293l-4-4a1 1 0 111.414-1.414L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4A1 1 0 0110 12z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
+                </button>
+            </div>
+
+            {/* Dropdown menu */}
+            <div
+                className={`origin-top-left z-10 absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                    }`}
+            >
+                <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    {options.map((option) => (
+                        <button
+                            key={option.value}
+                            onClick={() => handleOptionClick(option)}
+                            className="block px-4 py-2 text-base font-medium text-primary hover:text-secondary w-full text-left"
+                            role="menuitem"
+                        >
+                            {option.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+

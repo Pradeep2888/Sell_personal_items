@@ -12,7 +12,7 @@
     margin-right: 10px;
     border-radius: 10px;
     background-color: #b3d4fc;
-    animation: pulse 1.5s infinite ease-in-out;
+    animation: loader 1.5s infinite ease-in-out;
   }
   
   .dot:last-child {
@@ -31,7 +31,7 @@
     animation-delay: 0.1s;
   }
   
-  @keyframes pulse {
+  @keyframes loader {
     0% {
       transform: scale(0.8);
       background-color: #b3d4fc;

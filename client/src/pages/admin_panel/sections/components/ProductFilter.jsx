@@ -1,13 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom';
 
 function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFilter }) {
 
     const dropdownRef = useRef(null)
-    const [sortValue, setSortvalue] = useState('Newest')
+    const delay = useRef(300)
+    const [SearchParams, SetSearchParams] = useSearchParams({});
+    const [searchQuery, setSearchQuery] = useState(() => SearchParams.get('searchQuery') || '');
+
+    const queryParams = {};
+
+    SearchParams.forEach((value, key, parent) => {
+        if (queryParams[key]) {
+            queryParams[key] = value;
+        }
+        else {
+            queryParams[key] = value;
+        }
+    })
+
+    const [sortValue, setSortvalue] = useState(SearchParams.get('sort') ? SearchParams.get('sort') : 'Newest')
 
     const handleChange = (value) => {
-        setSortvalue(value)
+        setSortvalue(value);
+        SetSearchParams(() => ({ sort: value }))
     };
+
     const handleCloseSortSelect = () => {
         // handle close sort select
         if (dropdownRef.current) {
@@ -16,14 +34,30 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
             }
         }
     };
+
     const handleToggle = () => {
         dropdownRef.current.children[1].style.display = dropdownRef.current.children[1].style.display === 'block' ? 'none' : 'block'
     };
 
+    const handleSeach = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    useEffect(() => {
+        const getData = setTimeout(() => {
+            if (searchQuery === '') {
+                SetSearchParams(() => ({ ...SearchParams.delete("searchQuery") }))
+            } else {
+                SetSearchParams((pre) => ({ ...queryParams, searchQuery: searchQuery }))
+            }
+        }, 500);
+        return () => clearTimeout(getData)
+    }, [searchQuery])
+
     useEffect(() => {
         document.addEventListener('click', handleCloseSortSelect);
         return () => removeEventListener('click', handleCloseSortSelect)
-    });
+    }, [sortValue]);
 
     return (
         <div className='flex justify-between items-center'>
@@ -70,7 +104,12 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
                         </div>
                     </div>
                 </div>
-                <input className='border border-[#D5E3EE] flex justify-between items-center px-4 py-4 gap-4 rounded-md focus:outline-none placeholder:text-[#3F5263] placeholder:font-medium' type="search" placeholder='Search...' />
+                <input className='border border-[#D5E3EE] flex justify-between items-center px-4 py-4 gap-4 rounded-md focus:outline-none placeholder:text-[#3F5263] placeholder:font-medium'
+                    type="search"
+                    placeholder='Search...'
+                    value={searchQuery}
+                    onChange={handleSeach}
+                />
             </div>
         </div>
     )

@@ -2,11 +2,11 @@ import React, { memo, useState } from 'react'
 import { CrossIcon, UploadImageIcon, } from './Icons'
 import { IMAGEURL } from '../utils/constants';
 
-function FileUpload({ onUploadFile, handleRemove, type, files, setFiles, name, id, progress }) {
+function FileUpload({ className, onUploadFile, handleRemove, type, files, setFiles, name, id, progress }) {
 
     const [dragging, setDragging] = useState(false);
 
-    console.log(files,"files");
+    console.log(files, "files");
     const handleDragEnter = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -68,7 +68,7 @@ function FileUpload({ onUploadFile, handleRemove, type, files, setFiles, name, i
             </div>}
             <label
                 htmlFor={id}
-                className={`border border-dashed cursor-pointer relative border-[#D5E3EE] rounded p-2  flex flex-col justify-center items-center gap-5 ${files?.length > 0 ? "" : "min-h-56"}`}>
+                className={`border border-dashed cursor-pointer relative border-[#D5E3EE] rounded p-2  flex flex-col justify-center items-center gap-5 ${files?.length > 0 ? "" : className ? className : "min-h-56"}`}>
                 <UploadImageIcon />
                 <p className='text-lg text-primary font-semibold'><span className='text-helper'>Choose {type} </span><span>or drag it here</span></p>
             </label>

@@ -30,13 +30,14 @@ export const DELETEUPLOADS = async (id) => {
   );
 };
 
-export const GET_MODERATION_PRODUCT = async () => {
+export const GET_MODERATION_PRODUCT = async (params) => {
   return await responseHanlder(
     "GET",
     getModerationProduct_API,
     null,
     true,
-    null
+    null,
+    params,
   );
 };
 export const GET_MODERATION_PRODUCTByID = async (params) => {
@@ -69,8 +70,11 @@ export const MODERATION_PRODUCT_STATUSUPDATE = async (data) => {
   );
 };
 
-export const GET_MY_PRODUCT = async () => {
-  return await responseHanlder("GET", getMyProducts_API, null, true, null);
+export const GET_MY_PRODUCT = async (params) => {
+  return await responseHanlder("GET", getMyProducts_API, null, true, null,params);
+};
+export const GET_MY_PRODUCT_BY_ID = async (id) => {
+  return await responseHanlder("GET", getMyProducts_API+"/"+id, null, true, null);
 };
 export const DELETE_MY_PRODUCT = async (id) => {
   return await responseHanlder(

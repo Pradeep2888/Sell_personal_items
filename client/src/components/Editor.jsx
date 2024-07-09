@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const TextEditor = ({ onEditorChange, content,defaultValue }) => {
+
+const TextEditor = ({ onEditorChange, content, defaultValue }) => {
     // const editorRef = useRef(null);
 
-console.log(defaultValue);
+    console.log(defaultValue);
 
     // useEffect(() => {
     //     if (editorRef.current) {
@@ -33,3 +35,27 @@ console.log(defaultValue);
     );
 }
 export default TextEditor;
+
+
+// export const EditorComponent = ({ onEditorChange, content, defaultValue }) => {
+//     useEffect(() => {
+//         ClassicEditor
+//             .create(document.querySelector('#editor'), {
+//                 // CKEditor configuration
+//                 // Example: toolbar, plugins, etc.
+//             })
+//             .then(editor => {
+//                 console.log('Editor initialized successfully:', editor);
+//             })
+//             .catch(error => {
+//                 console.error('Error initializing editor:', error);
+//             });
+//     }, []); // Empty array means this effect runs only once
+
+//     return (
+//         <div>
+//             <textarea id="editor" />
+//         </div>
+//     );
+// };
+

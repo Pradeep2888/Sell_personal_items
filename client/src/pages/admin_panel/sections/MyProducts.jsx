@@ -10,31 +10,39 @@ import { GET_MY_PRODUCT, DELETE_MY_PRODUCT } from '../../../services/operations/
 import { IMAGEURL, getFormatedDate } from '../../../utils/constants'
 import { toast } from 'sonner'
 import { GridLoadingUI } from './ModerateProducts'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useAuthStore } from '../../../store/AuthStore'
 
 function MyProducts() {
 
   const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState(null);
+  const navigate = useNavigate()
+  const user = useAuthStore(state => state.userData)
   // const [refresh, setRefresh] = useState(false)
   const handleRefresh = () => {
     setTimeout(() => {
       setRefresh(!refresh)
     }, 1000)
   }
-  const { isPending, error, data } = useQuery({
-    queryKey: ['GET_MODERATION_PRODUCT', refresh],
-    queryFn: async () => await GET_MY_PRODUCT()
+  const [SearchParams,setSearchParams] = useSearchParams()
+
+  const searchQuery = SearchParams.get('searchQuery')
+  const sort = SearchParams.get('sort')
+  const {  isLoading, error, data } = useQuery({
+    queryKey: ['GET_My_PRODUCT', refresh, user,sort,searchQuery],
+    queryFn: async () => await GET_MY_PRODUCT({ sort, searchQuery })
   });
 
   const allProductsCount = useMemo(() => data?.products?.length, [data?.products?.length]);
-  const draftProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Draft')?.length, [data?.products?.length]);
-  const activeProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Active')?.length, [data?.products?.length]);
-  const pendingProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Pending')?.length, [data?.products?.length]);
+  const draftProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Draft')?.length, [data]);
+  const activeProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Active')?.length, [data]);
+  const pendingProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Pending')?.length, [data]);
 
+  // console.log(status);
 
-
-  if (isPending) {
+  if (isLoading) {
     return <GridLoadingUI />
   }
 
@@ -57,7 +65,9 @@ function MyProducts() {
     // setRefresh(!refresh)
   };
 
-  const handleEdit = async () => {
+  const handleEdit = async (id) => {
+    // setSearchParams((search)=>({...search,id:id,type:"moderation"}))
+    await navigate(location.pathname + "/edit" + `?id=${id}&type=moderation`, { state: location.pathname,replace:true })
   }
 
   // const draftProducts = data?.products?.filter((item) => item.status === 'Draft')
@@ -85,12 +95,14 @@ function MyProducts() {
                       {data?.products.filter((item) => activeFilter ? item.status === activeFilter : item).map((item) => <div key={item.post_id} className='grid grid-cols-12'>
                         <div className='col-span-10 border-r border-[#F2F4F8]'>
                           <div className='grid grid-cols-3'>
-                            <div className='col-span-1 flex justify-center items-center overflow-hidden p-4'>
-                              <img className='rounded-lg' src={IMAGEURL + item?.images[0]?.image} alt="" />
-                            </div>
+                            <Link to={location.pathname + "/" + item.post_id + "-" + item.name} className='col-span-1 rounded-lg flex justify-center items-center overflow-hidden mx-4 my-2 size-60'>
+                              <img className='rounded-lg object-cover w-full' src={IMAGEURL + item?.images[0]?.image} alt="" />
+                            </Link>
                             <div className='col-span-2 flex justify-start items-start p-4'>
                               <div className='flex flex-col justify-between items-start gap-2'>
-                                <h3 className='text-primary font-medium text-2xl'>{item.name}</h3>
+                                <Link to={location.pathname + "/" + item.post_id + "-" + item.name} className='text-primary font-medium text-2xl mb-2'>
+                                  <h3 >{item.name}</h3>
+                                </Link>
                                 <div className='flex flex-col justify-start items-start gap-2'>
                                   <p className='text-primary font-normal border border-[#F2F4F8] py-2 px-6 rounded-md'>{item.category}</p>
                                   <div className='flex justify-evenly gap-4 items-center'>
@@ -100,7 +112,7 @@ function MyProducts() {
                                   <div className='bg-[#F2F4F8] flex justify-between items-center px-2 py-1 rounded-md gap-4'>
                                     <div className=' flex justify-between items-center gap-2 cursor-pointer'>
                                       <ViewIcon className='fill-light' />
-                                      <span className='text-light font-medium'>9</span>
+                                      <span className='text-light font-medium'>{item.views.length}</span>
                                     </div>
                                     <div className=' flex justify-between items-center gap-2 cursor-pointer'>
                                       <MobileIcon className='fill-light' />
@@ -116,7 +128,6 @@ function MyProducts() {
                             </div>
                           </div>
                         </div>
-
                         <div className='col-span-2 relative p-4 flex justify-between items-start flex-col'>
                           <ul>
                             <li onClick={() => handleEdit(item.post_id)} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><EditIcon />Edit</li>
@@ -131,7 +142,7 @@ function MyProducts() {
                       </div>)}
                     </div>
                     <div className='mt-4'>
-                      <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>3</span> of <span className='text-[#374B5C] font-semibold'>6</span> results</p>
+                      {/* <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>3</span> of <span className='text-[#374B5C] font-semibold'>6</span> results</p> */}
                     </div>
                   </div>
                 </div>

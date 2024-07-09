@@ -29,16 +29,17 @@ const responseHanlder = async (
     if (error.response) {
       if (error.response.data.message) {
         if (error.response.status === 401) {
-          if (error.response.data.message) {
-            toast.error(error.response.data.message);
-          }
+          // if (error.response.data.message) {
+          //   toast.error(error.response.data.message);
+          // }
           localStorage.setItem(
             "authStore",
             JSON.stringify({
               state: { loggedIn: false, authorised: false, userData: {} },
             })
           );
-          // window.location.href = BASEURL + "/sign-in";
+          localStorage.removeItem('_sell_Token')
+          window.location.href = BASEURL + "login-register?tab=login";
         } else {
           if (error.response.data.message) {
             toast.error(error.response.data.message);

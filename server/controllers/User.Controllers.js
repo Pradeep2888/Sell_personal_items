@@ -3,6 +3,8 @@ import AppError from "../utils/appError.js";
 import fs, { stat } from "fs";
 import { PrismaClient } from "@prisma/client";
 import { CatchAsync } from "../utils/CatchAsync.js";
+import bcrypt from "bcryptjs";
+import { count } from "console";
 
 const prisma = new PrismaClient();
 
@@ -22,7 +24,7 @@ export const addMembership = async (req, res, next) => {
 export const uploads = async (req, res, next) => {
   try {
     const { file } = req;
-    // console.log(file);
+    console.log(file);
     res.status(200).json({
       status: "success",
       file,
@@ -33,6 +35,7 @@ export const uploads = async (req, res, next) => {
     );
   }
 };
+
 export const deleteUploads = async (req, res, next) => {
   try {
     const { file } = req.params;
@@ -66,7 +69,6 @@ export const postProduct = CatchAsync(async (req, res, next) => {
       category,
       slug,
       userId: req.user.id,
-      updatedAt: new Date.now(),
     },
   });
 
@@ -76,10 +78,11 @@ export const postProduct = CatchAsync(async (req, res, next) => {
       image: itm.url,
       listedItem_id: product.post_id,
     }));
-    // console.log(product, newImages);
+
     const productImages = await prisma.images.createMany({
       data: [...newImages],
     });
+    console.log(product, productImages);
     res
       .status(200)
       .json({ status: true, message: "Product is listed successfully." });
@@ -115,6 +118,7 @@ export const updateProduct = CatchAsync(async (req, res, next) => {
       category,
       slug,
       userId: req.user.id,
+      updatedAt: new Date(),
     },
   });
 
@@ -124,18 +128,14 @@ export const updateProduct = CatchAsync(async (req, res, next) => {
       image: itm.url,
       listedItem_id: product.post_id,
     }));
-    // console.log(product, newImages);
-    // const oldImages = await prisma.images.findMany({
-    //   where: {
-    //     listedItem_id: post_id,
-    //   },
-    // });
-    // const _newImages = newImages.filter(
-    //   (item) => oldImages.find((itm) => itm.image === item.image)
-    // );
-    // const productImages = await prisma.images.create({
-    //   data: [...newImages],
-    // });
+    const oldImages = await prisma.images.deleteMany({
+      where: {
+        listedItem_id: product.post_id,
+      },
+    });
+    const newImagesData = await prisma.images.createMany({
+      data: newImages,
+    });
     res.status(200).json({
       status: true,
       message: "Product has been updated successfully.",
@@ -146,7 +146,13 @@ export const updateProduct = CatchAsync(async (req, res, next) => {
 
 export const getModerationProductsforAdmin = CatchAsync(
   async (req, res, next) => {
+    const { page, limit, sort, searchQuery } = req.query;
+    const order = sort ? (sort === "Oldest" ? "asc" : "desc") : "desc";
+
     const products = await prisma.listedItem.findMany({
+      where: {
+        name: { contains: searchQuery, mode: "insensitive" },
+      },
       include: {
         images: true,
         user: {
@@ -155,7 +161,11 @@ export const getModerationProductsforAdmin = CatchAsync(
           },
         },
       },
+      orderBy: {
+        createdAt: order,
+      },
     });
+
     // const user = await prisma.users.findFirst({
     //   where: {
     //     id: products.userId,
@@ -172,13 +182,21 @@ export const getModerationProductsforAdminByID = CatchAsync(
       },
       include: {
         images: true,
+        comments: true,
+        views: true,
+        likes: true,
         user: {
           select: {
             name: true,
+            username: true,
+            userType: true,
+            countryCode: true,
+            contactNumber: true,
           },
         },
       },
     });
+
     // const user = await prisma.users.findFirst({
     //   where: {
     //     id: products.userId,
@@ -296,9 +314,13 @@ export const updateModerationProductStatus = CatchAsync(
 
 export const getMyProducts = CatchAsync(async (req, res, next) => {
   const { id } = req.user;
+  const { page, limit, sort, searchQuery } = req.query;
+  const order = sort ? (sort === "Oldest" ? "asc" : "desc") : "desc";
+
   const products = await prisma.listedItem.findMany({
     where: {
       userId: id,
+      name: { contains: searchQuery, mode: "insensitive" },
     },
     include: {
       images: true,
@@ -306,11 +328,49 @@ export const getMyProducts = CatchAsync(async (req, res, next) => {
       views: true,
       likes: true,
     },
+    orderBy: {
+      createdAt: order,
+    },
   });
 
   res.status(200).json({
     status: true,
     products,
+  });
+});
+
+export const getMyProduct = CatchAsync(async (req, res, next) => {
+  const { id } = req.user;
+  const product = await prisma.listedItem.findUnique({
+    where: {
+      post_id: parseInt(req.params.id.split("-")[0]),
+      userId: id,
+    },
+    include: {
+      images: true,
+      comments: true,
+      views: true,
+      likes: true,
+      user: {
+        select: {
+          name: true,
+          username: true,
+          userType: true,
+          countryCode: true,
+          contactNumber: true,
+        },
+      },
+    },
+  });
+  const views = await prisma.views.create({
+    data: {
+      postId: parseInt(req.params.id.split("-")[0]),
+      userId: id,
+    },
+  });
+  res.status(200).json({
+    status: true,
+    product,
   });
 });
 
@@ -348,5 +408,257 @@ export const deleteMyProduct = CatchAsync(async (req, res, next) => {
   res.status(200).json({
     status: true,
     message: "Product deleted successfully",
+  });
+});
+
+//profile
+export const deleteUser = CatchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await prisma.users.delete({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      images: true,
+      donations: true,
+      socailLinks: true,
+      listedItem: true,
+      membership: true,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
+  user.images.forEach((image) => {
+    const file = image.image;
+    const imagePath = path.join(__dirname, "uploads", file);
+    if (fs.existsSync(imagePath)) {
+      // Delete the file
+      fs.unlinkSync(imagePath);
+    }
+  });
+  res.status(200).json({
+    status: true,
+    message: "User deleted successfully",
+  });
+});
+
+export const getProfile = CatchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await prisma.users.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      donations: true,
+      socailLinks: true,
+      listedItem: true,
+      membership: true,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
+  res.status(200).json({
+    status: true,
+    message: "User found successfully",
+    user: user,
+  });
+});
+
+export const updateSocialMedia = CatchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { socialMedia } = req.body;
+  const user = await prisma.users.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      socailLinks: socialMedia,
+    },
+    include: {
+      socailLinks: true,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
+  res.status(200).json({
+    status: true,
+    message: "Data saved successfully",
+    user: user,
+  });
+});
+
+export const upadatePassword = CatchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { oldPassword, newPassord } = req.body;
+
+  const user = await prisma.users.findUnique({
+    select: {
+      id: true,
+      password: true,
+    },
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
+
+  const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!passwordMatch) {
+    // res.clearCookie("token");
+    return res.status(404).json({ message: "Invalid Password" });
+  }
+
+  let newUser = await prisma.users.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      password: newPassord,
+    },
+  });
+
+  newUser.password = undefined;
+
+  res.status(200).json({
+    status: true,
+    message: "Password updated successfully",
+    user: newUser,
+  });
+});
+
+export const upadateEmail = CatchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { currentEmail, newEmail } = req.body;
+
+  const user = await prisma.users.findUnique({
+    select: {
+      id: true,
+      email: true,
+    },
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
+
+  if (currentEmail != user.email) {
+    // res.clearCookie("token");
+    return res.status(404).json({ message: "Invalid email address" });
+  }
+
+  let newUser = await prisma.users.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      email: newEmail,
+    },
+  });
+  newUser.password === undefined;
+
+  res.status(200).json({
+    status: true,
+    message: "Password updated successfully",
+    user: newUser,
+  });
+});
+
+export const updateProfileImage = CatchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { image } = req.body;
+  const user = await prisma.users.findUnique({
+    select: {
+      id: true,
+      image: true,
+    },
+    where: {
+      id: parseInt(id),
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
+  if (!image) {
+    return res.status(404).json({
+      status: false,
+      message: "Image not found",
+    });
+  }
+  let newUser = await prisma.users.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      image: image,
+    },
+  });
+  res.status(200).json({
+    status: true,
+    message: "Profile image updated successfully",
+    user: newUser,
+  });
+});
+
+export const updateAccountDetails = CatchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { name, email, phone } = req.body;
+  const user = await prisma.users.findUnique({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+    },
+    where: {
+      id: parseInt(id),
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
+  let newUser = await prisma.users.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      name: name,
+      email: email,
+      phone: phone,
+    },
+  });
+  res.status(200).json({
+    status: true,
+    message: "Account details updated successfully",
+    user: newUser,
   });
 });

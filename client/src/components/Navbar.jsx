@@ -2,22 +2,25 @@ import { Link, useNavigate } from 'react-router-dom'
 import logo from '../assets/Logo-6.png'
 import { AddIcon, AdminIcon, LikeIcon, LoginIcon, MessageIcon, ModerateIcon, OrdersIcon, SettingIcon } from './Icons'
 
-import { useAuthStore } from '../store/AuthStore';
+import { useAuthStore, useGlobalState } from '../store/AuthStore';
 import { LOGOUTUSER } from '../services/operations/authApi';
 import { toast } from 'sonner';
 import Cookies from 'js-cookie'
+import { useCookies } from 'react-cookie';
 
 // const cookies = new Cookies();
 const Navbar = () => {
 
     const navigate = useNavigate()
-
+    const [cookies, setCookie] = useCookies(['token']);
 
     // const loggedIn = useAuthStore(state => state.loggedIn)
-    // const loggedIn = Cookies.get("_session")
-    const loggedIn = useAuthStore(state => state.loggedIn)
-    const logout = useAuthStore(state => state.logout)
-    // console.log(loggedIn);
+    // const token = Cookies.get("token");
+    // const loggedIn = cookies?.token ? true : false;
+    const loggedIn = useGlobalState(state => state.loggedIn)
+    const logout = useGlobalState(state => state.logout);
+    const user = useAuthStore(state => state.userData)
+    console.log(cookies,"loggedIn");
 
     const handleLogout = async () => {
         const res = await LOGOUTUSER();
@@ -28,10 +31,18 @@ const Navbar = () => {
         }
     };
 
-    const NavLinkList = [
+    const AdminNavLinkList = [
         { icons: <AddIcon />, name: 'Add New', link: '/panel/create' },
         { icons: <ModerateIcon />, name: 'Moderation', link: '/panel/moderation' },
         { icons: <OrdersIcon />, name: 'Orders', link: '/panel/orders' },
+        { icons: <OrdersIcon />, name: 'My Products', link: '/panel/my-products' },
+        { icons: <LikeIcon />, name: 'Favorites', link: '/panel/favorites' },
+        { icons: <MessageIcon />, name: 'Messages', link: '/panel/messages' },
+        { icons: <OrdersIcon />, name: 'My Orders', link: '/panel/my-orders' },
+        { icons: <SettingIcon />, name: 'Settings', link: '/panel/settings' },
+    ]
+    const UserNavLinkList = [
+        { icons: <AddIcon />, name: 'Add New', link: '/panel/create' },
         { icons: <OrdersIcon />, name: 'My Products', link: '/panel/my-products' },
         { icons: <LikeIcon />, name: 'Favorites', link: '/panel/favorites' },
         { icons: <MessageIcon />, name: 'Messages', link: '/panel/messages' },
@@ -66,7 +77,7 @@ const Navbar = () => {
                 <div className='hidden lg:block'>
                     <div className="flex items-center justify-end gap-4 w-full">
                         <div className='account flex justify-center items-center gap-4 relative group'>
-                            <Link to={loggedIn ? '/panel' : '/login-register'} className='flex justify-center items-center relative overflow-hidden transition-all text-nowrap font-medium py-4 h-[50px] w-[50px] rounded-full border border-primary'>
+                            <Link to={loggedIn ? '/panel/my-products' : '/login-register'} className='flex justify-center items-center relative overflow-hidden transition-all text-nowrap font-medium py-4 h-[50px] w-[50px] rounded-full border border-primary'>
                                 <AdminIcon className={'stroke-primary'} />
                             </Link>
 
@@ -81,10 +92,10 @@ const Navbar = () => {
                                 </>
                                 :
                                 <>
-                                    <p className='text-nowrap font-medium py-4 text-primary'>Admin</p>
+                                    <p className='text-nowrap font-medium py-4 text-primary'>{user?.username}</p>
                                     <div className='hidden group-hover:block bg-transparent transition ease-in-out  absolute top-12 cursor-pointer z-10  py-3'>
                                         <ul className='py-2 mt-4  bg-white shadow-lg min-w-60 flex flex-col justify-between items-start'>
-                                            {NavLinkList.map((list, i) => <li key={i} className='py-2 w-full hover:bg-[#f8fafd] text-nowrap flex justify-between items-start '>
+                                            {[user?.role==='ADMIN'?[...AdminNavLinkList]:[...UserNavLinkList]][0].map((list, i) => <li key={i} className='py-2 w-full hover:bg-[#f8fafd] text-nowrap flex justify-between items-start '>
                                                 <Link to={list.link} className='px-10 w-full flex items-start gap-2'>
                                                     {list.icons}
                                                     <span className='text-sm font-medium text-primary'>{list.name}</span>
@@ -105,7 +116,7 @@ const Navbar = () => {
                         </div>
 
                         <div className='post_product_button'>
-                            <Link to={'/login-register'} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
+                            <Link to={loggedIn?'/panel/create':'/login-register'} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
                                 <span className='text-nowrap text-primary'>Post Your Product</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M5.00488 11.525V7.075H0.854883V5.125H5.00488V0.65H7.00488V5.125H11.1549V7.075H7.00488V11.525H5.00488Z" fill="#000"></path></svg>
                             </Link>

@@ -79,7 +79,7 @@ function Footer() {
                             </ul>
                         </div> */}
                     </div>
-                    <div className='lg:w-[30%]'>
+                    {/* <div className='lg:w-[30%]'>
                         <div className='flex flex-col items-start justify-between'>
                             <h3 className='text-white font-normal'>Contact Us</h3>
                             <ul className='mt-6 flex flex-col justify-between items-start'>
@@ -112,7 +112,7 @@ function Footer() {
                                 </li>
                             </ul>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className='bg-black w-full text-xs lg:text-base text-center py-4'><p className='text-white'>Copyright © 2024 Sell Personal Items | Designed by Zonewebsites</p></div>

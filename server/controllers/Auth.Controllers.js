@@ -20,7 +20,7 @@ export const createSendToken = (user, statusCode, res) => {
   user.password = undefined;
   res.cookie("token", token, {
     httpOnly: false,
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 24 * 3600000, // 1 day in milliseconds
     secure: process.env.NODE_ENV === "production", // Only set secure cookie in production
   });
@@ -151,7 +151,7 @@ export const authenticateUser = (req, res, next) => {
   const token = req.cookies.token;
   console.log(token);
   if (!token) {
-    return next(new AppError("Unauthorized!, Token is not found", 404));
+    return next(new AppError("Unauthorized!, Token is not found", 401));
   }
 
   try {
@@ -161,7 +161,7 @@ export const authenticateUser = (req, res, next) => {
     req.user = decoded; // Attach decoded user data to request object
     next();
   } catch (error) {
-    return next(new AppError("Unauthorized", 401));
+    return next(new AppError("Unauthorized", 403));
   }
 };
 

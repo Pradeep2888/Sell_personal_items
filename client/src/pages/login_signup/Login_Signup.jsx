@@ -25,7 +25,8 @@ function Login_Signup() {
     const [sortValue, setSortvalue] = useState("Recipient")
     const loading = useGlobalState(state => state.loading);
     const setLoading = useGlobalState(state => state.setLoading);
-    const login = useAuthStore(state => state.login);
+    const login = useGlobalState(state => state.login);
+    const setUserData = useAuthStore(state => state.setUserData);
 
 
     const handleChange = (value) => {
@@ -90,6 +91,9 @@ function Login_Signup() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (loading) {
+            return;
+        }
         setLoading(true)
         const formdata = await getFormData(inputrefs);
         // await checkValidation(formdata)
@@ -97,8 +101,10 @@ function Login_Signup() {
         setLoading(false)
         console.log(res);
         if (res?.status === 'success') {
-            login(res.data)
-            Cookies.set('_session', res.token, { expires: 24 * 3600000, })
+            login();
+            localStorage.setItem("_sell_Token",res.token)
+            setUserData(res.data)
+            // Cookies.set('_session', res.token, { expires: 24 * 3600000, })
             navigate("/panel/my-products");
             toast.success("Login successful.");
         }
@@ -106,15 +112,21 @@ function Login_Signup() {
 
     const handleSignup = async (e) => {
         e.preventDefault();
+        if (loading) {
+            return;
+        }
         setLoading(true)
         const formdata = await getFormData(signupinputrefs)
         let res = await SIGNUP({ ...formdata, userType: sortValue, countryCode: "+91" });
         setLoading(false)
         console.log(res);
         if (res?.status === 'success') {
-            login(res.data)
-            Cookies.set('_session', res.token, { expires: 24 * 3600000,})
-            navigate("/panel/my-products");
+            localStorage.setItem("_sell_Token",res.token)
+            login();
+            setUserData(res.data)
+            // Cookies.set('_session', res.token, { expires: 24 * 3600000,})
+            // navigate("/panel/my-products");
+            SetURLSearchParams({ tab: 'login' })
             toast.success("Signup successful.");
         }
 

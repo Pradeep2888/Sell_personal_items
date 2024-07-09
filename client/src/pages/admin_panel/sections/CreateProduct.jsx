@@ -8,8 +8,8 @@ import FileUpload from '../../../components/FileUpload'
 import { ADDPRODUCT, DELETEUPLOADS, UPLOADS } from '../../../services/operations/adminApi'
 import axios from 'axios'
 import { fileUploadEndpoints } from '../../../services/api'
-import { IMAGEURL } from '../../../utils/constants'
 import { toast } from 'sonner'
+import EditorComponent from '../../../components/CKEEditor'
 
 function CreateProduct() {
 
@@ -78,100 +78,148 @@ function CreateProduct() {
     setCategory(value);
   }
 
-  const handleGallary = async (file) => {
-    // console.log(file, "handleGallary")
-    if (!file) {
-      return
-    }
-    toast.loading('Uploading...')
-    if (file.length > 0) {
-      let files = file.map((item) => {
-        return ({ url: URL.createObjectURL(item), name: item.name, liveUrl: null, loading: true, progress: 0 })
+  // const handleGallary = async (file) => {
+  //   // console.log(file, "handleGallary")
+  //   if (!file) {
+  //     return
+  //   }
+  //   toast.loading('Uploading...')
+  //   if (file.length > 0) {
+  //     let files = file.map((item) => {
+  //       return ({ url: URL.createObjectURL(item), name: item.name, liveUrl: null, loading: true, progress: 0 })
+  //     });
+  //     setGallery([...gallery, ...files]);
+  //   }
+
+  //   let newArr = [];
+
+  //   for (let index = 0; index < file.length; index++) {
+  //     const element = file[index];
+  //     const _resData = await Uploadfiletoserver(element);
+  //     newArr.push({ ..._resData.file, url: `${_resData.file.filename}`, name: _resData.file.originalname, progress: 0 })
+  //   }
+  //   toast.dismiss()
+  //   setGallery([...gallery, ...newArr]);
+  //   toast.success('Images uploaded successfully.')
+  // }
+
+
+  const handleGallary = async (files) => {
+
+    if (!files || files.length === 0) return;
+
+    try {
+      const promises = Array.from(files).map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+
+          reader.onload = () => resolve({ fileName: file.name, url: reader.result });
+          reader.onerror = error => reject(error);
+
+          reader.readAsDataURL(file);
+        });
       });
-      setGallery([...gallery, ...files]);
-    }
+      const base64Results = await Promise.all(promises);
+      setGallery(base64Results);
 
-    let newArr = [];
-
-    for (let index = 0; index < file.length; index++) {
-      const element = file[index];
-      const _resData = await Uploadfiletoserver(element);
-      newArr.push({ ..._resData.file, url: `${_resData.file.filename}`, name: _resData.file.originalname, progress: 0 })
+    } catch (error) {
+      console.error('Error converting files to base64:', error);
     }
-    toast.dismiss()
-    setGallery([...gallery, ...newArr]);
-    toast.success('Images uploaded successfully.')
   }
 
-
+  console.log(gallery)
 
   const handleRemoveGallary = async (e, i) => {
     let list = [...gallery];
-    let res = await DELETEUPLOADS(list[i].filename);
-    if (res.status) {
-      list.splice(i, 1);
-      setGallery(list);
-      toast.success(res.message)
-    }
+    // let res = await DELETEUPLOADS(list[i].filename);
+    // if (res.status) {
+    list.splice(i, 1);
+    setGallery(list);
+    toast.success('Image removed successfully')
+    // }
   }
 
   const handleRemoveAttachments = async (e, i) => {
     let list = [...attachments];
-    let res = await DELETEUPLOADS(list[i].filename)
-    if (res.status) {
-      list.splice(i, 1);
-      setAttachment(list);
-    }
+    // let res = await DELETEUPLOADS(list[i].filename)
+    // if (res.status) {
+    list.splice(i, 1);
+    setAttachment(list);
+    toast.success('Attachments removed successfully')
+    // }
   }
 
 
-  const Uploadfiletoserver = async (item) => {
+  // const Uploadfiletoserver = async (item) => {
+  //   try {
+  //     let progress = 0
+  //     const formData = new FormData();
+  //     formData.append('file', item);
+  //     const res = await axios.post(fileUploadEndpoints.fileUpload_API, formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       },
+  //       withCredentials: true,
+  //       onUploadProgress: (progressEvent) => {
+  //         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+  //         // setProgress(percentCompleted);
+  //         progress = percentCompleted;
+  //       }
+  //     });
+  //     if (res.status === 200) {
+  //       setProgress(0)
+  //       return { ...res.data, file: { ...res.data.file, progress } }
+  //     }
+  //   } catch (error) {
+  //     return error
+  //   }
+  // }
+
+
+  const handleAttachments = async (files) => {
+
+    if (!files || files.length === 0) return;
+
     try {
-      let progress = 0
-      const formData = new FormData();
-      formData.append('file', item);
-      const res = await axios.post(fileUploadEndpoints.fileUpload_API, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        withCredentials: true,
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          // setProgress(percentCompleted);
-          progress = percentCompleted;
-        }
+      const promises = Array.from(files).map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+
+          reader.onload = () => resolve({ fileName: file.name, url: reader.result });
+          reader.onerror = error => reject(error);
+
+          reader.readAsDataURL(file);
+        });
       });
-      if (res.status === 200) {
-        setProgress(0)
-        return { ...res.data, file: { ...res.data.file, progress } }
-      }
+      const base64Results = await Promise.all(promises);
+      setAttachment(base64Results);
+
     } catch (error) {
-      return error
+      console.error('Error converting files to base64:', error);
     }
   }
 
+  // const handleAttachments = async (file) => {
+  //   if (!file) {
+  //     return
+  //   }
+  //   toast.loading('Uploading...')
+  //   if (file.length > 0) {
+  //     let files = file.map((item) => ({ url: URL.createObjectURL(item), name: item.name }));
+  //     setAttachment([...attachments, ...files]);
+  //   }
 
-  const handleAttachments = async (file) => {
-    if (!file) {
-      return
-    }
-    toast.loading('Uploading...')
-    if (file.length > 0) {
-      let files = file.map((item) => ({ url: URL.createObjectURL(item), name: item.name }));
-      setAttachment([...attachments, ...files]);
-    }
+  //   let newArr = [];
 
-    let newArr = [];
-
-    for (let index = 0; index < file.length; index++) {
-      const element = file[index];
-      const _resData = await Uploadfiletoserver(element);
-      newArr.push({ ..._resData.file, url: `${_resData.file.filename}`, name: _resData.file.originalname, progress: 0 })
-    }
-    toast.dismiss()
-    setAttachment([...attachments, ...newArr]);
-    toast.success('Images uploaded successfully.')
-  }
+  //   for (let index = 0; index < file.length; index++) {
+  //     const element = file[index];
+  //     const _resData = await Uploadfiletoserver(element);
+  //     newArr.push({ ..._resData.file, url: `${_resData.file.filename}`, name: _resData.file.originalname, progress: 0 })
+  //   }
+  //   toast.dismiss()
+  //   setAttachment([...attachments, ...newArr]);
+  //   toast.success('Images uploaded successfully.')
+  // }
 
   const handlePostProduct = async (e) => {
     e.preventDefault()
@@ -207,14 +255,19 @@ function CreateProduct() {
     }
   }
 
-  const handleTextEditor = (content) => {
+  const handleEditorChange = (content) => {
     setDescription(content);
   }
   const handleClearDropdown = () => {
     setCategory('')
   }
 
-  // console.log(allProducts);
+  // const [editorData, setEditorData] = useState('<p>Hello CKEditor!</p>');
+
+  // const handleEditorChange = (newData) => {
+  //     setEditorData(newData);
+  // };
+  console.log(description, "Description");
 
 
   return (
@@ -237,7 +290,8 @@ function CreateProduct() {
                   </div>
                   <div className='mt-8 flex flex-col '>
                     <label className='text-primary text-lg font-semibold mb-4 ml-4'>Description <span>*</span></label>
-                    <TextEditor style={{ outerWidth: "100%" }} onEditorChange={handleTextEditor} defaultValue={''}/>
+                    {/* <TextEditor style={{ outerWidth: "100%" }} onEditorChange={handleTextEditor} defaultValue={''}/> */}
+                    <EditorComponent data={description} onChange={handleEditorChange} style={{ outerWidth: "100%" }} />
                   </div>
                   <div className='mt-8 flex flex-col '>
                     <label className='text-primary text-lg font-semibold mb-4 ml-4'>Gallery <span>*</span></label>

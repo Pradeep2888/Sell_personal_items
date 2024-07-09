@@ -29,7 +29,7 @@ function ContactUs() {
                 </div>
             </div>
             <div className='bg-[#F8FAFD]'>
-                <div className='relative max-w-[1200px] mx-auto mt-20 py-14'>
+                {/* <div className='relative max-w-[1200px] mx-auto mt-20 py-14'>
                     <div className='relative grid grid-cols-3 justify-between items-center mt-10'>
                         <div className='py-6 px-12 mx-10 bg-white min-h-[264px] relative'>
                             <div className='h-full flex flex-col justify-between items-center gap-10'>
@@ -83,7 +83,7 @@ function ContactUs() {
                         </div>
 
                     </div>
-                </div>
+                </div> */}
             </div>
             <Map />
         </div>

@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useContext, useState } from "react";
-
+import '../../App.css'
 
 // Create a context for managing loading state
 const BackdropLoaderContext = React.createContext({

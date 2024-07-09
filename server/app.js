@@ -39,6 +39,7 @@ app.use(
     origin: [
       "https://thepreview.pro",
       "https://sellpersonalitems.thepreview.pro",
+      "https://sellpersonalitem.vercel.app",
       "http://localhost:5173",
     ],
     credentials: true,
@@ -78,7 +79,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+let tempraryImageDirectory
+if (process.env.DEV && process.env.DEV === 'Yes') {
+  tempraryImageDirectory = path.join(__dirname, `/tmp`);
+} else {
+  tempraryImageDirectory = '/tmp';
+}
+app.use("/tmp", express.static(tempraryImageDirectory));
 
 // routes
 
