@@ -1,6 +1,7 @@
 import express from "express";
 import {
-  authenticateUser,
+  AdminLogin,
+  authMiddleware,
   getValidUser,
   userLogin,
   userLogout,
@@ -19,25 +20,41 @@ import {
   getModerationProductsforAdminByID,
   updateProduct,
   getMyProduct,
+  getProfile,
+  updateAccountDetails,
+  updateProfileImage,
+  updateSocialMedia,
+  upadatePassword,
+  upadateEmail,
+  deleteUser,
 } from "../controllers/User.Controllers.js";
-import { getPlans } from "../controllers/Membership.Controller.js";
+import {
+  getPlans,
+  getPlansById,
+} from "../controllers/Membership.Controller.js";
 import { createDonation } from "../controllers/Donation.Controller.js";
 import upload from "../utils/upload.js";
-import {  PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient()
+import { PrismaClient } from "@prisma/client";
+import {
+  getAllProducts,
+  getProductCategories,
+  getSingleProduct,
+} from "../controllers/Products.Controllers.js";
+const prisma = new PrismaClient();
 
 const router = express.Router();
 
-router.route("/login").post(userLogin);
-router.route("/getValidUser").get(getValidUser);
-router.route("/authenticate").get(authenticateUser, async(req, res, next) => {
+router.route("/authenticate").get(authMiddleware, async (req, res, next) => {
   try {
+    const user = await prisma.users.findUnique({
+      where: {
+        id: req.user.id,
+      },
+    });
 
-    const user = await prisma.users.findUnique({where:{
-      id:req.user.id
-    }})
-
-    res.status(200).json({user, message: "Access granted to protected route" });
+    res
+      .status(200)
+      .json({ user, message: "Access granted to protected route" });
     console.log("Authenticated");
   } catch (err) {
     return next(new AppError("unauthorized", 401));
@@ -45,34 +62,76 @@ router.route("/authenticate").get(authenticateUser, async(req, res, next) => {
 });
 router.route("/signup").post(userSignUp);
 router.route("/logout").post(userLogout);
+router.route("/login").post(userLogin);
+router.route("/admin/login").post(AdminLogin);
+router.route("/check-session").get(authMiddleware, async (req, res, next) => {
+  try {
+    // const _user = req.user.delete("iat")
+    // console.log(req.user,_user);
+    const user = await prisma.users.findUnique({
+      where: {
+        id: parseInt(req.user.id),
+      },
+    });
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+    res.status(200).json({
+      status: true,
+      user: req.user,
+    });
+  } catch (error) {
+    res.status(401).json({ status: "expired", message: "Session is expired" });
+  }
+});
+router.route("/getValidUser").get(authMiddleware, getValidUser);
+router.route("/profile").get(authMiddleware, getProfile);
+router.route("/profile").put(authMiddleware, updateAccountDetails);
+router.route("/profile").delete(authMiddleware, deleteUser);
+router.route("/profile/image").put(authMiddleware, updateProfileImage);
+router.route("/profile/socialmedia").put(authMiddleware, updateSocialMedia);
+router.route("/profile/password").put(authMiddleware, upadatePassword);
+router.route("/profile/email").put(authMiddleware, upadateEmail);
 
 // for membership
-router.route("/membership").post(authenticateUser, addMembership);
+router.route("/membership").post(authMiddleware, addMembership);
 router.route("/plans").get(getPlans);
+router.route("/plans/:id").get(getPlansById);
 
 // for donation
 router.route("/donation/create").post(createDonation);
 
 //user routes
 
-router.route("/addproduct").post(authenticateUser, postProduct).put(authenticateUser,updateProduct)
+router
+  .route("/addproduct")
+  .post(authMiddleware, postProduct)
+  .put(authMiddleware, updateProduct);
 router.route("/uploads").post(upload.single("file"), uploads);
-router.route("/uploads/:file").get(upload.single('file'), uploads);
-router.route("/uploads/:file").delete(authenticateUser, deleteUploads);
+router.route("/uploads/:file").get(upload.single("file"), uploads);
+router.route("/uploads/:file").delete(authMiddleware, deleteUploads);
 
 // for products
 router
   .route("/moderation")
-  .get(authenticateUser, getModerationProductsforAdmin)
-  .put(authenticateUser, updateModerationProductStatus);
+  .get(authMiddleware, getModerationProductsforAdmin)
+  .put(authMiddleware, updateModerationProductStatus);
 router
   .route("/moderation/:id")
-  .get(authenticateUser, getModerationProductsforAdminByID)
-  .delete(authenticateUser, deleteMyProduct)
+  .get(authMiddleware, getModerationProductsforAdminByID)
+  .delete(authMiddleware, deleteMyProduct);
 
+router.route("/my-products").get(authMiddleware, getMyProducts);
+router
+  .route("/my-products/:id")
+  .get(authMiddleware, getMyProduct)
+  .delete(authMiddleware, deleteMyProduct);
+// .put(authMiddleware, updateModerationProductStatus);
 
-router.route("/my-products").get(authenticateUser, getMyProducts);
-router.route("/my-products/:id").get(authenticateUser, getMyProduct).delete(authenticateUser, deleteMyProduct);
-// .put(authenticateUser, updateModerationProductStatus);
+// for products
+
+router.route("/products").get(getAllProducts);
+router.route("/products/:slug").get(getSingleProduct);
+router.route("/product-categories").get(getProductCategories);
 
 export default router;

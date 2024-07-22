@@ -2,10 +2,10 @@ import { toast } from "sonner";
 import { getAlert } from "./getAlert";
 
 export const BASEURL = "/";
-export const IMAGEURL =''
-  // import.meta.env.MODE === "development"
-  //   ? "http://localhost:8000/tmp/"
-  //   : "https://sell-personal-items-server.vercel.app/tmp/";
+export const IMAGEURL = "";
+// import.meta.env.MODE === "development"
+//   ? "http://localhost:8000/tmp/"
+//   : "https://sell-personal-items-server.vercel.app/tmp/";
 
 export function getFormData(formRef) {
   let formData = {};
@@ -29,11 +29,17 @@ export const getArrayLength = (array) => {
 
 export function fileToBase64(file) {
   return new Promise((resolve, reject) => {
-      const reader = new FileReader();
+    const reader = new FileReader();
 
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
 
-      reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
   });
 }
+
+export const sanitizeForId = (label) => {
+  return label
+    .toLowerCase()
+    .replace(/[^\w\s]|(\s+)/g, (_match, group1) => (group1 ? "-" : ""));
+};

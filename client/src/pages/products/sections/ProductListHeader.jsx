@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-function ProductListHeader() {
+function ProductListHeader({ isPending, count }) {
 
     const dropdownRef = useRef(null)
     const [sortValue, setSortvalue] = useState('Most Relevant')
@@ -9,6 +9,9 @@ function ProductListHeader() {
         setSortvalue(value)
     };
     const handleCloseSortSelect = () => {
+        if (!dropdownRef.current) {
+            return
+        }
         // handle close sort select
         if (dropdownRef?.current.children[1] && !dropdownRef?.current.contains(event.target)) {
             // console.log(dropdownRef.current)
@@ -19,17 +22,23 @@ function ProductListHeader() {
         dropdownRef.current.children[1].style.display = dropdownRef.current.children[1].style.display === 'block' ? 'none' : 'block'
     };
 
+
+
     useEffect(() => {
         document.addEventListener('click', handleCloseSortSelect);
         return () => removeEventListener('click', handleCloseSortSelect)
     });
 
+    // if (isPending) {
+    //     return <div className='min-h-10 animate-pulse bg-loader w-full rounded-3xl'></div>
+    // }
+
     return (
         <div className='flex justify-between items-center'>
-            <div className='flex gap-2 items-end justify-between'>
-                <h2 className='text-[#374B5C] text-2xl font-semibold'>6 Results</h2>
+            {isPending ? <div className='min-h-10 animate-pulse bg-loader  rounded-3xl'></div> : <div className='flex gap-2 items-end justify-between'>
+                <h2 className='text-[#374B5C] text-2xl font-semibold'>{count} Results</h2>
                 <h3 className='text-[#FFB300]'>Classified Products</h3>
-            </div>
+            </div>}
             <div className=' flex items-center justify-between gap-4'>
                 <div className=''>
                     <div className='flex items-center justify-between gap-4'>

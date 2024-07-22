@@ -18,11 +18,21 @@ import MyOrders from "../pages/admin_panel/sections/MyOrders";
 import Settings from "../pages/admin_panel/sections/Settings";
 import Membership from "../pages/Mambership/Membership";
 import Donation from "../pages/Donation/Donation";
-import Protected from "../components/Protected";
 import Unauthorised from "../components/Unauthorised";
 import ErrorUi from "../components/ErrorUi";
 import ProductDetails from "../pages/admin_panel/sections/ProductDetails";
 import ProductPage from "../pages/admin_panel/sections/ProductPage";
+import Donations from "../pages/admin_panel/sections/Donations";
+import MembershipPlans from "../pages/Mambership/MembershipPlans";
+import MembershipPurchase from "../pages/Mambership/MembershipPurchase";
+import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
+import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
+import RefundPolicy from "../pages/RefundPolicy/RefundPolicy";
+import Protected from "../auth/Protected";
+import LoginSignupReview from "../pages/login_signup/LoginSignupReview";
+import ProductDetail from "../pages/products/ProductDetail";
+import QualifiedItemsList from "../pages/QualifiedListItems/QualifiedItemsList";
+import AdminLogin from "../pages/admin_panel/AdminLogin";
 
 
 const routes = [
@@ -43,8 +53,24 @@ const routes = [
                 element: <About />,
             },
             {
-                path: "ads",
+                path: "/admin/login",
+                element: <AdminLogin />,
+            },
+            {
+                path: "qualified-items-list",
+                element: <QualifiedItemsList />,
+            },
+            {
+                path: "login-signup-review",
+                element: <LoginSignupReview />,
+            },
+            {
+                path: "products",
                 element: <Products />,
+            },
+            {
+                path: "/products/:slug",
+                element: <ProductDetail />,
             },
             {
                 path: "blogs",
@@ -55,16 +81,34 @@ const routes = [
                 element: <ContactUs />,
             },
             {
+                path: "privacy-policy",
+                element: <PrivacyPolicy />,
+            },
+            {
+                path: "terms-and-conditions",
+                element: <TermsAndConditions />,
+            },
+            {
+                path: "refund-policy",
+                element: <RefundPolicy />,
+            },
+            {
                 path: "login-register",
                 element: <Login_Signup />,
             },
             {
-                path: "/protected",
-                element: <Protected />
-            },
-            {
                 path: "memberships",
                 element: <Membership />,
+                children: [
+                    {
+                        path: "",
+                        element: <MembershipPlans />,
+                    },
+                    {
+                        path: "purchase",
+                        element: <MembershipPurchase />,
+                    }
+                ]
             },
             {
                 path: "donate",
@@ -120,6 +164,14 @@ const routes = [
                     {
                         path: 'my-orders',
                         element: <MyOrders />
+                    },
+                    {
+                        path: 'plans-and-features',
+                        element: <Settings />
+                    },
+                    {
+                        path: 'donations',
+                        element: <Donations />
                     },
                     {
                         path: 'settings',

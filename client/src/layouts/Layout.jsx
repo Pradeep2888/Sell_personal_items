@@ -1,19 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { createSearchParams, Navigate, Outlet, redirect, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import Footer from '../components/Footer'
 import { useQuery } from '@tanstack/react-query';
 import { GET_VALID_USER, LOGOUTUSER } from '../services/operations/authApi';
 import { GlobalLoader } from '../components/backdropLoader/BackdropLoader';
-import { useAuthStore, useGlobalState } from '../store/AuthStore';
-import Cookies from "js-cookie";
-import { useCookies } from 'react-cookie';
+import { useGlobalState } from '../store/AuthStore';
+// import Cookies from "js-cookie";
+import { Cookies } from 'react-cookie';
+import Tooltip from '../components/Tooltip';
+import { UnAuthorisedUi } from '../components/ErrorUi';
+import { AuthContext } from '../auth/AuthContext';
+import { useBrowserFocus } from '../hooks/Hooks';
 
+const cookie = new Cookies()
 
+const token = localStorage.getItem('_sell_Token');
 function Layout() {
+    const { user, logout, checkSession, loading } = useContext(AuthContext);
 
-    
+    // useBrowserFocus(() => {
+    //     checkSession();
+    // });
 
+    useEffect(() => {
+        if (user) {
+            checkSession();
+        } else {
+            logout();
+        }
+    }, [])
 
     return (
         <div>

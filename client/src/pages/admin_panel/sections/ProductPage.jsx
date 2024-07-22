@@ -10,24 +10,13 @@ import FileUpload from '../../../components/FileUpload';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { fileUploadEndpoints } from '../../../services/api';
-import { getAlert } from '../../../utils/getAlert';
-
-
-//
-
-// import {
-//     Tooltip,
-//     TooltipContent,
-//     TooltipProvider,
-//     TooltipTrigger,
-// } from "@/components/ui/tooltip"
 
 
 function ProductPage() {
 
     const params = useParams()
     const { isPending, error, data, isLoading } = useQuery({
-        queryKey: ['GET_PRODUCT_BY_ID'],
+        queryKey: ['GET_MY_PRODUCT_BY_ID'],
         queryFn: async () => {
             let res = await GET_MY_PRODUCT_BY_ID(params.slug);
             return res;

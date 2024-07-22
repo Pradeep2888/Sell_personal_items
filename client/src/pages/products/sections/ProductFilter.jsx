@@ -1,97 +1,84 @@
+import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
+import { GET_PRODUCT_CATEGORY } from '../../../services/operations/productsApi';
+import ErrorUi from '../../../components/ErrorUi';
 
-function ProductFilter() {
-    const [urlSearchParams, setUrlSearchParams] = useSearchParams();
+const ProductFilter = () => {
+    const [URLSearchParams, SetURLSearchParams] = useSearchParams();
+
     const searchParams = {}
-    urlSearchParams?.forEach((value, key, parent) => {
+    URLSearchParams?.forEach((value, key, parent) => {
         if (searchParams[key]) {
-            searchParams[key].push(value)
+            searchParams[key] = value
         } else {
-            searchParams[key] = [value]
+            searchParams[key] = value
         }
     });
-    const [category, setcategory] = useState(() => searchParams?.category ? searchParams?.category[0] : 'Any');
 
-    console.log(searchParams);
+    const [category, setcategory] = useState(() => searchParams?.category ? searchParams?.category : 'Any');
+
+    // console.log(searchParams);
+
+    const { isPending, error, data: categories } = useQuery({
+        queryKey: ['GET_PRODUCT_CATEGORY_LIST'],
+        queryFn: async () => {
+            // const product = await GET_ALL_PRODUCTS(searchParams);
+            const category = await GET_PRODUCT_CATEGORY();
+            return category
+        }
+    });
+
+    if (error) {
+        return <ErrorUi error={error.message} />
+    }
 
     const handleChange = (e) => {
         setcategory(e.target.value);
         if (e.target.value !== 'Any') {
-            setUrlSearchParams({ category: e.target.value });
+            SetURLSearchParams({ ...searchParams, category: e.target.value });
         } else {
-            setUrlSearchParams({});
+            SetURLSearchParams({ ...searchParams });
         }
     }
 
-    const lists = [
-        {
-            label: 'Any',
-            value: 'Any',
-            disable: true
-        },
-        {
-            label: 'Clothing, Shoes, & Accessories',
-            value: 'Clothing, Shoes, & Accessories',
-            disable: true
-        },
-        {
-            label: 'Collections & Art',
-            value: 'Collections & Art',
-            disable: true
-        },
-        {
-            label: 'Electronics & Media',
-            value: 'Electronics & Media',
-            disable: true
-        },
-        {
-            label: 'Home & Garden',
-            value: 'Home & Garden',
-            disable: true
-        },
-        {
-            label: 'Baby & Kids',
-            value: 'Baby & Kids',
-            disable: false
-        },
-        {
-            label: 'Furniture',
-            value: 'Furniture',
-            disable: false
-        },
-        {
-            label: 'Health & Beauty',
-            value: 'Health & Beauty',
-            disable: false
-        },
-        {
-            label: 'Sport & Outdoor',
-            value: 'Sport & Outdoor',
-            disable: false
-        },
-        {
-            label: 'Toys, Games, & Hobbies',
-            value: 'Toys, Games, & Hobbies',
-            disable: false
-        },
-        {
-            label: 'Vehicle',
-            value: 'Vehicle',
-            disable: false
-        },
 
-    ]
+    if (isPending) {
+        return (
+            <>
+                <div className='relative'>
+                    <h3 className='text-base font-medium text-[#374B5C] flex justify-between items-center'><span>Category</span><div className='h-3 w-3 rounded-full bg-[#D5E3EE]'></div></h3>
+                    <ul className='mt-4'>
+                        <li className='py-2 w-3/4 h-2 animate-pulse'> </li>
+                        {
+                            [...Array(10)].map((list, i) =>
+                                <li className='py-2' key={i}>
+                                    <div className='min-h-5 animate-pulse bg-loader w-full rounded-3xl'></div>
+                                </li>
+                            )
+                        }
+                    </ul>
+                </div>
+            </>
+        )
+    }
+    const productCategories = categories?.productCategories
     return (
         <div className='relative'>
             <h3 className='text-base font-medium text-[#374B5C] flex justify-between items-center'><span>Category</span><div className='h-3 w-3 rounded-full bg-[#D5E3EE]'></div></h3>
             <ul className='mt-4'>
+                <li className='py-2'>
+                    <div className='flex justify-start items-center gap-3'>
+                        <input id={'any'} className='size-4' value={"any"} checked={"any" === category} onChange={handleChange} type="radio" />
+                        <label className='font-medium text-sm text-[#374B5C]' htmlFor={"any"}>{"Any"}<span></span></label>
+                    </div>
+                </li>
                 {
-                    lists.map((list, i) =>
+                    productCategories.map((list, i) =>
                         <li className='py-2' key={i}>
                             <div className='flex justify-start items-center gap-3'>
-                                <input id={list.label.replaceAll(' ')} className='size-4' value={list.value} checked={list.value === category} onChange={handleChange} type="radio" />
-                                <label className='font-medium text-sm text-[#374B5C]' htmlFor={list.label.replaceAll(' ')}>{list.label}<span>(6)</span></label>
+                                <input id={list.id} className='size-4' value={list.id} checked={list.id === parseInt(category)} onChange={handleChange} type="radio" />
+                                <label className='font-medium text-sm text-[#374B5C]' htmlFor={list.id}>{list.name}<span>{list.count}</span></label>
                             </div>
                         </li>
                     )

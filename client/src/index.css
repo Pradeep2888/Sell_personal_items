@@ -14,6 +14,7 @@
 
 
 
+
 h1,
 h2,
 h3,
@@ -178,7 +179,8 @@ nav>ul>li:hover {
   color: #EDC678;
 }
 
-.post_product_button>a,button {
+.post_product_button>a,
+button {
   position: relative;
   overflow: hidden;
   display: inline-flex;
@@ -248,13 +250,15 @@ nav>ul>li:hover {
   margin-left: 5px;
   margin-right: 5px;
 }
-.new-image{
+
+.new-image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
 }
-.new-image::after{
+
+.new-image::after {
   position: absolute;
   content: " ";
   top: 13px;
@@ -265,7 +269,8 @@ nav>ul>li:hover {
   border: 1px dashed;
   /* background-color: #556E82; */
 }
-.new-image1::after{
+
+.new-image1::after {
   position: absolute;
   content: " ";
   top: 8px;
@@ -274,7 +279,8 @@ nav>ul>li:hover {
   height: 0px;
   /* background-color: #556E82; */
 }
-.new-image svg{
+
+.new-image svg {
   fill: #ffffff;
   width: 20px;
   height: 20px;
@@ -323,6 +329,60 @@ nav>ul>li:hover {
 
 
 /* tinymce */
-.tox-statusbar__branding{
-    display: none !important;
+.tox-statusbar__branding {
+  display: none !important;
+}
+
+
+/* Tabs */
+
+.tab-nav {
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+
+.tab-list::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-list {
+  width: fit-content;
+  min-width: 100%;
+  display: flex;
+  gap: .5em;
+  margin: 0;
+  padding: 0;
+  border-bottom: 2px solid #eee;
+  color: #888;
+}
+.tab-list li {
+  display: block;
+  margin-bottom: -2px;
+}
+
+.tab-btn {
+  font: inherit;
+  padding: 0.75em 1em;
+  background-color: transparent;
+  border: 2px solid;
+  border-width: 0 0 2px;
+  cursor: pointer;
+  color: inherit;
+  white-space: nowrap;
+}
+.tab-btn:not(.tab-btn--active):hover {
+  color: var(--site-text-color);
+}
+.tab-btn--active {
+  color: black;
+  border-color: blue;
+}
+
+.tab-panel {
+  margin-top: 1em;
+  padding: 1em;
+  background-color: var(--tab-panel-bg-color);
+  border-radius: .5em;
 }

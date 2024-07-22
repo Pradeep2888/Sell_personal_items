@@ -50,15 +50,19 @@ export const BackdropLoaderProvider = ({ children }) => {
 
 
 
-export const GlobalLoader = () => {
+export const GlobalLoader = ({loadingText}) => {
     return (
-        <section className="dots-container">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-        </section>
+        <div className='h-screen flex flex-col justify-center items-center'>
+            <section className="dots-container">
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+            </section>
+            <p className='mt-5 text-sm font-bold text-primary'>{loadingText}</p>
+        </div>
+
     )
 }
 

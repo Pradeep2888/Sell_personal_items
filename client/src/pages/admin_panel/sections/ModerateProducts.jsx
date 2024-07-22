@@ -50,6 +50,7 @@ function ModerateProducts() {
   }
 
 
+
   const handleDelete = async (id) => {
     let res = window.confirm("Are you sure you want to delete this product?");
     if (res) {
@@ -97,15 +98,19 @@ function ModerateProducts() {
                       <div className='col-span-6 border-r  border-[#D5E3EE]'>
                         <div className='grid grid-cols-3'>
                           <div className='col-span-1 flex justify-center items-center overflow-hidden p-4'>
-                            <img className='rounded-lg' src={IMAGEURL + item.images[0].image} alt={item.name} />
+                            <img className='rounded-lg h-32 w-56 items-center object-fill' src={IMAGEURL + item.images[0].image} alt={item.name} />
                           </div>
-                          <div className='col-span-2 flex justify-start items-center'>
-                            <div className='flex flex-col justify-between items-start gap-2'>
+                          <div className='col-span-2 flex justify-start items-center pr-4'>
+                            <div className='flex flex-col justify-between items-start gap-2 w-full'>
                               <h3 className='text-primary font-medium'>{item.name}</h3>
-                              <div className='flex flex-col justify-start items-start gap-1'>
-                                <p className='text-primary font-medium'>Category: <span className='text-light font-normal'>{item.category}</span></p>
+                              <div className='flex flex-col justify-start items-start gap-1 w-full'>
+                                <p className='text-primary font-medium'>Category: <span className='text-light font-normal'>{item.category.name}</span></p>
                                 <p className='text-primary font-medium'>Added: <span className='text-light font-normal'>{getFormatedDate(item.createdAt)}</span></p>
-                                <p className='text-primary font-medium'>Expires: <span className='text-light font-normal'>{getFormatedDate(item.expires) ? getFormatedDate(item.expires) : 'Never'}</span></p>
+                                <div className='flex justify-start gap-5 w-full'>
+                                  <p className='text-primary font-medium'>Expires: <span className='text-light font-normal'>{getFormatedDate(item.expires) ? getFormatedDate(item.expires) : 'Never'}</span></p>
+                                  <p className='text-primary font-medium'>For: <span className='text-light font-normal'>{item.itemsType}</span></p>
+                                </div>
+
                               </div>
                             </div>
                           </div>

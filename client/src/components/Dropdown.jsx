@@ -1,11 +1,22 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { CrossIcon } from './Icons';
+import { GET_PRODUCT_CATEGORY } from '../services/operations/productsApi';
+import { useQuery } from '@tanstack/react-query';
 
-const Dropdown = ({ defaultValue, children, setCategory, category, onChange, onClear, required, lists, search }) => {
+const Dropdown = ({defaultValue, children, setCategory, category, onChange, onClear, required, search, label }) => {
+
     const dropdownRef = useRef(null)
     // const [sortValue, setSortvalue] = useState('');
-    const [filteredList, setFilteredList] = useState(lists);
+    const [filteredList, setFilteredList] = useState([]);
 
+    const { isPending, error, data } = useQuery({
+        queryKey: ['GET_PRODUCT_CATEGORY',],
+        queryFn: async () => {
+            const category = await GET_PRODUCT_CATEGORY();
+            setFilteredList(category.productCategories)
+            return { categories: category.productCategories }
+        }
+    });
 
     const handleChange = (e, value) => {
         setCategory(value)
@@ -28,13 +39,13 @@ const Dropdown = ({ defaultValue, children, setCategory, category, onChange, onC
     const handleSearch = (e) => {
         console.log(e.target.value, lists);
         const searchValue = e.target.value.toLowerCase();
-        const filteredList = lists.filter((item) => item.label.toLowerCase().includes(searchValue));
+        const filteredList = lists.filter((item) => item.name.toLowerCase().includes(searchValue));
         setFilteredList(filteredList)
     }
 
     const handleClear = (e) => {
         e.stopPropagation()
-        setCategory('');
+        setCategory({ value: '', name: "" });
         onChange('')
         onClear && onClear('')
     }
@@ -47,8 +58,8 @@ const Dropdown = ({ defaultValue, children, setCategory, category, onChange, onC
     return (
         <div ref={dropdownRef} className='relative' >
             <div className='border border-[#D5E3EE] flex justify-between items-center p-4 gap-4 rounded-md' onClick={handleToggle}>
-                <div className='min-w-48 text-base font-medium text-[#3F5263] select-none'>{category !== '' ? category : defaultValue}</div>
-                {category !== '' ? <CrossIcon onClick={handleClear} /> : <div>
+                <div className='min-w-48 text-base font-medium text-[#3F5263] select-none'>{category.value !== '' ? category.name : label}</div>
+                {category.value !== '' ? <CrossIcon onClick={handleClear} /> : <div>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width={7}
@@ -67,9 +78,12 @@ const Dropdown = ({ defaultValue, children, setCategory, category, onChange, onC
                 <input type="search" placeholder='Search...' onChange={handleSearch} className='relative border border-[#D5E3EE] focus:outline-none w-full rounded py-1 px-2' />
                 <ul className='mt-4 scroll-smooth max-h-96 select-none'>
                     {
-                        filteredList.map((list, i) =>
-                            <li key={i} onClick={(e) => handleChange(e, list.value)} className='text-primary font-semibold py-1 cursor-pointer transition ease-in-out hover:text-secondary'>{list.label}</li>
-                        )
+                        isPending ? [...Array(7)].map((list, i) =>
+                            <li key={i} className='text-primary font-semibold py-1 cursor-pointer min-h-2 animate-pulse bg-loader'></li>
+                        ) :
+                            filteredList?.map((list, i) =>
+                                <li key={i} onClick={(e) => handleChange(e, list)} className='text-primary font-semibold py-1 cursor-pointer transition ease-in-out hover:text-secondary'>{list.name}</li>
+                            )
                     }
                 </ul>
             </div>
@@ -84,7 +98,7 @@ export default memo(Dropdown)
 
 export const DropdownComponent = ({ options, onChange, value }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState(() => ({ label: value }));
     const dropdownRef = useRef(null);
 
     // Function to handle clicks outside the dropdown
@@ -104,7 +118,7 @@ export const DropdownComponent = ({ options, onChange, value }) => {
         };
     }, []);
 
-   
+
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -117,7 +131,7 @@ export const DropdownComponent = ({ options, onChange, value }) => {
     };
 
     useEffect(() => {
-        if(value===''||value===null){
+        if (value === '' || value === null) {
             setSelectedOption(null)
         }
     }, [value])
@@ -170,3 +184,164 @@ export const DropdownComponent = ({ options, onChange, value }) => {
     );
 };
 
+
+
+export const SelectGroupOne = ({ onChange, value, children }) => {
+    const [selectedOption, setSelectedOption] = useState(() => value ? value : "");
+    const [isOptionSelected, setIsOptionSelected] = useState(false);
+
+    const changeTextColor = () => {
+        setIsOptionSelected(true);
+    };
+
+    return (
+        <div className="mb-4.5">
+            <label className="mb-2.5 block text-black dark:text-white">
+                {" "}
+                Subject{" "}
+            </label>
+
+            <div className="relative z-20 bg-transparent dark:bg-form-input">
+                <select
+                    value={selectedOption}
+                    onChange={(e) => {
+                        setSelectedOption(e.target.value);
+                        onChange(e, e.target.value)
+                        changeTextColor();
+                    }}
+                    className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""
+                        }`}
+                >
+                    <option value="" disabled className="text-body dark:text-bodydark">
+                        Select your subject
+                    </option>
+                    <option value="USA" className="text-body dark:text-bodydark">
+                        USA
+                    </option>
+                    <option value="UK" className="text-body dark:text-bodydark">
+                        UK
+                    </option>
+                    <option value="Canada" className="text-body dark:text-bodydark">
+                        Canada
+                    </option>
+                </select>
+
+                <span className="absolute right-4 top-1/2 z-30 -translate-y-1/2">
+                    <svg
+                        className="fill-current"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <g opacity="0.8">
+                            <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                fill=""
+                            ></path>
+                        </g>
+                    </svg>
+                </span>
+            </div>
+        </div>
+    );
+};
+
+
+export const DropdownList = ({ value, onChange, label }) => {
+    const dropdownRef = useRef(null)
+    const [sortValue, setSortvalue] = useState(() => ({ value: value, name: "" }));
+    const [searchValue, setSearchValue] = useState('');
+
+    const [filteredList, setFilteredList] = useState([]);
+    const { isPending, error, data } = useQuery({
+        queryKey: ['GET_Category',],
+        queryFn: async () => {
+            const category = await GET_PRODUCT_CATEGORY();
+            setFilteredList(category.productCategories)
+            return { categories: category.productCategories }
+        }
+    });
+
+
+
+
+    const handleChange = (e, value) => {
+        console.log(value);
+        setSortvalue(value)
+        onChange(value)
+        handleSearch('')
+        dropdownRef.current.children[1].style.display = 'none'
+    };
+
+    const handleCloseSelect = (e, value) => {
+        if (!dropdownRef.current) {
+            return;
+        }
+        if (dropdownRef?.current.children[1] && !dropdownRef?.current.children[1].contains(event.target)) {
+            dropdownRef.current.children[1].style.display = 'none'
+        }
+    };
+    const handleToggle = (e) => {
+        e.stopPropagation();
+        dropdownRef.current.children[1].style.display = dropdownRef.current.children[1].style.display === 'block' ? 'none' : 'block'
+    };
+
+    const handleSearch = (searchValue) => {
+        // console.log(e.target.value, lists);
+        // const searchValue = e.target.value.toLowerCase();
+        setSearchValue(searchValue)
+        const filteredList = data.categories.filter((item) => item.name.toLowerCase().includes(searchValue));
+        setFilteredList(filteredList)
+    }
+
+    const handleClear = (e) => {
+        e.stopPropagation()
+        handleSearch('')
+        setSortvalue({ value: "", name: "" })
+        onChange({ value: "", name: "" })
+    }
+
+
+    useEffect(() => {
+        document.addEventListener('click', handleCloseSelect);
+        return () => removeEventListener('click', handleCloseSelect)
+    }, []);
+    return (
+        <div ref={dropdownRef} className='relative' >
+            <div className='border border-[#D5E3EE] flex justify-between items-center p-3 gap-4 rounded-md' onClick={handleToggle}>
+                <div className='min-w-48 text-base font-medium text-[#3F5263] select-none'>{sortValue.value !== '' ? sortValue.name : label}</div>
+                {sortValue.value !== '' ? <CrossIcon onClick={(e) => handleClear(e)} /> : <div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={7}
+                        height={5}
+                        viewBox="0 0 7 5"
+                        fill="none"
+                    >
+                        <path
+                            d="M3.5 2.56768L5.87477 0.192917C6.13207 -0.0643854 6.54972 -0.0643854 6.80702 0.192917C7.06433 0.45022 7.06433 0.86787 6.80702 1.12517L3.9394 3.99279C3.6964 4.2358 3.30298 4.2358 3.0606 3.99279L0.192977 1.12517C-0.0643257 0.86787 -0.0643257 0.45022 0.192977 0.192917C0.45028 -0.0643854 0.86793 -0.0643854 1.12523 0.192917L3.5 2.56768Z"
+                            fill="#2A3946"
+                        />
+                    </svg>
+                </div>}
+            </div>
+            <div className='hidden dropdownlist w-full border border-[#D5E3EE] px-5 py-3 absolute z-10 bg-white rounded-md shadow-lg mt-1'>
+                <input type="search" placeholder='Search...' value={searchValue} onChange={(e) => handleSearch(e.target.value.toLowerCase())} className='relative border border-[#D5E3EE] focus:outline-none w-full rounded py-1 px-2' />
+                <ul className='mt-4 scroll-smooth max-h-96 select-none'>
+                    {
+                        isPending ? [...Array(7)].map((list, i) =>
+                            <li key={i} className='text-primary font-semibold py-1 cursor-pointer min-h-2 animate-pulse bg-loader'></li>
+                        ) :
+                            filteredList.map((list, i) =>
+                                <li key={i} onClick={(e) => handleChange(e, list)} className='text-primary font-semibold py-1 cursor-pointer transition ease-in-out hover:text-secondary'>{list.name}</li>
+                            )
+                    }
+                </ul>
+            </div>
+        </div>
+    )
+}

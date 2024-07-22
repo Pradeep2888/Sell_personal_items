@@ -10,6 +10,7 @@ const BASE_URL = isProd;
 // AUTH ENDPOINTS
 export const endpoints = {
   LOGIN_API: BASE_URL + "/login",
+  SET_COOKIES: BASE_URL + "/check-session",
   AUTHENTICATE_USER_API: BASE_URL + "/authenticate",
   GETUSER: BASE_URL + "/getValidUser",
   LOGOUT_USER_API: BASE_URL + "/logout",
@@ -31,6 +32,13 @@ export const fileUploadEndpoints = {
   deleteFileUpload_API: BASE_URL + "/uploads",
 };
 export const adminEndpoints = {
+  getProfile_API: BASE_URL + "/profile",
+  updateProfile_API: BASE_URL + "/profile",
+  updateProfile_Image_API: BASE_URL + "/profile/image",
+  updateSocialMedia_API: BASE_URL + "/profile/socialmedia",
+  updateEmail_API: BASE_URL + "/profile/email",
+  updatePassword_API: BASE_URL + "/profile/password",
+  deleteProfile_API: BASE_URL + "/profile/",
   addProduct_API: BASE_URL + "/addproduct",
   getModerationProduct_API: BASE_URL + "/moderation",
   moderationProduct_Statusupdate_API: BASE_URL + "/moderation",
@@ -40,4 +48,10 @@ export const adminEndpoints = {
   getMessages_API: BASE_URL + "/messages",
   getMyOrders_API: BASE_URL + "/my-orders",
   getSettings_API: BASE_URL + "/settings",
+  adminLoginUrl: BASE_URL + "/admin/login",
+};
+
+export const productEndPoint = {
+  getProducts_API: BASE_URL + "/products",
+  getProductCategory_API: BASE_URL + "/product-categories",
 };

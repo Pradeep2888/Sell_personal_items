@@ -36,8 +36,8 @@ import 'react-international-phone/style.css';
 
 
 export function PhoneNumber({ value, onchange }) {
-    const [countryCode, setCountryCode] = useState('+91');
-    const [country, setCountry] = useState('in');
+    const [countryCode, setCountryCode] = useState('1');
+    const [country, setCountry] = useState('us');
 
     return (
         <div className='relative flex'>
@@ -49,9 +49,11 @@ export function PhoneNumber({ value, onchange }) {
                     onSelect={(country) => {
                         setCountryCode(country.dialCode);
                         setCountry(country.iso2);
+                        console.log(country);
+                        onchange(`${country.dialCode}-${value}`)
                     }}
                 />
-                <span className="text-primary font-medium">{countryCode}</span>
+                <span className="text-primary font-medium">+{countryCode}</span>
                 <input name='contactNumber' value={value} onChange={(e) => onchange(`${countryCode}-${e.target.value}`)} className='w-full rounded focus:outline-none placeholder:text-[#374b5c] text-base font-medium' type="tel" placeholder="Phone" />
             </div>
             <span className='absolute top-[16px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>

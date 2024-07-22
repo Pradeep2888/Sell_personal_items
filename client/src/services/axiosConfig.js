@@ -1,6 +1,31 @@
 import axios from "axios";
 
-const axiosInstance = axios.create({});
+const baseURL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:8000/api/v1"
+    : "https://sell-personal-items-server.vercel.app/api/v1";
+
+const axiosInstance = axios.create({
+  // baseURL: baseURL,
+});
+
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("_sell_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login-register?tab=login";  // redirect to login page
+    }
+    return Promise.reject(error);
+  }
+);
 
 //
 

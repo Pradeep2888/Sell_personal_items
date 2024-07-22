@@ -5,11 +5,12 @@ import { redirect, useLocation, useNavigate, useParams, useSearchParams } from '
 import { toast } from 'sonner';
 import Topsection from './components/Topsection';
 import Dropdown from '../../../components/Dropdown';
-import TextEditor from '../../../components/Editor';
 import FileUpload from '../../../components/FileUpload';
 import axios from 'axios';
 import { fileUploadEndpoints } from '../../../services/api';
 import EditorComponent from '../../../components/CKEEditor';
+import { GET_PRODUCT_CATEGORY } from '../../../services/operations/productsApi';
+import ErrorUi from '../../../components/ErrorUi';
 
 function ProductDetails() {
 
@@ -28,27 +29,36 @@ function ProductDetails() {
     const [attachments, setAttachment] = useState([]);
     const [progress, setProgress] = useState(0);
     const [productName, setProductName] = useState('')
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState({ value: '', name: "" });
     const [description, setDescription] = useState('')
     const [descriptionDefault, setDescriptionDefault] = useState('')
-
-    let { isPending, error, data, isLoading } = useQuery({
-        queryKey: ['GET_MODERATION_PRODUCTById', location.pathname],
+    const [edit, setEdit] = useState(false)
+    const { isPending, error, data, isLoading } = useQuery({
+        queryKey: ['GET_MODERATION_PRODUCTById'],
         queryFn: async () => {
             let res = await GET_MODERATION_PRODUCTByID(queryParams);
+            const category = await GET_PRODUCT_CATEGORY()
+            // if (!edit) {
             let _gallary = res?.products?.images.filter((item) => item.imagesType === 'GALLARY')
             let _Attachments = res?.products?.images.filter((item) => item.imagesType === 'ATTACHMENTS')
+            const _productCategory = category.productCategories.find((itm) => itm.id === res.products.categoryId)
             setProductName(res?.products?.name)
-            setCategory(res?.products?.category)
+            setCategory({ value: _productCategory.id, name: _productCategory.name })
             setDescriptionDefault(res?.products?.desription)
             setDescription(res?.products?.desription)
             setGallery(_gallary.map((item) => ({ ...item, url: item.image })))
-            setAttachment(_Attachments.map((item) => ({ ...item, url: item.image })))
-            return res;
+            setAttachment(_Attachments.map((item) => ({ ...item, url: item.image })));
+            setEdit(true)
+            // }
+
+            return { products: res.products, categories: category.productCategories };
         }
     });
 
 
+
+
+    // console.log(category,"fjsdkfhjgdf");
 
 
 
@@ -68,61 +78,9 @@ function ProductDetails() {
 
     if (isLoading) return <FormLoadingUI />;
     if (isPending) return <FormLoadingUI />;
-    if (error) return <div>Error</div>;
+    if (error) return <ErrorUi />;
 
-    const lists = [
-        {
-            label: 'Clothing, Shoes, & Accessories',
-            value: 'Clothing, Shoes, & Accessories',
-            disable: true
-        },
-        {
-            label: 'Collections & Art',
-            value: 'Collections & Art',
-            disable: true
-        },
-        {
-            label: 'Electronics & Media',
-            value: 'Electronics & Media',
-            disable: true
-        },
-        {
-            label: 'Home & Garden',
-            value: 'Home & Garden',
-            disable: true
-        },
-        {
-            label: 'Baby & Kids',
-            value: 'Baby & Kids',
-            disable: false
-        },
-        {
-            label: 'Furniture',
-            value: 'Furniture',
-            disable: false
-        },
-        {
-            label: 'Health & Beauty',
-            value: 'Health & Beauty',
-            disable: false
-        },
-        {
-            label: 'Sport & Outdoor',
-            value: 'Sport & Outdoor',
-            disable: false
-        },
-        {
-            label: 'Toys, Games, & Hobbies',
-            value: 'Toys, Games, & Hobbies',
-            disable: false
-        },
-        {
-            label: 'Vehicle',
-            value: 'Vehicle',
-            disable: false
-        },
-
-    ]
+    const lists = data?.categories
 
     const handleChange = (value) => {
         setCategory(value);
@@ -156,34 +114,34 @@ function ProductDetails() {
     const handleGallary = async (files) => {
 
         if (!files || files.length === 0) return;
-    
+
         try {
-          const promises = Array.from(files).map(file => {
-            return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-    
-              reader.onload = () => resolve({ fileName: file.name, url: reader.result });
-              reader.onerror = error => reject(error);
-    
-              reader.readAsDataURL(file);
+            const promises = Array.from(files).map(file => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+
+                    reader.onload = () => resolve({ fileName: file.name, url: reader.result });
+                    reader.onerror = error => reject(error);
+
+                    reader.readAsDataURL(file);
+                });
             });
-          });
-          const base64Results = await Promise.all(promises);
-          setGallery(base64Results);
-    
+            const base64Results = await Promise.all(promises);
+            setGallery(base64Results);
+
         } catch (error) {
-          console.error('Error converting files to base64:', error);
+            console.error('Error converting files to base64:', error);
         }
-      }
+    }
 
 
     const handleRemoveGallary = async (e, i) => {
         let list = [...gallery];
         // let res = await DELETEUPLOADS(list[i].filename);
         // if (res.status) {
-            list.splice(i, 1);
-            setGallery(list);
-            toast.success("Image deleted successfully from gallery.")
+        list.splice(i, 1);
+        setGallery(list);
+        toast.success("Image deleted successfully from gallery.")
         // }
     }
 
@@ -191,9 +149,9 @@ function ProductDetails() {
         let list = [...attachments];
         // let res = await DELETEUPLOADS(list[i].filename)
         // if (res.status) {
-            list.splice(i, 1);
-            setAttachment(list);
-            toast.success("Image deleted successfully from attachments.")
+        list.splice(i, 1);
+        setAttachment(list);
+        toast.success("Image deleted successfully from attachments.")
         // }
     }
 
@@ -309,7 +267,7 @@ function ProductDetails() {
     //     setDescription(content);
     // }
     const handleClearDropdown = () => {
-        setCategory('')
+        setCategory({ value: "", name: "" })
     }
     const handleEditorChange = (content) => {
         setDescription(content);
@@ -336,7 +294,7 @@ function ProductDetails() {
                                     <div className='mt-8 flex flex-col '>
                                         <label className='text-primary text-lg font-semibold mb-4 ml-4'>Description <span>*</span></label>
                                         {/* <TextEditor style={{ outerWidth: "100%" }} onEditorChange={handleTextEditor} content={description} defaultValue={descriptionDefault} /> */}
-                                        <EditorComponent data={description} onChange={handleEditorChange} style={{ outerWidth: "100%" }} />
+                                        <EditorComponent data={description} onChange={handleEditorChange} style={{ outerWidth: "100%" }} id={'editProduct'} />
                                     </div>
                                     <div className='mt-8 flex flex-col '>
                                         <label className='text-primary text-lg font-semibold mb-4 ml-4'>Gallery <span>*</span></label>
@@ -371,7 +329,7 @@ export default ProductDetails
 
 
 
-const FormLoadingUI = () => {
+export const FormLoadingUI = () => {
     return (
         <div className="relative bg-[#F8FAFD]">
             <div className="max-w-[1200px] mx-auto py-14">

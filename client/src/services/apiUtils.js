@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { apiConnector } from "./axiosConfig";
 import { BASEURL } from "../utils/constants";
+import { Navigate } from "react-router-dom";
 
 const responseHanlder = async (
   method,
@@ -26,20 +27,14 @@ const responseHanlder = async (
     // data = response.data;
     return response.data;
   } catch (error) {
+    
     if (error.response) {
       if (error.response.data.message) {
         if (error.response.status === 401) {
-          // if (error.response.data.message) {
-          //   toast.error(error.response.data.message);
-          // }
-          localStorage.setItem(
-            "authStore",
-            JSON.stringify({
-              state: { loggedIn: false, authorised: false, userData: {} },
-            })
-          );
-          localStorage.removeItem('_sell_Token')
-          window.location.href = BASEURL + "login-register?tab=login";
+          if (error.response.data.message) {
+            toast.error(error.response.data.message);
+          }
+          localStorage.removeItem('_sell_Token');
         } else {
           if (error.response.data.message) {
             toast.error(error.response.data.message);

@@ -8,24 +8,21 @@ import AppError from "../utils/appError.js";
 
 const prisma = new PrismaClient();
 
-export const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+export const signToken = (user) => {
+  return jwt.sign({ ...user }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
 export const createSendToken = (user, statusCode, res) => {
-  console.log(user);
-  const token = signToken(user.id);
-  user.password = undefined;
+  const token = signToken(user);
   res.cookie("token", token, {
     httpOnly: false,
     sameSite: "none",
     maxAge: 24 * 3600000, // 1 day in milliseconds
     secure: process.env.NODE_ENV === "production", // Only set secure cookie in production
   });
-
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     status: "success",
     token,
     data: {
@@ -33,6 +30,11 @@ export const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+
+// export const checkSession = CatchAsync(async (req, res, next) => {
+//   if (!req.cookies.token) return res.status(200).json({ status: false });
+//   res.status(200).json({ status: "success" });
+// });
 
 export const userSignUp = CatchAsync(async (req, res, next) => {
   try {
@@ -45,6 +47,9 @@ export const userSignUp = CatchAsync(async (req, res, next) => {
       countryCode,
       contactNumber,
       userType,
+      seller,
+      buyer,
+      donor,
     } = req.body;
 
     if (!password) {
@@ -74,6 +79,9 @@ export const userSignUp = CatchAsync(async (req, res, next) => {
       contactNumber,
       userType,
       verification: verificationToken,
+      seller,
+      buyer,
+      donor,
     };
 
     const user = await prisma.users.create({ data: newUser });
@@ -107,7 +115,14 @@ export const userSignUp = CatchAsync(async (req, res, next) => {
 });
 
 export const userLogin = CatchAsync(async (req, res, next) => {
-  const { usernameoremail, password } = req.body;
+  const { usernameoremail, password, accountType } = req.body;
+
+  const checkAccountPermission =
+    accountType === "DONOR"
+      ? { donor: true, buyer: true }
+      : accountType === "SELLER"
+      ? { seller: true, buyer: true }
+      : { buyer: true };
 
   if (!usernameoremail || !password) {
     return next(
@@ -124,34 +139,49 @@ export const userLogin = CatchAsync(async (req, res, next) => {
   // });
 
   const user = await prisma.users.findFirst({
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      contactNumber: true,
+      password: true,
+      role: true,
+      userType: true,
+      active: true,
+      ...checkAccountPermission,
+    },
     where: {
-      OR: [
-        { email: usernameoremail },
-        { username: usernameoremail },
-      ],
+      OR: [{ email: usernameoremail }, { username: usernameoremail }],
+      ...checkAccountPermission,
     },
   });
 
+  console.log(user, checkAccountPermission);
   // If user not found, return error
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    res.clearCookie("token");
+    return res.status(403).json({ message: "Invalid credentials" });
+  }
+  if (user.role === "ADMIN") {
+    res.clearCookie("token");
+    return res.status(403).json({ message: "Invalid credentials" });
   }
 
   // Check if password is correct
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (!passwordMatch) {
     res.clearCookie("token");
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.status(403).json({ message: "Invalid credentials" });
   }
 
-  createSendToken(user, 200, res);
+  createSendToken({ ...user, password: undefined }, 200, res);
 });
 
-export const authenticateUser = (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
-  console.log(token);
+  // console.log(token);
   if (!token) {
-    return next(new AppError("Unauthorized!, Token is not found", 401));
+    return res.status(403).json({ status: "404", message: "Token not found" });
   }
 
   try {
@@ -161,7 +191,16 @@ export const authenticateUser = (req, res, next) => {
     req.user = decoded; // Attach decoded user data to request object
     next();
   } catch (error) {
-    return next(new AppError("Unauthorized", 403));
+    if (err.name === "TokenExpiredError") {
+      res.status(401).json({
+        status: "expired",
+        message: "Session is expired. Login again",
+      });
+    } else {
+      res
+        .status(401)
+        .json({ status: "invalid", message: "Token is not valid" });
+    }
   }
 };
 
@@ -238,4 +277,50 @@ export const userLogout = CatchAsync(async (req, res, next) => {
     status: 200,
     message: "Logged out successfully",
   });
+});
+
+export const AdminLogin = CatchAsync(async (req, res, next) => {
+  const { usernameoremail, password, role } = req.body;
+
+  if (!usernameoremail || !password) {
+    return next(
+      new AppError("Please provide username/email and password", 400)
+    );
+  }
+
+  const user = await prisma.users.findFirst({
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      contactNumber: true,
+      password: true,
+      role: true,
+      userType: true,
+      active: true,
+      seller: true,
+      donor: true,
+      buyer: true,
+    },
+    where: {
+      OR: [{ email: usernameoremail }, { username: usernameoremail }],
+      role,
+    },
+  });
+
+  console.log(user, role);
+  // If user not found, return error
+  if (!user) {
+    res.clearCookie("token");
+    return res.status(403).json({ message: "Invalid credentials" });
+  }
+
+  // Check if password is correct
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  if (!passwordMatch) {
+    res.clearCookie("token");
+    return res.status(403).json({ message: "Invalid credentials" });
+  }
+
+  createSendToken({ ...user, password: undefined }, 200, res);
 });

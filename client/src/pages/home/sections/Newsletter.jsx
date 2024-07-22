@@ -2,16 +2,17 @@ import React from 'react'
 
 function Newsletter({ text }) {
     return (
-        <div className='w-full relative py-5 bg-[#283641]'>
+        <div className='w-full relative py-5 bg-[#283641]' >
             <div className='lg:max-w-7xl mx-auto'>
                 <div className='flex py-5 lg:py-10 flex-col sm:flex-row gap-4 lg:gap-0 justify-between items-center '>
                     <div className=''>
-                        <h2 className='text-white text-xl lg:text-4xl max-w-[600px] font-bold'>{text ? text : "Subscribe To Our Newsletter"}</h2>
+                        <h2 className='text-white text-xl lg:text-4xl max-w-[600px] font-bold'>{text ? text : "Join our news letter"}</h2>
+                        <p className='text-white text-base  max-w-[600px] mt-4'>{text ? text : "Get up to date information on current market conditions. Learn how these conditions effect your personal property. Learn also how to stage and price your personal items for quick sell."}</p>
                     </div>
                     <div className='grow px-4 lg:px-0 lg:ml-20'>
                         <div className='flex justify-center lg:justify-between items-center gap-4 bg-white lg:p-5 p-2 rounded-md' >
                             <div className=' relative grow'>
-                                <input className='border border-[#D5E3EE] rounded-md py-4 lg:py-5 px-16 focus:outline-none placeholder:text-[#374b5c] w-full lg:text-base font-medium' type="email" placeholder="Email" />
+                                <input id='subcribe' className='border border-[#D5E3EE] rounded-md py-4 lg:py-5 px-16 focus:outline-none placeholder:text-[#374b5c] w-full lg:text-base font-medium' type="email" placeholder="Email" />
                                 <span className='absolute top-3 lg:top-4 left-3 lg:left-4 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"

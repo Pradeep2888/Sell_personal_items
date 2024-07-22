@@ -8,14 +8,14 @@ function Footer() {
         <footer className='relative w-full bg-[#374B5C]'>
             <div className='relative px-[30px] lg:px-[60px] py-[60px] '>
                 <div className='flex flex-col lg:flex-row lg:mx-auto gap-5  lg:max-w-7xl'>
-                    <div className='flex flex-col lg:w-[40%] gap-2 '>
-                        <div className='flex flex-col justify-start items-center gap-2 lg:px-4'>
+                    <div className='flex flex-col lg:w-[40%] gap-2 mx-auto'>
+                        <div className='flex flex-col justify-start items-start gap-2 lg:px-4'>
                             <Link className='relative'>
                                 <img src={logoImage} alt="" />
                             </Link>
                         </div>
                         <div className='flex flex-col justify-start items-start lg:px-6 gap-4 mt-4'>
-                            <p className='text-base font-normal leading-8 text-white' >Founded with a passion for merchandise and a commitment to creating a more eco-friendly consumer culture, we aim to provide a platform where individuals can easily buy, sell, and discover unique items of their choice.</p>
+                            <p className='text-base font-normal text-start leading-8 text-white' >Founded with a passion for merchandise and a commitment to creating a more eco-friendly consumer culture, we aim to provide a platform where individuals can easily buy, sell, and discover unique items of their choice.</p>
                             {/* <p className='text-base font-normal leading-6 text-white'>Follow our social media</p>
                             <div className='flex justify-start items-start gap-2'>
                                 <div className='rounded-full border border-white p-4 flex justify-center items-center transition ease-in-out group hover:border-[#FFB301]'>
@@ -42,26 +42,26 @@ function Footer() {
                         </div>
                     </div>
                     <div className='relative lg:w-[30%]'>
-                        {/* <div className='flex flex-col items-start justify-between'>
+                        <div className='flex flex-col items-start justify-between'>
                             <h3 className='text-white font-normal'>Useful Links</h3>
                             <ul className='mt-6 flex flex-col justify-between items-start'>
                                 {
-                                    ['Home', 'About Us', 'Blogs', 'Contact Us'].map((itm) => {
+                                    [{ label: "Refund Policy", url: '/refund-policy' }, { label: "Privacy Policy", url: '/privacy-policy' }, { label: "Terms & Conditions", url: '/terms-and-conditions' }].map((itm) => {
                                         return (
-                                            <li className='py-3' key={itm}>
-                                                <Link className='flex gap-3 group:' to={`/${itm}`} >
+                                            <li className='py-3' key={itm.url}>
+                                                <Link className='flex gap-3 group:' to={`${itm.url}`} >
                                                     <span className='text-white'><i aria-hidden="true" className="fas fa-angle-double-right" /></span>
-                                                    <span className='text-[#DFE1E3] font-normal transition ease-in-out hover:text-[#FFB301]'>{itm}</span>
+                                                    <span className='text-[#DFE1E3] font-normal transition ease-in-out hover:text-[#FFB301]'>{itm.label}</span>
                                                 </Link>
                                             </li>
                                         )
                                     })
                                 }
                             </ul>
-                        </div> */}
+                        </div>
                     </div>
-                    <div className='lg:w-[30%]'>
-                        {/* <div className='flex flex-col items-start justify-between'>
+                    {/* <div className='lg:w-[30%]'>
+                        <div className='flex flex-col items-start justify-between'>
                             <h3 className='text-white font-normal'>Categories</h3>
                             <ul className='mt-6 flex flex-col justify-between items-start'>
                                 {
@@ -77,9 +77,9 @@ function Footer() {
                                     })
                                 }
                             </ul>
-                        </div> */}
-                    </div>
-                    {/* <div className='lg:w-[30%]'>
+                        </div>
+                    </div> */}
+                    <div className='lg:w-[30%]'>
                         <div className='flex flex-col items-start justify-between'>
                             <h3 className='text-white font-normal'>Contact Us</h3>
                             <ul className='mt-6 flex flex-col justify-between items-start'>
@@ -106,13 +106,13 @@ function Footer() {
                                 </li>
                                 <li className='py-3 flex gap-3 group' >
                                     <div className='flex justify-center items-center'>
-                                        <MessageIcon color={'#fff'}/>
+                                        <MessageIcon color={'#fff'} />
                                     </div>
                                     <a href="mailto:Info@sellpersonalitems.com" className='text-[#DFE1E3] font-medium transition ease-in-out hover:text-[#FFB301]'>Info@sellpersonalitems.com</a>
                                 </li>
                             </ul>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
             </div>
             <div className='bg-black w-full text-xs lg:text-base text-center py-4'><p className='text-white'>Copyright © 2024 Sell Personal Items | Designed by Zonewebsites</p></div>

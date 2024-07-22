@@ -7,10 +7,14 @@ const {
   AUTHENTICATE_USER_API,
   LOGOUT_USER_API,
   GETUSER,
+  SET_COOKIES,
 } = endpoints;
 
 export const LOGIN = async (formdata) => {
   return await responseHanlder("POST", LOGIN_API, formdata, true, null);
+};
+export const CHECK_SESSION = async (loading) => {
+  return await responseHanlder("GET", SET_COOKIES, null, loading, null);
 };
 export const GET_VALID_USER = async () => {
   return await responseHanlder("GET", GETUSER, null, true, null);

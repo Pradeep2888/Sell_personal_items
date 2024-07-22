@@ -10,15 +10,14 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import Cookies from "js-cookie";
-import { useAuthStore } from './store/AuthStore.js'
-import { AUTHENTICATEUSER, GET_VALID_USER } from './services/operations/authApi.js'
+
 import { CookiesProvider } from 'react-cookie'
+import { AuthProvider } from './auth/AuthContext.jsx'
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
-    <CookiesProvider defaultSetOptions={{ path: '/' }}>
+    <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <BackdropLoaderProvider>
@@ -31,8 +30,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Toaster position="top-center" theme='light' richColors />
         </BrowserRouter>
       </QueryClientProvider>
-    </CookiesProvider>
-  // </React.StrictMode>,
+    </AuthProvider>
+  //</React.StrictMode>
 )
 
 export default function Main() {

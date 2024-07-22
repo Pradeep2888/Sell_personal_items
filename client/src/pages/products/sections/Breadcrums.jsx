@@ -8,9 +8,9 @@ function Breadcrums({ data }) {
             <ul className='flex relative py-4 rounded gap-4'>
                 {
                     breadcrumData.map((item, index) => {
-                        return item.url ?
+                        return item.link ?
                             <li className='flex items-center justify-between gap-4'>
-                                <Link className='text-base font-medium text-[#904B5C]' to='/'>Home</Link>
+                                <Link className='text-base font-medium text-[#904B5C]' to={`${item.link}`}>{item.name}</Link>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width={5}
@@ -23,7 +23,7 @@ function Breadcrums({ data }) {
                                         fill="#F09965"
                                     />
                                 </svg>
-                            </li> : <li className='text-[#B18B8C] text-base font-medium'>About Us</li>
+                            </li> : <li className='text-[#B18B8C] text-base font-medium'>{item.name}</li>
                     })
                 }
 
