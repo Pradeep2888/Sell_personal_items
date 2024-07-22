@@ -176,8 +176,7 @@ function Login_Signup() {
             return;
         }
         const formdata = await getFormData(signupinputrefs);
-
-
+        
         const validationErrors = validator({ ...formdata, ...contactNumber, role: roleData });
         // console.log(validationErrors);
         for (let i = 0; i < Object.keys(validationErrors).length; i++) {

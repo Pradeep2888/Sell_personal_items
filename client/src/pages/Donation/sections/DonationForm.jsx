@@ -363,7 +363,7 @@ function DonationForm() {
                 </div>}
 
             </div>
-            <button onClick={handleDonation} disabled={disable || !items.length > 0} className='mt-10 block w-full rounded-md bg-indigo-600 disabled:bg-opacity-50 disabled:hover:bg-opacity-50 disabled:cursor-not-allowed px-3 py-2 text-center text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Donate Now</button>
+            <button onClick={handleDonation} disabled={disable} className='mt-10 block w-full rounded-md bg-indigo-600 disabled:bg-opacity-50 disabled:hover:bg-opacity-50 disabled:cursor-not-allowed px-3 py-2 text-center text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Donate Now</button>
         </form>
     )
 }
