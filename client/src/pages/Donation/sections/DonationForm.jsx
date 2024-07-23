@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { AddIcon, CalenderIcon, EmailIcon, LocationIcon, MobileIcon, UserNameIcon } from '../../../components/Icons'
+import { AddIcon, CalenderIcon, CrossIcon, EmailIcon, LocationIcon, MobileIcon, UserNameIcon } from '../../../components/Icons'
 import { CREATEDONATION } from '../../../services/operations/donationApi';
 import { toast } from 'sonner';
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -212,7 +212,7 @@ function DonationForm() {
                     </span>
                 </div>
                 <div className='relative'>
-                    <label htmlFor='pickupDate' className={`${formData.pickupDate?"hidden":'absolute mb-2 block ml-2 pb-1 font-medium text-primary bg-white z-20 left-12 top-4 w-1/2'}`}>Pickup Date *</label>
+                    <label htmlFor='pickupDate' className={`${formData.pickupDate ? "hidden" : 'absolute mb-2 block ml-2 pb-1 font-medium text-primary bg-white z-20 left-12 top-4 w-1/2'}`}>Pickup Date *</label>
                     <input value={formData.pickupDate} name='pickupDate' id='pickupDate' onChange={handleChange} className='py-4 w-full pl-14 pr-2 text-sm lg:text-base border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c] font-medium' type="date" placeholder="Pickup Date *" />
                     <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>
                         <CalenderIcon color={"#475B6B"} />
@@ -325,35 +325,46 @@ function DonationForm() {
                 {/* <div className='relative'>
                     <textarea name='items' onChange={handleChange} className='w-full border text-sm lg:text-base border-[#D5E3EE] rounded py-3 min-h-24 px-8 focus:outline-none placeholder:text-[#374b5c]  font-medium' type="text" placeholder="Items *" />
                 </div> */}
-                {/* <div className='relative'>
+                <div className='relative col-span-3'>
                     <label className='text-primary text-sm font-bold text-nowrap' htmlFor="selectAmout">Select Amount (Optional)</label>
-                    <div className='bg-white border border-gray-200 px-5 py-3 rounded flex justify-between items-start gap-2 flex-wrap relative mt-2'>
+                    <div className='bg-white border border-gray-200 px-5 py-3 rounded flex justify-start items-center gap-5 w-fit relative mt-2'>
                         <div>
                             <input className='opacity-0 absolute' type="radio" name="amount" id="10" value={'10'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-10 p-2 ${formData.amount === '10' ? " bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="10">$ 10</label>
+                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '10' ? " bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="10">$ 10</label>
                         </div>
                         <div >
                             <input className='opacity-0 absolute' type="radio" name="amount" id="20" value={'20'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-10 p-2 ${formData.amount === '20' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="20">$ 20</label>
+                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '20' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="20">$ 20</label>
                         </div>
                         <div >
                             <input className='opacity-0 absolute' type="radio" name="amount" id="30" value={'30'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-10 p-2 ${formData.amount === '30' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="30">$ 30</label>
+                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '30' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="30">$ 30</label>
                         </div>
                         <div >
                             <input className='opacity-0 absolute' type="radio" name="amount" id="40" value={'40'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-10 p-2 ${formData.amount === '40' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="40">$ 40</label>
+                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '40' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="40">$ 40</label>
+                        </div>
+                        <div >
+                            <input className='opacity-0 absolute' type="radio" name="amount" id="50" value={'50'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
+                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '50' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="50">$ 50</label>
+                        </div>
+                        <div >
+                            <input className='opacity-0 absolute' type="radio" name="amount" id="100" value={'100'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
+                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '100' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="100">$ 100</label>
                         </div>
                         <div>
-                            <span onClick={(e) => setFormData((prev) => ({ ...prev, otherAmount: true, amount: '' }))} className={`cursor-pointer py-2 px-4 ${formData.otherAmount === true ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="other">Other</span>
+                            <span onClick={(e) => setFormData((prev) => ({ ...prev, otherAmount: !formData.otherAmount, amount: '' }))} className={`cursor-pointer py-2 px-4 ${formData.otherAmount === true ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} >Other</span>
                         </div>
-                    </div>
-                    {formData.otherAmount === true &&
-                        <div className='relative mt-2'>
-                            <input className='py-4 w-full pl-14 pr-2 text-sm lg:text-base border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c]  font-medium' type="text" placeholder="Enter Amount *" name='amount' onChange={handleChange} />
-                            <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'></span>
+                        {formData.amount && <div>
+                            <span onClick={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: '' }))} className={`cursor-pointer py-2 px-4 text-red-500 text-sm font-bold text-nowrap   flex justify-center items-center`}><CrossIcon /><span className='ml-1'>clear</span></span>
                         </div>}
-                </div> */}
+                        {formData.otherAmount === true &&
+                            <div className='relative flex-grow'>
+                                <input className='py-4 w-full pl-14 pr-2 text-sm lg:text-base border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c]  font-medium' type="number" placeholder="Enter Amount *" name='amount' maxLength={5} onChange={handleChange} />
+                                <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'></span>
+                            </div>}
+                    </div>
+                </div>
                 {/* <div className='relative col-span-1'>
                     <button onClick={handleAddNew} className='bg-secondary text-white font-semibold'>Add New Item</button>
                 </div> */}

@@ -40,19 +40,20 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
     };
 
     const handleSeach = (e) => {
-        setSearchQuery(e.target.value);
+        e.preventDefault();
+        SetSearchParams((pre) => ({ ...queryParams, searchQuery: searchQuery }))
     };
 
-    useEffect(() => {
-        const getData = setTimeout(() => {
-            if (searchQuery === '') {
-                SetSearchParams(() => ({ ...SearchParams.delete("searchQuery") }))
-            } else {
-                SetSearchParams((pre) => ({ ...queryParams, searchQuery: searchQuery }))
-            }
-        }, 500);
-        return () => clearTimeout(getData)
-    }, [searchQuery])
+    // useEffect(() => {
+    //     const getData = setTimeout(() => {
+    //         if (searchQuery === '') {
+    //             SetSearchParams(() => ({ ...queryParams, searchQuery: '' }))
+    //         } else {
+    //             SetSearchParams((pre) => ({ ...queryParams, searchQuery: searchQuery }))
+    //         }
+    //     }, 500);
+    //     return () => clearTimeout(getData)
+    // }, [searchQuery])
 
     useEffect(() => {
         document.addEventListener('click', handleCloseSortSelect);
@@ -104,12 +105,23 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
                         </div>
                     </div>
                 </div>
-                <input className='border border-[#D5E3EE] flex justify-between items-center px-4 py-4 gap-4 rounded-md focus:outline-none placeholder:text-[#3F5263] placeholder:font-medium'
-                    type="search"
-                    placeholder='Search...'
-                    value={searchQuery}
-                    onChange={handleSeach}
-                />
+                <div className='relative'>
+                    <input className='border pr-10 border-[#D5E3EE] flex justify-between items-center px-4 py-4 gap-4 rounded-md focus:outline-none placeholder:text-[#3F5263] placeholder:font-medium'
+                        type="search"
+                        placeholder='Search...'
+                        value={searchQuery}
+                        onChange={(e) => {
+                            if (e.target.value !== '') {
+                                setSearchQuery(e.target.value)
+                            } else {
+                                setSearchQuery('');
+                                delete queryParams['searchQuery']
+                                SetSearchParams({ ...queryParams })
+                            }
+                        }}
+                    />
+                    <i onClick={handleSeach} className='fa fa-search cursor-pointer absolute text-white bg-helper p-2 top-3 right-2 rounded-md' />
+                </div>
             </div>
         </div>
     )

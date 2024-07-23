@@ -118,8 +118,8 @@ function ProductPage() {
     const breadcrumsData = [
         { name: "Home", link: "/" },
         { name: 'Search Result', link: `/product` },
-        { name: product.category, link: `/product/${product.category}` },
-        { name: product.name, link: `/product/${product.category}/${product.id}` }
+        { name: product.category.name, link: `/product/${product.category.name}` },
+        { name: product.name, link: `/product/${product.category.name}/${product.post_id}` }
     ]
 
     return (
@@ -145,7 +145,7 @@ function ProductPage() {
                                 </div>
                                 <div className='mt-6 lg:px-6 px-2 text-primary'>
                                     <h1 className='text-3xl font-semibold '>{product.name}</h1>
-                                    <p className='py-1 px-2 mt-4 rounded-md w-fit border border-helper text-helper'>{product.category}</p>
+                                    <p className='py-1 px-2 mt-4 rounded-md w-fit border border-helper text-helper'>{product.category.name}</p>
                                 </div>
                                 <div className='mt-6 lg:px-6 px-2 text-primary pb-6'>
                                     <h3 className='text-xl font-medium '>{'Description'}</h3>

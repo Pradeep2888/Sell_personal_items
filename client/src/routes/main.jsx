@@ -33,6 +33,7 @@ import LoginSignupReview from "../pages/login_signup/LoginSignupReview";
 import ProductDetail from "../pages/products/ProductDetail";
 import QualifiedItemsList from "../pages/QualifiedListItems/QualifiedItemsList";
 import AdminLogin from "../pages/admin_panel/AdminLogin";
+import AdminLayout from "../layouts/AdminLayout";
 
 
 const routes = [
@@ -44,13 +45,17 @@ const routes = [
                 path: "",
                 element: <Home />,
             },
-            // {
-            //     path: "server-error",
-            //     element: <ErrorUi />,
-            // },
+            {
+                path: "server-error",
+                element: <ErrorUi />,
+            },
             {
                 path: "about-us",
                 element: <About />,
+            },
+            {
+                path: "/admin",
+                element: <AdminLayout />,
             },
             {
                 path: "/admin/login",

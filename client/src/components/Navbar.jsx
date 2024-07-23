@@ -100,9 +100,10 @@ const Navbar = () => {
                         {user ? <ul className='flex items-center '>
                             <li className='font-[lexend deca] text-primary font-medium text-base py-2 '><Link to={''}>Home</Link></li>
                             <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/memberships'}>Memberships</Link></li>
+                            <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/qualified-items-list'}>Qualified Items</Link></li>
                             {user.donor && <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={user ? '/donate' : "/login-register?tab=login"} state={user ? { to: "/" } : { to: "/donate" }}>Donate Items</Link></li>}
-                            <><li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=donation'}>Items for Donation</Link></li></>
+                            {/* <><li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
+                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=donation'}>Items for Donation</Link></li></> */}
 
                             {/* <li className='font-[lexend deca] font-medium text-base py-2 ml-[45px] '><Link to={'/blogs'}>Blog</Link></li>
                             <li className='font-[lexend deca] font-medium text-base py-2 ml-[45px] '><Link to={'/contact-us'}>Contact US</Link></li> */}
@@ -110,10 +111,10 @@ const Navbar = () => {
                             <ul className='flex items-center '>
                                 <li className='font-[lexend deca] text-primary font-medium text-base py-2 '><Link to={''}>Home</Link></li>
                                 <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/memberships'}>Memberships</Link></li>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/qualified-items-list'}>Qualified Items list</Link></li>
+                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/qualified-items-list'}>Qualified Items</Link></li>
                                 <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={user ? '/donate' : "/login-register?tab=login"} state={{ to: "/donate", "for": 'donor' }}>Donate Items</Link></li>
-                                <><li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
-                                    <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=donation'}>Items for Donation</Link></li></>
+                                {/* <><li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
+                                    <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=donation'}>Items for Donation</Link></li></> */}
 
                                 {/* <li className='font-[lexend deca] font-medium text-base py-4 ml-[45px] '><Link to={'/blogs'}>Blog</Link></li>
                         <li className='font-[lexend deca] font-medium text-base py-4 ml-[45px] '><Link to={'/contact-us'}>Contact US</Link></li> */}

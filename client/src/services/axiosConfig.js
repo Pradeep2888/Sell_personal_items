@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "sonner";
 
 const baseURL =
   import.meta.env.MODE === "development"
@@ -19,9 +20,14 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log(error, "hjghfgh");
+    if (error.code === "ERR_NETWORK") {
+      toast.error(error.message);
+      window.location.href = "/server-error";
+    }
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login-register?tab=login";  // redirect to login page
+      window.location.href = "/login-register?tab=login"; // redirect to login page
     }
     return Promise.reject(error);
   }

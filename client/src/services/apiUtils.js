@@ -27,14 +27,13 @@ const responseHanlder = async (
     // data = response.data;
     return response.data;
   } catch (error) {
-    
     if (error.response) {
       if (error.response.data.message) {
         if (error.response.status === 401) {
           if (error.response.data.message) {
             toast.error(error.response.data.message);
           }
-          localStorage.removeItem('_sell_Token');
+          localStorage.removeItem("_sell_Token");
         } else {
           if (error.response.data.message) {
             toast.error(error.response.data.message);
@@ -43,7 +42,6 @@ const responseHanlder = async (
       }
     } else {
       toast.error(error.message);
-      // return error;
     }
   } finally {
     toast.dismiss();

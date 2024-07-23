@@ -29,12 +29,12 @@ const QualifiedItemsList = () => {
                         isPending ? [...Array(7)].map((list, i) =>
                             <div key={i} className='font-semibold py-1 cursor-pointer min-h-24 min-w-36 animate-pulse bg-loader ring-2 ring-primary'></div>) :
                             data.productCategories?.map((list, i) =>
-                                <div key={i} className='border-2 transition ease-in-out relative hover:bg-btn-primay group border-white rounded-md flex items-center justify-center flex-col text-white py-2 px-4 gap-2'>
+                                <Link key={i} to={'/products?type=sale&category=' + list.id} className='border-2 transition ease-in-out relative hover:bg-btn-primay group border-white rounded-md flex items-center justify-center flex-col text-white py-2 px-4 gap-2'>
                                     <div>
                                         <img className='' height={45} width={45} src={HomeAndGarden} alt='helper' />
                                     </div>
-                                    <Link className='group-hover:text-black' to={''}>{list.name}</Link>
-                                </div>)}
+                                    <span className='group-hover:text-black font-normal'>{list.name}</span>
+                                </Link>)}
                     {/* <>
                         <div className='border-2 transition ease-in-out relative hover:bg-btn-primay group border-white rounded-md flex items-center justify-center flex-col text-white py-2 px-4 gap-2'>
                             <div>

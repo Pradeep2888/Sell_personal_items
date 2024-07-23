@@ -18,32 +18,32 @@ function ModerateProducts() {
   const navigate = useNavigate();
   const [SearchParams, SetSearchParams] = useSearchParams({});
 
-  const handleStatus = async (product_id, status) => {
-    let res = await MODERATION_PRODUCT_STATUSUPDATE({ product_id, status });
-    if (res.status) {
-      // window.location.reload()
-      setTimeout(() => {
-        setRefresh(!refresh)
-      }, 1000)
-      toast.success(res.message)
-    }
-  };
+  const [products, setProducts] = useState([])
 
-  const sortValue = SearchParams.get('sort')
-  const searchQuery = SearchParams.get('searchQuery')
+  const sortValue = SearchParams.get('sort');
+  const searchQuery = SearchParams.get('searchQuery');
+
 
   const { isPending, error, data } = useQuery({
     queryKey: ['GET_MODERATION_PRODUCT', refresh, sortValue, searchQuery],
     queryFn: async () => await GET_MODERATION_PRODUCT({ sort: SearchParams.get('sort'), searchQuery })
   });
 
-  const draftProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Draft')?.length, [data?.products?.length]);
-  const activeProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Active')?.length, [data?.products?.length]);
-  const pendingProductsCount = useMemo(() => data?.products?.filter((item) => item.status === 'Pending')?.length, [data?.products?.length]);
 
-  if (isPending) {
-    return <GridLoadingUI />
-  }
+
+
+  const draftProductsCount = useMemo(() => products?.filter((item) => item.status === 'Draft')?.length, [products?.length]);
+  const activeProductsCount = useMemo(() => products?.filter((item) => item.status === 'Active')?.length, [products?.length]);
+  const pendingProductsCount = useMemo(() => products?.filter((item) => item.status === 'Pending')?.length, [products?.length]);
+
+  useEffect(() => {
+    setProducts(data?.products)
+  }, [data])
+
+
+  // if (isPending) {
+  //   return <GridLoadingUI />
+  // }
 
   if (error) {
     return <ErrorUi error={error.name} />
@@ -51,13 +51,30 @@ function ModerateProducts() {
 
 
 
+
+  const handleStatus = async (product_id, status) => {
+    let res = await MODERATION_PRODUCT_STATUSUPDATE({ product_id, status });
+    if (res.status) {
+      let _products = products.map((item, i) => {
+        if (item.post_id === product_id) {
+          console.log(item.post_id === product_id);
+          return { ...res.product }
+        }
+        return item
+      });
+      setProducts(_products)
+      toast.success(res.message)
+    }
+  };
+
   const handleDelete = async (id) => {
     let res = window.confirm("Are you sure you want to delete this product?");
     if (res) {
       let res = await DELETE_MODERATION_PRODUCT(id)
-      if (res.status) {
+      if (res?.status) {
+        let _products = products.filter((item) => item.post_id !== id);
+        setProducts(_products)
         toast.success(res.message)
-        setRefresh(!refresh)
       }
     }
   };
@@ -89,11 +106,66 @@ function ModerateProducts() {
                   <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>Status</div>
                   <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium'>Actions</div>
                 </div>
-                {data.products.length < 1 ?
+                {isPending &&
+                  <>
+                    <div className='bg-white rounded relative'>
+                      <div className='grid grid-cols-12 border-b border-[#D5E3EE] p-2'>
+                        <div className='col-span-6 p-6 text-[#374B5C] text-lg font-medium  animate-pulse bg-loader w-1/2 rounded-3xl'></div>
+                        <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium  animate-pulse bg-loader w-1/2 rounded-3xl'></div>
+                        <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium  animate-pulse bg-loader w-1/2 rounded-3xl'></div>
+                        <div className='col-span-2 p-6 text-[#374B5C] text-lg font-medium  animate-pulse bg-loader w-1/2 rounded-3xl'></div>
+                      </div>
+                      {[...Array(3), () => ({})].map((item, index) =>
+                        <div key={index} className='grid grid-cols-12 border-b border-[#D5E3EE]'>
+                          <div className='col-span-6 border-r  border-[#D5E3EE]'>
+                            <div className='grid grid-cols-3'>
+                              <div className='col-span-1 flex justify-center items-center overflow-hidden p-4'>
+                                <span className='rounded-lg border-0 outline-none min-h-20 min-w-32 animate-pulse bg-loader' />
+                              </div>
+                              <div className='col-span-2 flex justify-start items-center w-full'>
+                                <div className='flex flex-col justify-between items-start gap-2 w-full'>
+                                  <h3 className='text-primary font-medium min-h-4 animate-pulse bg-loader w-1/2 rounded-3xl'></h3>
+                                  <div className='flex flex-col justify-start items-start gap-1 w-1/2'>
+                                    <p className='text-primary font-medium min-h-4 animate-pulse bg-loader w-1/2 rounded-3xl'></p>
+                                    <p className='text-primary font-medium min-h-4 animate-pulse bg-loader w-1/2 rounded-3xl'></p>
+                                    <p className='text-primary font-medium min-h-4 animate-pulse bg-loader w-1/2 rounded-3xl'></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='col-span-2 flex justify-center items-center border-r border-[#D5E3EE]'>
+                            <div className='flex justify-center items-center flex-col gap-3'>
+                              <div className='rounded-full size-12 flex justify-center items-center animate-pulse bg-loader'>
 
+                              </div>
+                              <p className='text-primary font-semibold min-h-6 animate-pulse bg-loader w-full'></p>
+                            </div>
+                          </div>
+                          <div className='col-span-2 flex justify-center items-center border-r border-[#D5E3EE]'>
+                            <div className='flex justify-center items-center '>
+                              <p className={`py-1 px-4 rounded-md font-semibold  min-h-6 w-full animate-pulse bg-loader text-center `}></p>
+                            </div>
+                          </div>
+                          <div className='col-span-2 relative p-4 flex justify-center items-center'>
+                            <div className='relative group'>
+                              <div className=' min-w-32  flex justify-between items-center px-3 py-3 relative rounded-md min-h-6 animate-pulse bg-loader' >
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className='mt-4'>
+                      <p className='text-[#73819E] min-h-6 min-w-full animate-pulse bg-loader rounded-3xl'></p>
+                    </div>
+                  </>
+                }
+                {!isPending && products?.length < 1 ?
                   <div className='relative bg-white border border-[#D5E3EE] rounded flex justify-center items-center min-h-80'>
                     <NoRecords title={"No Moderations"} />
-                  </div> : data?.products?.filter((item) => activeFilter ? item.status === activeFilter : item).map((item, index) =>
+                  </div> : products?.filter((item) => activeFilter ? item.status === activeFilter : item).map((item, index) =>
                     <div key={item.post_id} className='grid grid-cols-12 border-b border-[#D5E3EE]'>
                       <div className='col-span-6 border-r  border-[#D5E3EE]'>
                         <div className='grid grid-cols-3'>
