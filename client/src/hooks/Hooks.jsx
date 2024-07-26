@@ -43,15 +43,33 @@ export const useQueryData = () => {
 
 export function createValidator(schema) {
     return function validate(formData) {
-      const errors = {};
-  
-      Object.keys(schema).forEach((key) => {
-        const error = schema[key](formData[key]);
-        if (error) {
-          errors[key] = error;
-        }
-      });
-  
-      return errors;
+        const errors = {};
+
+        Object.keys(schema).forEach((key) => {
+            const error = schema[key](formData[key]);
+            if (error) {
+                errors[key] = error;
+            }
+        });
+
+        return errors;
     };
-  }
+}
+
+export function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+}
+
+

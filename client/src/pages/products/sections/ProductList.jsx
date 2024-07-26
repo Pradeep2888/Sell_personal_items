@@ -68,7 +68,7 @@ function ProductList({ products, isPending, handleLike }) {
                   <div className="grid grid-cols-3 items-center gap-4">
                     <Link to={`/products/${product.slug}`}><TooltipIcon IconComponent={ViewIcon} tooltipText="View" id='View' /></Link>
                     {/* <TooltipIcon IconComponent={CompareIcon} tooltipText="Compare" id={'Compare'} /> */}
-                    {user && <TooltipIcon IconComponent={LikeIcon} tooltipText="Like" id={'Like'} like={product?.likes[0]?.like} onClick={() => handleLike(product.post_id)} />}
+                    {user && <TooltipIcon IconComponent={LikeIcon} tooltipText="Like" id={'Like'} like={product.likeStatus} onClick={() => handleLike(product.post_id)} />}
                   </div>
                   <div className='text-end flex gap-2'>
                     <p className="text-sm font-medium text-[#9A818C]">{product._count.views} views</p>

@@ -69,7 +69,14 @@ export const getAllProducts = CatchAsync(async (req, res) => {
     where: whereClause,
     include: {
       _count: {
-        select: { likes: true, views: true },
+        select: {
+          likes: {
+            where: {
+              like: true,
+            },
+          },
+          views: true,
+        },
       },
       images: true,
       comments: true,
@@ -84,6 +91,11 @@ export const getAllProducts = CatchAsync(async (req, res) => {
   if (!products) {
     return res.status(404).json({ message: "No products found." });
   }
+
+  const productsWithLikeStatus = products.map((product) => ({
+    ...product,
+    likeStatus: product.likes.length > 0 ? product.likes[0].like : false,
+  }));
 
   // if (products) {
   //   const views = await prisma.views.findMany({
@@ -110,7 +122,7 @@ export const getAllProducts = CatchAsync(async (req, res) => {
   // }
   return res.status(200).json({
     status: true,
-    products,
+    products: productsWithLikeStatus,
   });
 });
 
@@ -137,7 +149,14 @@ export const getSingleProduct = CatchAsync(async (req, res) => {
     },
     include: {
       _count: {
-        select: { likes: true, views: true },
+        select: {
+          likes: {
+            where: {
+              like: true,
+            },
+          },
+          views: true,
+        },
       },
       images: true,
       comments: true,
@@ -179,10 +198,10 @@ export const postLike = CatchAsync(async (req, res) => {
   const existingLike = await prisma.likes.findFirst({
     where: {
       listedItemPost_id: parseInt(id),
+      user_id: parseInt(req.user.id),
     },
   });
 
-  console.log(existingLike);
   if (existingLike) {
     const updatedLike = await prisma.likes.update({
       where: { id: existingLike.id },
@@ -191,6 +210,7 @@ export const postLike = CatchAsync(async (req, res) => {
         like: true,
       },
     });
+    console.log(updatedLike, "updated");
     return res.status(200).json({ status: true, data: updatedLike });
   } else {
     const newLike = await prisma.likes.create({
@@ -203,19 +223,7 @@ export const postLike = CatchAsync(async (req, res) => {
         like: true,
       },
     });
+    console.log(newLike, "newly");
     return res.status(200).json({ status: true, data: newLike });
   }
-
-  // if (product) {
-  //   await prisma.views.create({
-  //     data: {
-  //       postId: product.post_id,
-  //       userId: product.userId,
-  //     },
-  //   });
-  // }
-
-  res.status(200).json({
-    status: true,
-  });
 });

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import Breadcrums from './sections/Breadcrums'
 import SearchSection from './sections/SearchSection'
 import ProductList from './sections/ProductList'
@@ -9,21 +9,27 @@ import { useQuery } from '@tanstack/react-query'
 import ErrorUi from '../../components/ErrorUi'
 import { useSearchParams } from 'react-router-dom'
 import { AuthContext } from '../../auth/AuthContext'
+import { useDebounce } from '../../hooks/Hooks'
 
 function Products() {
 
     const { user } = useContext(AuthContext)
-    const [URLSearchParams, SetURLSearchParams] = useSearchParams();
+    const [URLSearchParams] = useSearchParams();
     const [products, setProducts] = useState([])
 
-    const searchParams = {}
-    URLSearchParams?.forEach((value, key, parent) => {
-        if (searchParams[key]) {
-            searchParams[key] = value
-        } else {
-            searchParams[key] = value
-        }
-    });
+    const [pendingLike, setPendingLike] = useState(null);
+
+
+
+    const searchParams = useMemo(() => {
+        const params = {};
+        URLSearchParams.forEach((value, key) => {
+            params[key] = value;
+        });
+        return params;
+    }, [URLSearchParams]);
+
+
     const { isPending, error, data } = useQuery({
         queryKey: ['GET_PRODUCTS', searchParams],
         queryFn: async () => {
@@ -32,18 +38,40 @@ function Products() {
         }
     });
 
-    const handleLike = async (id) => {
-        console.log(id);
-        setProducts(products.map((itm) => itm.post_id === id ? {
-            ...itm, likes: [{ like: !itm?.likes[0]?.like }]
-        } : { ...itm }));
-        const res = await POST_LIKE({ id, like: true });
-        if (!res) {
-            setProducts(products.map((itm) => itm.post_id === id ? {
-                ...itm, likes: [{ like: false }]
-            } : { ...itm }));
+    const debouncedPendingLike = useDebounce(pendingLike, 500);
+
+    useEffect(() => {
+        if (debouncedPendingLike) {
+            const handleDebouncedLike = async () => {
+                const { id, likeStatus } = debouncedPendingLike;
+                const res = await POST_LIKE({ id, like: likeStatus });
+                if (!res) {
+                    setProducts(products.map((itm) =>
+                        itm.post_id === id ? {
+                            ...itm,
+                            likeStatus: false,
+                            _count: { ...itm._count, likes: (itm._count.likes - 1) },
+                        } : { ...itm }
+                    ));
+                }
+            };
+            handleDebouncedLike();
         }
-    }
+    }, [debouncedPendingLike, setProducts, products, POST_LIKE]);
+
+
+    const handleLike = useCallback((id) => {
+        setProducts(products.map((itm) =>
+            itm.post_id === id ? {
+                ...itm,
+                likeStatus: !itm.likeStatus,
+                _count: { ...itm._count, likes: !itm?.likeStatus ? (itm._count.likes + 1) : (itm._count.likes - 1) },
+            } : { ...itm }
+        ));
+
+        const _products = products.find((itm) => itm.post_id === id);
+        setPendingLike({ id, likeStatus: !_products.likeStatus });
+    }, [products]);
 
     useEffect(() => {
         setProducts(data?.products)

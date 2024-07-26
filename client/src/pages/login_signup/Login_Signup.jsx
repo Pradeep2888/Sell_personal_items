@@ -78,7 +78,15 @@ function Login_Signup() {
     const [contactNumber, setContactNumber] = useState({ countryCode: '', contactNumber: '' });
 
     const [accountType, setAccountType] = useState("");
-    const [sendNext, setSendNext] = useState(false)
+    const [sendNext, setSendNext] = useState(false);
+
+    const [disableOptions, setDisableOptions] = useState({
+        "buyer": false,
+        "seller": false,
+        "donor": false
+    })
+
+    console.log(accountType);
 
     const [rememberMe, setRememberMe] = useState(false);
 
@@ -93,9 +101,21 @@ function Login_Signup() {
         }
         if (location.state?.for === 'sell') {
             setAccountType('SELLER')
+            setDisableOptions({
+                ...disableOptions, donor: true, buyer: true
+            })
         }
         if (location.state?.for === 'donor') {
             setAccountType('DONOR')
+            setDisableOptions({
+                ...disableOptions, seller: true, buyer: true
+            })
+        }
+        if (location.state?.for === 'buyer') {
+            setDisableOptions({
+                ...disableOptions, seller: true, donor: true
+            })
+            setAccountType('BUYER')
         }
         // console.log(location.state.for);
     }, []);
@@ -116,6 +136,7 @@ function Login_Signup() {
             dropdownRef.current.children[1].style.display = 'none'
         }
     };
+
     const handleToggle = () => {
         dropdownRef.current.children[1].style.display = dropdownRef.current.children[1].style.display === 'block' ? 'none' : 'block'
     };
@@ -176,7 +197,7 @@ function Login_Signup() {
             return;
         }
         const formdata = await getFormData(signupinputrefs);
-        
+
         const validationErrors = validator({ ...formdata, ...contactNumber, role: roleData });
         // console.log(validationErrors);
         for (let i = 0; i < Object.keys(validationErrors).length; i++) {
@@ -225,37 +246,37 @@ function Login_Signup() {
                             <div className='flex justify-center items-center relative overflow-hidden'>
                                 <div className={`${sendNext ? "hidden" : "absolute bg-white z-20 h-full w-full flex flex-col justify-between"}`}>
                                     <div className='w-full'>
-                                        <h1 className='text-primary text-xl md:text-3xl lg:text-4xl font-bold text-center'>Login With</h1>
+                                        <h1 className='text-primary text-xl md:text-3xl lg:text-4xl font-bold text-center '>Login With</h1>
                                         <div className='flex flex-col gap-5 mt-20 px-4 justify-center'>
                                             {/* {user.donor &&  */}
-                                            <div className={`ring-2 ring-bdr rounded-md transition-all ease-in-out duration-500 hover:ring-helper hover:shadow-xl  font-medium ${accountType === 'BUYER' ? "ring-helper text-helper" : "text-primary"}`}>
+                                            <div className={`ring-2 ring-bdr rounded-md transition-all ease-in-out duration-500 ${disableOptions.buyer ? "cursor-not-allowed" : "hover:ring-helper hover:shadow-xl"}   font-medium ${accountType === 'BUYER' ? "ring-helper text-helper" : "text-primary"}`}>
                                                 {/* <Link to='/panel/create' replace={true} className='flex flex-col items-center justify-center text-center p-4'>Seller Account</Link> */}
                                                 <label
                                                     // to='/donate' 
                                                     // replace={true} 
-                                                    className='flex flex-col items-center justify-center text-center p-4 relative '>
-                                                    <input className='opacity-0 absolute' type="radio" value={"BUYER"} checked={accountType === 'BUYER'} onChange={(e) => setAccountType(e.target.value)} />
+                                                    className={`flex flex-col items-center justify-center text-center p-4 relative ${disableOptions.buyer ? "cursor-not-allowed" : ""}`}>
+                                                    <input disabled={disableOptions.buyer} className='opacity-0 absolute' type="radio" value={"BUYER"} checked={accountType === 'BUYER'} onChange={(e) => setAccountType(e.target.value)} />
                                                     Buyer Account
                                                 </label>
                                             </div>
-                                            <div className={`ring-2 ring-bdr rounded-md transition-all ease-in-out duration-500 hover:ring-helper hover:shadow-xl  font-medium ${accountType === 'DONOR' ? "ring-helper text-helper" : "text-primary"}`}>
+                                            <div className={`ring-2 ring-bdr rounded-md transition-all ease-in-out duration-500 ${disableOptions.donor ? "cursor-not-allowed" : "hover:ring-helper hover:shadow-xl"} font-medium ${accountType === 'DONOR' ? "ring-helper text-helper" : "text-primary"}`}>
                                                 <label
                                                     // to='/donate' 
                                                     // replace={true} 
-                                                    className='flex flex-col items-center justify-center text-center p-4 relative '>
-                                                    <input className='opacity-0 absolute' type="radio" value={"DONOR"} checked={accountType === 'DONOR'} onChange={(e) => setAccountType(e.target.value)} />
+                                                    className={`flex flex-col items-center justify-center text-center p-4 relative ${disableOptions.donor ? "cursor-not-allowed" : ""}`}>
+                                                    <input disabled={disableOptions.donor} className='opacity-0 absolute' type="radio" value={"DONOR"} checked={accountType === 'DONOR'} onChange={(e) => setAccountType(e.target.value)} />
                                                     Donor Account
                                                 </label>
                                             </div>
                                             {/* } */}
                                             {/* {user.seller &&  */}
-                                            <div className={`ring-2 ring-bdr rounded-md transition-all ease-in-out duration-500 hover:ring-helper hover:shadow-xl  font-medium ${accountType === 'SELLER' ? "ring-helper text-helper" : "text-primary"}`}>
+                                            <div className={`ring-2 ring-bdr rounded-md transition-all ease-in-out  duration-500 ${disableOptions.seller ? "cursor-not-allowed" : "hover:ring-helper hover:shadow-xl"} font-medium ${accountType === 'SELLER' ? "ring-helper text-helper" : "text-primary"}`}>
                                                 {/* <Link to='/panel/create' replace={true} className='flex flex-col items-center justify-center text-center p-4'>Seller Account</Link> */}
                                                 <label
                                                     // to='/donate' 
                                                     // replace={true} 
-                                                    className='flex flex-col items-center justify-center text-center p-4 relative '>
-                                                    <input className='opacity-0 absolute' type="radio" value={"SELLER"} checked={accountType === 'SELLER'} onChange={(e) => setAccountType(e.target.value)} />
+                                                    className={`flex flex-col items-center justify-center text-center p-4 relative ${disableOptions.seller ? "cursor-not-allowed" : ""}`}>
+                                                    <input disabled={disableOptions.seller} className='opacity-0 absolute' type="radio" value={"SELLER"} checked={accountType === 'SELLER'} onChange={(e) => setAccountType(e.target.value)} />
                                                     Seller Account
                                                 </label>
                                             </div>
