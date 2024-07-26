@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Breadcrums from './sections/Breadcrums'
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { IMAGEURL } from '../../utils/constants'
 import ErrorUi from '../../components/ErrorUi';
 import { AdminIcon, CompareIcon, EmailIcon, LikeIcon, MessageIcon, MobileIcon, ViewIcon } from '../../components/Icons';
@@ -11,9 +11,28 @@ import axios from 'axios';
 import { fileUploadEndpoints } from '../../services/api';
 import { GET_SINGLE_PRODUCTS } from '../../services/operations/productsApi';
 import { useQueryData } from '../../hooks/Hooks';
+import EmailModal from '../../components/EmailModal';
+import { AuthContext } from '../../auth/AuthContext';
+import { SEND_PURCHASE_REQUEST } from '../../services/operations/PurchaseRequestApi';
 
 
 const ProductDetail = () => {
+
+
+    const { user } = useContext(AuthContext)
+    const [modalOpen, setModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+
+
+    const openModal = () => {
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsLoading(false)
+        setModalOpen(false);
+    };
 
     const params = useParams()
     const searchQuery = useQueryData();
@@ -21,7 +40,7 @@ const ProductDetail = () => {
     console.log(searchQuery);
 
 
-    const { isPending, error, data, isLoading } = useQuery({
+    const { isPending, error, data } = useQuery({
         queryKey: ['GET_PRODUCT_BY_ID'],
         queryFn: async () => {
             let res = await GET_SINGLE_PRODUCTS(params.slug, searchQuery);
@@ -101,19 +120,37 @@ const ProductDetail = () => {
         setShow(value)
     };
 
-    const handlePostReview = () => {
-
-    }
+    const handlePostReview = () => { }
 
     const OpenChatModal = () => {
-        toast.error("You can't send message to yourself!")
-    }
+        toast.error("You can't send message to yourself!");
+        setModalOpen(true);
+    };
+
     const OpenEmailModal = () => {
-        toast.error("You can't send email to yourself!")
+        if (!user) {
+            return navigate('/login-register?tab=login', { state: { to: location.pathname } });
+        }
+        console.log(user.id, product.userId);
+        if (user.id === product.userId) {
+            return toast.error("You can't send request to yourself!");
+        }
+        setModalOpen(true);
     }
 
+    const handleEmailSend = async (message) => {
+        console.log(message);
+        const res = await SEND_PURCHASE_REQUEST({ buyerId: user.id, productId: product.post_id, message });
+        console.log(res);
+        if (res.status) {
+            toast.success(res.message);
+            setModalOpen(false);
+            // navigate('/panel/my-orders');
+            // toast.success("Email sent successfully")
+        }
+    }
 
-    if (isLoading && isPending) {
+    if (isPending) {
         return <LoadingUi />
     }
     if (error) {
@@ -121,13 +158,15 @@ const ProductDetail = () => {
     }
 
     const { product } = data;
-    console.log(product);
     const breadcrumsData = [
         { name: "Home", link: "/" },
         { name: 'Search Result', link: `/products` },
         { name: product.category.name, link: `/products?type=sale&category=${product.categoryId}` },
         { name: product.name, link: null }
     ]
+
+    console.log(product);
+
 
     return (
         <div className="relative bg-[#F8FAFD]">
@@ -147,7 +186,7 @@ const ProductDetail = () => {
                                         {/* <span className='p-2 bg-light opacity-35  rounded-full'><AdminIcon /></span> */}
                                         <p className='text-light font-medium'>1 second ago</p>
                                         <span className='p-1 mt-0.5'><ViewIcon /></span>
-                                        <p className='text-light font-medium'>{product.views.length} Views</p>
+                                        <p className='text-light font-medium'>{product._count.views} Views</p>
                                     </div>
                                 </div>
                                 <div className='mt-6 lg:px-6 px-2 text-primary'>
@@ -247,7 +286,7 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='relative lg:w-1/3 md:w-2/3'>
+                        <div className='relative lg:w-1/2 md:w-2/3'>
                             <div className=' ml-10 border border-bdr rounded-md bg-white'>
                                 <div className='relative px-8 py-4 w-full'>
                                     <div className='w-full flex items-center justify-start gap-4 py-4'>
@@ -280,7 +319,7 @@ const ProductDetail = () => {
                                 </div>
                                 <div className='bg-white px-8 w-full my-6'>
                                     <div className='flex justify-between items-center gap-4'>
-                                        <button className='bg-helper px-8 py-4 text-white font-bold text-base' onClick={() => OpenChatModal()}>
+                                        {/* <button className='bg-helper px-8 py-4 text-white font-bold text-base' onClick={() => OpenChatModal()}>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width={16}
@@ -295,10 +334,10 @@ const ProductDetail = () => {
                                                     strokeWidth="0.1"
                                                 />
                                             </svg>
-                                            <span className='ml-4'>Chat</span>
-                                        </button>
-                                        <button className='bg-helper px-8 py-4 text-white font-bold text-base' onClick={() => OpenEmailModal()}>
-                                            <svg
+                                            <span className='ml-4'>Send Request</span>
+                                        </button> */}
+                                        <button className='bg-helper px-8 py-4 text-white font-bold text-base' onClick={(message) => OpenEmailModal(message)}>
+                                            {/* <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width={14}
                                                 height={11}
@@ -309,13 +348,22 @@ const ProductDetail = () => {
                                                     d="M1.4 0C0.6279 0 0 0.616687 0 1.375V9.625C0 10.3833 0.6279 11 1.4 11H12.6C13.3721 11 14 10.3833 14 9.625V1.375C14 0.616687 13.3721 0 12.6 0H1.4ZM1.4 1.375H12.6V1.37903L7 4.8125L1.4 1.37769V1.375ZM1.4 2.75269L7 6.1875L12.6 2.75403L12.6014 9.625H1.4V2.75269Z"
                                                     fill="#FDFDFE"
                                                 />
-                                            </svg>
-                                            <span className='ml-4'>Email</span>
+                                            </svg> */}
+                                            <span className='ml-4'>Send Purchase Request</span>
                                         </button>
+                                        <EmailModal
+                                            isLoading={isLoading}
+                                            isOpen={modalOpen}
+                                            title="Product Purchase Request"
+                                            product={product}
+                                            onClose={closeModal}
+                                            onConfirm={handleEmailSend}
+                                        />
+
                                     </div>
                                 </div>
                             </div>
-                            <div className=' ml-10 mt-8 border border-bdr rounded-md bg-white flex justify-center py-4'>
+                            {/* <div className=' ml-10 mt-8 border border-bdr rounded-md bg-white flex justify-center py-4'>
                                 <div className="grid grid-cols-3 items-center gap-4 w-fit ">
                                     <div className="rounded-full border size-12  flex justify-center items-center cursor-pointer hover:border-[#537CD9]">
                                         <ViewIcon />
@@ -323,11 +371,11 @@ const ProductDetail = () => {
                                     <div className="rounded-full border size-12  flex justify-center items-center cursor-pointer hover:border-[#537CD9]">
                                         <CompareIcon />
                                     </div>
-                                    <div className="rounded-full border size-12   flex justify-center items-center cursor-pointer hover:border-[#537CD9]">
+                                    <div className={`rounded-full border size-12   flex justify-center items-center cursor-pointer hover:border-[#537CD9] `}>
                                         <LikeIcon />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className=' ml-10 mt-8 flex justify-center items-center gap-4'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.91804 8.89643e-05C9.23321 0.00563136 8.55081 0.270265 8.03664 0.792843L0.762291 8.18722C-0.266032 9.23236 -0.252158 10.9347 0.792997 11.963L8.18738 19.2374C9.23252 20.2657 10.9349 20.2518 11.9632 19.2067L19.2375 11.8132C19.2379 11.8129 19.2382 11.8126 19.2385 11.8123C20.266 10.7667 20.252 9.06483 19.2068 8.03649L11.8125 0.762137C11.2899 0.247976 10.6029 -0.00545358 9.91804 8.89643e-05ZM9.93013 1.41997C10.2462 1.41742 10.5631 1.53768 10.8104 1.78099L18.2047 9.05535C18.6993 9.54195 18.7052 10.3161 18.2187 10.8111L10.9443 18.2046C10.4577 18.6991 9.68406 18.7052 9.18949 18.2185L1.7951 10.9442C1.30055 10.4576 1.29453 9.68391 1.78115 9.18933L9.0555 1.79495C9.2988 1.54767 9.61405 1.42253 9.93013 1.41997ZM9.98875 4.74917C9.79956 4.75213 9.61926 4.83 9.48739 4.9657C9.35552 5.1014 9.28286 5.28386 9.28532 5.47307V11.1898C9.28398 11.2845 9.30148 11.3785 9.33679 11.4664C9.3721 11.5543 9.42452 11.6343 9.49101 11.7017C9.5575 11.7691 9.63673 11.8227 9.72409 11.8592C9.81146 11.8958 9.90522 11.9146 9.99992 11.9146C10.0946 11.9146 10.1884 11.8958 10.2757 11.8592C10.3631 11.8227 10.4423 11.7691 10.5088 11.7017C10.5753 11.6343 10.6277 11.5543 10.663 11.4664C10.6984 11.3785 10.7159 11.2845 10.7145 11.1898V5.47307C10.7158 5.3775 10.6978 5.28265 10.6618 5.19414C10.6257 5.10563 10.5723 5.02525 10.5046 4.95775C10.4369 4.89026 10.3564 4.83702 10.2678 4.80119C10.1792 4.76537 10.0843 4.74768 9.98875 4.74917ZM9.99992 13.3336C9.74722 13.3336 9.50488 13.434 9.32619 13.6127C9.14751 13.7914 9.04712 14.0337 9.04712 14.2864C9.04712 14.5391 9.14751 14.7814 9.32619 14.9601C9.50488 15.1388 9.74722 15.2392 9.99992 15.2392C10.2526 15.2392 10.495 15.1388 10.6736 14.9601C10.8523 14.7814 10.9527 14.5391 10.9527 14.2864C10.9527 14.0337 10.8523 13.7914 10.6736 13.6127C10.495 13.434 10.2526 13.3336 9.99992 13.3336Z" fill="#ED5E4F"></path></svg>
                                 <p className='text-[#ED5E4F]'>Report abuse</p>

@@ -61,12 +61,14 @@ export const postProduct = CatchAsync(async (req, res, next) => {
   // try {
   const { name, description, category, images, _attachments, active } =
     req.body;
+
+  console.log(category);
   const slug = Date.now() + name.replaceAll(" ", "-");
   const product = await prisma.listedItem.create({
     data: {
       name,
       desription: description,
-      category,
+      categoryId: category,
       slug,
       userId: req.user.id,
       images: {
@@ -91,7 +93,7 @@ export const postProduct = CatchAsync(async (req, res, next) => {
   //   const productImages = await prisma.images.createMany({
   //     data: [...newImages],
   //   });
-  console.log(product);
+  // console.log(product);
   res
     .status(200)
     .json({ status: true, message: "Product is listed successfully." });
@@ -222,6 +224,22 @@ export const getModerationProductsforAdminByID = CatchAsync(
 
 export const deleteModerateProducts = CatchAsync(async (req, res, next) => {
   const { id } = req.params;
+
+  // const product = await prisma.listedItem.findUnique({
+  //   where: {
+  //     post_id: parseInt(id),
+  //   },
+  //   include: {
+  //     images: true,
+  //     comments: true,
+  //     views: true,
+  //     likes: true,
+  //     Donations: true,
+  //   },
+  // });
+
+  // console.log(product);
+
   const product = await prisma.listedItem.delete({
     where: {
       post_id: parseInt(id),
@@ -231,6 +249,7 @@ export const deleteModerateProducts = CatchAsync(async (req, res, next) => {
       comments: true,
       views: true,
       likes: true,
+      Donations: true,
     },
   });
   if (!product) {

@@ -10,27 +10,25 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-
-import { CookiesProvider } from 'react-cookie'
 import { AuthProvider } from './auth/AuthContext.jsx'
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <BackdropLoaderProvider>
-            <BackdropLoader>
-              <Main />
-            </BackdropLoader>
-          </BackdropLoaderProvider>
+  <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <BackdropLoaderProvider>
+          <BackdropLoader>
+            <Main />
+          </BackdropLoader>
+        </BackdropLoaderProvider>
 
-          {/* <BackdropLoader /> */}
-          <Toaster position="top-center" theme='light' richColors />
-        </BrowserRouter>
-      </QueryClientProvider>
-    </AuthProvider>
+        {/* <BackdropLoader /> */}
+        <Toaster position="top-center" theme='light' richColors />
+      </BrowserRouter>
+    </QueryClientProvider>
+  </AuthProvider>
   //</React.StrictMode>
 )
 

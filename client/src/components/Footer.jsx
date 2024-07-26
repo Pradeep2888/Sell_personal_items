@@ -57,6 +57,18 @@ function Footer() {
                                         )
                                     })
                                 }
+                                <li className='py-3' >
+                                    <Link className='flex gap-3 group:' to={'/products?type=sale'} >
+                                        <span className='text-white'><i aria-hidden="true" className="fas fa-angle-double-right" /></span>
+                                        <span className='text-[#DFE1E3] font-normal transition ease-in-out hover:text-[#FFB301]'>Items for Sale</span>
+                                    </Link>
+                                </li>
+                                <li className='py-3' >
+                                    <Link className='flex gap-3 group:' to={'/products?type=donation'} >
+                                        <span className='text-white'><i aria-hidden="true" className="fas fa-angle-double-right" /></span>
+                                        <span className='text-[#DFE1E3] font-normal transition ease-in-out hover:text-[#FFB301]'>Items for Donation</span>
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
                     </div>

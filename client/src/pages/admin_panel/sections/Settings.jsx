@@ -2,13 +2,15 @@ import { toast } from 'sonner'
 import Topsection from './components/Topsection'
 import ProfileSettings from './ProfileSettings'
 import Modal from '../../../components/Modal';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { DELETE_PROFILE } from '../../../services/operations/adminApi';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalState } from '../../../store/AuthStore';
+import { AuthContext } from '../../../auth/AuthContext';
 
 function Settings() {
 
+  const { logout } = useContext(AuthContext)
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate()
@@ -23,7 +25,6 @@ function Settings() {
   };
 
 
-  const logout = useGlobalState(state => state.logout);
   const handleConfirm = async () => {
     setIsLoading(true)
     // Handle confirm logic here

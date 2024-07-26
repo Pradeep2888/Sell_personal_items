@@ -52,7 +52,7 @@ export const BackdropLoaderProvider = ({ children }) => {
 
 export const GlobalLoader = ({loadingText}) => {
     return (
-        <div className='h-screen flex flex-col justify-center items-center'>
+        <div className='h-screen flex flex-col justify-center items-center relative'>
             <section className="dots-container">
                 <div className="dot"></div>
                 <div className="dot"></div>

@@ -82,8 +82,8 @@ function AdminPanelHeader() {
 
 
     return (
-        <div className="relative bg-[#FDFDFE]">
-            <div className="max-w-[1200px] mx-auto py-14 tab-nav">
+        <div className="relative bg-[#FDFDFE] px-4">
+            <div className="max-w-[1200px] mx-auto py-8 lg:py-14 mb-2 lg:mb-0 tab-nav shadow-md lg:shadow-none rounded-md px-2 lg:px-0">
                 <div className="flex justify-start items-center">
                     <ul className='flex justify-start items-center gap-4'>
                         {[...user.role === 'ADMIN' ? AdminNavLinkList : UserNavLinkList].map((navLink, index) => (

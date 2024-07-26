@@ -53,5 +53,18 @@ export const adminEndpoints = {
 
 export const productEndPoint = {
   getProducts_API: BASE_URL + "/products",
+  getProduct_API: BASE_URL + "/product",
   getProductCategory_API: BASE_URL + "/product-categories",
+  postLike_API: BASE_URL + "/like",
+};
+
+export const newsLetterEndPoint = {
+  subscribeNewsletter: BASE_URL + "/newsletter/subscribe-newsletter",
+};
+
+export const purchaseRequestEndpoints = {
+  sendRequest: BASE_URL + "/purchase-requests/send",
+  getRequest: BASE_URL + "/purchase-requests",
+  statusUpdate: BASE_URL + "/purchase-requests",
+  getSingleRequest: BASE_URL + "/purchase-requests",
 };

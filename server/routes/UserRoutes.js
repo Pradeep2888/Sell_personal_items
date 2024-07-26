@@ -27,6 +27,7 @@ import {
   upadatePassword,
   upadateEmail,
   deleteUser,
+  deleteModerateProducts,
 } from "../controllers/User.Controllers.js";
 import {
   getPlans,
@@ -39,6 +40,7 @@ import {
   getAllProducts,
   getProductCategories,
   getSingleProduct,
+  postLike,
 } from "../controllers/Products.Controllers.js";
 const prisma = new PrismaClient();
 
@@ -99,7 +101,7 @@ router.route("/plans").get(getPlans);
 router.route("/plans/:id").get(getPlansById);
 
 // for donation
-router.route("/donation/create").post(createDonation);
+router.route("/donation/create").post(authMiddleware, createDonation);
 
 //user routes
 
@@ -119,7 +121,7 @@ router
 router
   .route("/moderation/:id")
   .get(authMiddleware, getModerationProductsforAdminByID)
-  .delete(authMiddleware, deleteMyProduct);
+  .delete(authMiddleware, deleteModerateProducts);
 
 router.route("/my-products").get(authMiddleware, getMyProducts);
 router
@@ -130,8 +132,9 @@ router
 
 // for products
 
-router.route("/products").get(getAllProducts);
-router.route("/products/:slug").get(getSingleProduct);
+router.route("/products/:userId?").get(getAllProducts);
+router.route("/like").post(authMiddleware, postLike);
+router.route("/product/:slug").get(getSingleProduct);
 router.route("/product-categories").get(getProductCategories);
 
 export default router;

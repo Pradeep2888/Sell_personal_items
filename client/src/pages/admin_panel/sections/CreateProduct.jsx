@@ -113,7 +113,7 @@ function CreateProduct() {
     const images = [...gallery].map((item) => ({ path: item.path, name: item.name, url: item.url, type: "GALLARY" }));
     const _attachments = [...attachments].map((item) => ({ path: item.path, name: item.name, url: item.url, type: "ATTACHMENTS" }));
 
-    const res = await ADDPRODUCT({ name: productName, description, category: category.value, images, _attachments });
+    const res = await ADDPRODUCT({ name: productName, description, category: category.id, images, _attachments });
 
     if (res.status) {
       setAttachment([]);
@@ -125,6 +125,8 @@ function CreateProduct() {
       toast.success('Product added successfully!')
     }
   }
+
+  console.log(category);
 
   const handleEditorChange = (content) => {
     setDescription(content);

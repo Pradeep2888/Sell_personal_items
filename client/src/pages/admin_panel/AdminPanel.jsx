@@ -7,7 +7,9 @@ function AdminPanel() {
     return (
         <>
             <AdminPanelHeader />
-            <Outlet />
+            <div className='relative px-4'>
+                <Outlet />
+            </div>
         </>
     )
 }

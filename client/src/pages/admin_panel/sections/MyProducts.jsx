@@ -48,7 +48,7 @@ function MyProducts() {
   }
 
   if (error) {
-    return <ErrorUi error={error.name} />
+    return <ErrorUi error={error.name}/>
   }
 
   const handleDelete = async (id) => {

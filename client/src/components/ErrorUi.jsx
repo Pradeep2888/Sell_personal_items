@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useGlobalState } from '../store/AuthStore'
 
 function ErrorUi({ error }) {
+
+
+    // useEffect(() => {
+    //     callback()
+    // }, [])
+
     return (
         <div className="bg-white py-12 sm:py-16">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">

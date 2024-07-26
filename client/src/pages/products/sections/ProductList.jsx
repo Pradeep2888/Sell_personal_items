@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { AdminIcon, CompareIcon, LikeIcon, ViewIcon } from '../../../components/Icons'
 import MensWhiteShoes from '../../../assets/Mens-White-Shoes.jpg'
 import { Tooltip } from 'react-tooltip'
 import TooltipIcon from '../../../components/Tooltip'
 import NoRecords from '../../admin_panel/sections/components/NoRecords'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../../auth/AuthContext'
 
 
 
-function ProductList({ products, isPending }) {
+function ProductList({ products, isPending, handleLike }) {
+
+
+  const { user } = useContext(AuthContext)
+
+
 
 
   if (isPending) {
@@ -42,7 +48,7 @@ function ProductList({ products, isPending }) {
   return (
     <div className='grid grid-cols-3 gap-4'>
       {
-        products.length > 0 ? products.map((product, index) => {
+        products?.length > 0 ? products?.map((product, index) => {
           return (
             <div key={index} className="relative flex flex-col rounded-lg group cursor-pointer">
               <Link to={`/products/${product.slug}`} className="   transition group-hover:shadow-lg overflow-hidden bg-[#FDFDFE]">
@@ -53,7 +59,7 @@ function ProductList({ products, isPending }) {
                 </div>
                 <div className="border-b  border-[#F2F4F8] flex flex-col justify-between">
                   <div className="p-6">
-                    <h1 className="text-xl font-semibold min-h-[56px] text-start text-[#4E606F]">{product.name}</h1>
+                    <h1 className="text-xl font-semibold min-h-[56px] text-start text-[#4E606F] line-clamp-2">{product.name}</h1>
                   </div>
                 </div>
               </Link>
@@ -62,10 +68,11 @@ function ProductList({ products, isPending }) {
                   <div className="grid grid-cols-3 items-center gap-4">
                     <Link to={`/products/${product.slug}`}><TooltipIcon IconComponent={ViewIcon} tooltipText="View" id='View' /></Link>
                     {/* <TooltipIcon IconComponent={CompareIcon} tooltipText="Compare" id={'Compare'} /> */}
-                    <TooltipIcon IconComponent={LikeIcon} tooltipText="Like" id={'Like'} />
+                    {user && <TooltipIcon IconComponent={LikeIcon} tooltipText="Like" id={'Like'} like={product?.likes[0]?.like} onClick={() => handleLike(product.post_id)} />}
                   </div>
-                  <div className='text-end'>
-                    <p className="text-sm font-medium text-[#9A818C]">{product.views.length} views</p>
+                  <div className='text-end flex gap-2'>
+                    <p className="text-sm font-medium text-[#9A818C]">{product._count.views} views</p>
+                    <p className="text-sm font-medium text-[#9A818C]">{product._count.likes} likes</p>
                   </div>
                 </div>
               </div>

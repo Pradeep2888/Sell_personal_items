@@ -402,3 +402,7 @@ button {
   background-color: var(--tab-panel-bg-color);
   border-radius: .5em;
 }
+
+.ck .ck-powered-by {
+  display: none !important;
+}

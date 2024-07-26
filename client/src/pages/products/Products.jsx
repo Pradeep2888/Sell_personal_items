@@ -1,17 +1,20 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Breadcrums from './sections/Breadcrums'
 import SearchSection from './sections/SearchSection'
 import ProductList from './sections/ProductList'
 import ProductFilter from './sections/ProductFilter'
 import ProductListHeader from './sections/ProductListHeader'
-import { GET_ALL_PRODUCTS, GET_PRODUCT_CATEGORY } from '../../services/operations/productsApi'
+import { GET_ALL_PRODUCTS, GET_PRODUCT_CATEGORY, POST_LIKE } from '../../services/operations/productsApi'
 import { useQuery } from '@tanstack/react-query'
 import ErrorUi from '../../components/ErrorUi'
 import { useSearchParams } from 'react-router-dom'
+import { AuthContext } from '../../auth/AuthContext'
 
 function Products() {
 
+    const { user } = useContext(AuthContext)
     const [URLSearchParams, SetURLSearchParams] = useSearchParams();
+    const [products, setProducts] = useState([])
 
     const searchParams = {}
     URLSearchParams?.forEach((value, key, parent) => {
@@ -24,18 +27,37 @@ function Products() {
     const { isPending, error, data } = useQuery({
         queryKey: ['GET_PRODUCTS', searchParams],
         queryFn: async () => {
-            const product = await GET_ALL_PRODUCTS(searchParams);
+            const product = await GET_ALL_PRODUCTS(searchParams, user ? user.id : null);
             return { products: product.products }
         }
     });
 
+    const handleLike = async (id) => {
+        console.log(id);
+        setProducts(products.map((itm) => itm.post_id === id ? {
+            ...itm, likes: [{ like: !itm?.likes[0]?.like }]
+        } : { ...itm }));
+        const res = await POST_LIKE({ id, like: true });
+        if (!res) {
+            setProducts(products.map((itm) => itm.post_id === id ? {
+                ...itm, likes: [{ like: false }]
+            } : { ...itm }));
+        }
+    }
 
+    useEffect(() => {
+        setProducts(data?.products)
+    }, [data])
 
     if (error) {
         return <ErrorUi error={error.message} />
     }
 
-    const products = data?.products
+    // const products = data?.products;
+
+
+
+
     return (
         <div className="bg-white w-full relative">
             <div className="bg-[#F8FAFD]  relative">
@@ -64,11 +86,11 @@ function Products() {
                                     </div>
                                     <div className='my-4'>
                                         <div>
-                                            <ProductList products={products} isPending={isPending} />
+                                            <ProductList products={products} isPending={isPending} handleLike={handleLike} />
                                         </div>
                                     </div>
                                     <div>
-                                        {isPending ? <div className='min-h-5 animate-pulse bg-loader w-full rounded-3xl'></div> : products.length > 0 && <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>{products?.length}</span> of <span className='text-[#374B5C] font-semibold'>{products?.length}</span> results</p>}
+                                        {isPending ? <div className='min-h-5 animate-pulse bg-loader w-full rounded-3xl'></div> : products?.length > 0 && <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>{products?.length}</span> of <span className='text-[#374B5C] font-semibold'>{products?.length}</span> results</p>}
                                     </div>
                                 </div>
                             </div>
