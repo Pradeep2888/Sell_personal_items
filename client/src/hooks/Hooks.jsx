@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export const useBrowserFocus = (onFocus) => {
@@ -71,5 +71,46 @@ export function useDebounce(value, delay) {
 
     return debouncedValue;
 }
+
+// hooks/useWebSocket.js
+export const useWebSocket = (url) => {
+    const [messages, setMessages] = useState([]);
+    const ws = useRef(null);
+
+    useEffect(() => {
+        ws.current = new WebSocket(url);
+
+        ws.current.onopen = () => {
+            console.log('WebSocket connected');
+        };
+
+        ws.current.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            setMessages((prev) => [...prev, message]);
+        };
+
+        ws.current.onclose = () => {
+            console.log('WebSocket disconnected');
+        };
+
+        ws.current.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        return () => {
+            ws.current.close();
+        };
+    }, [url]);
+
+    const sendMessage = useCallback((message) => {
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+            ws.current.send(JSON.stringify(message));
+        }
+    }, []);
+
+    return [messages, sendMessage];
+};
+
+
 
 

@@ -78,7 +78,7 @@ function Login_Signup() {
     const [contactNumber, setContactNumber] = useState({ countryCode: '', contactNumber: '' });
 
     const [accountType, setAccountType] = useState("");
-    const [sendNext, setSendNext] = useState(false);
+    const [sendNext, setSendNext] = useState(true);
 
     const [disableOptions, setDisableOptions] = useState({
         "buyer": false,
@@ -99,24 +99,24 @@ function Login_Signup() {
             inputrefs.current[1].value = savedPassword
             setRememberMe(true)
         }
-        if (location.state?.for === 'sell') {
-            setAccountType('SELLER')
-            setDisableOptions({
-                ...disableOptions, donor: true, buyer: true
-            })
-        }
-        if (location.state?.for === 'donor') {
-            setAccountType('DONOR')
-            setDisableOptions({
-                ...disableOptions, seller: true, buyer: true
-            })
-        }
-        if (location.state?.for === 'buyer') {
-            setDisableOptions({
-                ...disableOptions, seller: true, donor: true
-            })
-            setAccountType('BUYER')
-        }
+        // if (location.state?.for === 'sell') {
+        //     setAccountType('SELLER')
+        //     setDisableOptions({
+        //         ...disableOptions, donor: true, buyer: true
+        //     })
+        // }
+        // if (location.state?.for === 'donor') {
+        //     setAccountType('DONOR')
+        //     setDisableOptions({
+        //         ...disableOptions, seller: true, buyer: true
+        //     })
+        // }
+        // if (location.state?.for === 'buyer') {
+        //     setDisableOptions({
+        //         ...disableOptions, seller: true, donor: true
+        //     })
+        //     setAccountType('BUYER')
+        // }
         // console.log(location.state.for);
     }, []);
 
@@ -291,10 +291,12 @@ function Login_Signup() {
                                             <span className='text-primary text-sm'>and{" "}{message.split('.')[1].split('and')[1]}</span>
                                         </p>} */}
                                     </div>
-                                    <button onClick={handleNext} className='rounded w-full px-8 py-4 bg-[#537CD9] text-white font-bold mt-10'>Next</button>
+                                    {/* <button onClick={handleNext} className='rounded w-full px-8 py-4 bg-[#537CD9] text-white font-bold mt-10'>Next</button> */}
                                 </div>
                                 <div className='flex w-full flex-col gap-6'>
-                                    <h1 className='text-primary text-xl md:text-2xl lg:text-2xl font-bold text-center'>Login With {accountType === 'DONOR' ? "Donor" : accountType === 'SELLER' ? "Seller" : "Buyer"} Account</h1>
+                                    <h1 className='text-primary text-xl md:text-2xl lg:text-2xl font-bold text-center'>Login 
+                                        {/* With {accountType === 'DONOR' ? "Donor" : accountType === 'SELLER' ? "Seller" : "Buyer"} Account */}
+                                    </h1>
                                     <div className='relative mt-10'>
                                         <input ref={ref => inputrefs.current[0] = ref} required={true} autoComplete="false" className='py-4 w-full px-16 border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c] text-base font-medium' type="text" placeholder="Email or Username" name='usernameoremail' />
                                         <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>
@@ -339,12 +341,12 @@ function Login_Signup() {
                                         <div><Link className='text-[#ffb300] font-semibold' to={'/forget-password'}>Forget Password?</Link></div>
                                     </div>
                                     <button onClick={handleLogin} className='rounded w-full px-8 py-4 bg-[#537CD9] text-white font-bold'>{loading ? "Loading..." : "Login"}</button>
-                                    <button
+                                    {/* <button
                                         onClick={(e) => {
                                             e.preventDefault();
                                             setSendNext(false)
                                         }}
-                                        className='rounded w-full text-red-500 underline font-bold'>Go Back</button>
+                                        className='rounded w-full text-red-500 underline font-bold'>Go Back</button> */}
                                 </div>
                             </div>
                         </form> :

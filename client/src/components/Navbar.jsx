@@ -169,12 +169,12 @@ const Navbar = () => {
 
                         {user && user.seller && <div className='post_product_button'>
                             <Link to={loggedIn ? '/panel/create' : '/login-register?tab=login'} state={{ to: "/panel/create" }} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
-                                <span className='text-nowrap text-primary'>Post Your Product</span>
+                                <span className='text-nowrap text-primary'>Sell</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M5.00488 11.525V7.075H0.854883V5.125H5.00488V0.65H7.00488V5.125H11.1549V7.075H7.00488V11.525H5.00488Z" fill="#000"></path></svg>
                             </Link>
                         </div>}
                         {!user && <Link to={loggedIn ? '/panel/create' : '/login-register?tab=login'} state={{ to: "/panel/create", "for": "sell" }} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
-                            <span className='text-nowrap text-primary'>Post Your Product</span>
+                            <span className='text-nowrap text-primary'>Sell</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M5.00488 11.525V7.075H0.854883V5.125H5.00488V0.65H7.00488V5.125H11.1549V7.075H7.00488V11.525H5.00488Z" fill="#000"></path></svg>
                         </Link>}
                     </div>
