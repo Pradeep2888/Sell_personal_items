@@ -1,20 +1,11 @@
-import React, { useContext } from 'react'
-import belowbanner from '../../../assets/below-banner.png'
+import { useContext } from 'react'
 import SELLYOURPRODUCTS from '../../../assets/SELL-YOUR-PRODUCTS-.png'
-import CUSTOMERSUPPORT from '../../../assets/CUSTOMER-SUPPORT.png'
-import FINDYOURSTYLE from '../../../assets/FIND-YOUR-STYLE-.png'
 import REGISTERMEMBERSHIP from '../../../assets/REGISTER-MEMBERSHIP-.png'
-import LOVEATFIRSTSALE from '../../../assets/Love-At-First-Sale.jpg'
-import LOVEATFIRSTSALE2 from '../../../assets/Love-At-First-Sale-2.jpg'
 import { Link } from 'react-router-dom'
-import { useAuthStore } from '../../../store/AuthStore'
 import { AuthContext } from '../../../auth/AuthContext'
 
 function Services() {
-
     const { user } = useContext(AuthContext)
-
-
     return (
         <div className='w-full relative bg-white mb-20'>
             <div className='lg:mx-auto grid  lg:grid-cols-2 lg:gap-6 lg:max-w-7xl lg:mt-32 mt-20 mb-20 px-10 lg:px-0 gap-3'>
@@ -67,38 +58,22 @@ function Services() {
                 {/* <div className="relative col-span-2 ml-4 px-[30px] flex justify-center items-center"> */}
                 <div className='lg:px-[30px] max-w-6xl mx-auto'>
                     <div className=''>
-                        <h2 className=' text-center' style={{
-                            color: "#000000",
-                            fontFamily: "Montserrat, Sans-serif",
-                            fontSize: "24px",
-                            fontWeight: 'bold'
-                        }}>Love At First Sale!</h2>
+                        <h2 className=' text-center text-primary text-2xl font-bold' >Love At First Sale!</h2>
 
                     </div>
                     <div className=''>
-                        <h2 className='text-center' style={{
-                            color: "#000000",
-                            fontFamily: "Montserrat, Sans-serif",
-                            fontSize: "24px",
-                            fontWeight: 'bold'
-                        }}>Your Marketplace, Your Choice</h2>
+                        <h2 className='text-center text-light' >Your Marketplace, Your Choice</h2>
                     </div>
                     <div className=' mt-5'>
-                        <p className='font-normal text-center' style={{
-                            // textAlign: 'left',
-                            color: "#000000",
-                            fontFamily: "Noto Sans Display, Sans-serif",
-                            fontSize: '18px',
-                            lineHeight: '39px'
-                        }}>Welcome to Sell Personal Items, your leading destination for buying and selling high-quality used products online. Founded with a passion for merchandise and a commitment to creating a more conscious consumer culture, we aim to provide a platform where individuals can easily buy, sell, and discover unique items of their choice.
+                        <p className='font-light text-center px-2 text-light' >Welcome to Sell Personal Items, your leading destination for buying and selling high-quality used products online. Founded with a passion for merchandise and a commitment to creating a more conscious consumer culture, we aim to provide a platform where individuals can easily buy, sell, and discover unique items of their choice.
                             <br />Got too much stuff, right? Well, how about turning some of it into cold, hard cash?  In these economic times, it’s important to have a reliable place to raise money when you want to or get in a pinch, as we all do. That’s what “Sell Personal Items” is here for.
 
                             One of the best parts of our membership-only website is that it’s cheap and only for 90 days. After that, we will only get a small percentage of the sales.
 
                         </p>
                     </div>
-                    <div className='mt-4 flex justify-center items-center'>
-                        <Link to={'/memberships'} className='bg-[#537CD9] text-white text-xl font-medium py-2 px-7 rounded-md'>Get your membership started today!</Link>
+                    <div className='mt-8 md:mt-4 flex justify-center items-center'>
+                        <Link to={'/memberships'} className='bg-[#537CD9] text-white md:text-xl font-medium py-2 px-7 rounded-md'>Get your membership started today!</Link>
                     </div>
                     {/* </div> */}
                     {/* </div> */}

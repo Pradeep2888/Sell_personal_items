@@ -76,7 +76,7 @@ export const ProfileImage = ({ defaultData }) => {
     return (
         <>
             <div
-                className={`relative border flex justify-start gap-5 border-[#D5E3EE] p-4 mt-4 mx-6 rounded ${dragging ? 'bg-blue-50' : ""}`}
+                className={`relative border flex justify-start gap-5 border-[#D5E3EE] p-4 mt-4 lg:mx-6 rounded ${dragging ? 'bg-blue-50' : ""}`}
                 onDragEnter={handleDragEnter}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -87,7 +87,7 @@ export const ProfileImage = ({ defaultData }) => {
                     htmlFor={'profile'}
                     className={`border w-1/2 border-dashed cursor-pointer relative border-[#D5E3EE] rounded p-2  flex flex-col justify-center items-center gap-5 }`}>
                     <UploadImageIcon />
-                    <p className='text-lg text-primary font-semibold'><span className='text-helper'>Choose Profile Photo </span><span>or drag it here</span></p>
+                    <p className='text-sm lg:text-lg text-primary font-semibold'><span className='text-helper'>Choose Profile Photo </span><span>or drag it here</span></p>
                 </label>
                 {files && <div className='relative flex justify-center items-center gap-5 mb-5'>
                     <div className=' overflow-hidden rounded-full'>
@@ -98,7 +98,7 @@ export const ProfileImage = ({ defaultData }) => {
 
                 </div>}
             </div>
-            <div className='mt-8 flex justify-end items-end px-6'>
+            <div className='mt-8 flex justify-center lg:justify-end items-end px-6'>
                 <div>
                     <div className='post_product_button'>
                         <button onClick={(e) => handleSaveChanges(e)} className='bg-helper px-4  py-3 rounded-md flex items-center justify-between  gap-4 button'>

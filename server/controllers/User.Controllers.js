@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { CatchAsync } from "../utils/CatchAsync.js";
 import bcrypt from "bcryptjs";
 import { count, log } from "console";
+// import { broadcastService } from "../app.js";
 
 const prisma = new PrismaClient();
 
@@ -375,11 +376,13 @@ export const getMyProducts = CatchAsync(async (req, res, next) => {
       name: { contains: searchQuery, mode: "insensitive" },
     },
     include: {
-      images: true,
-      comments: true,
-      views: true,
-      likes: true,
-      category: true,
+      _count: { select: { views: true, likes: true, comments: true } },
+      images: {
+        select: {
+          image: true,
+        },
+      },
+      category: true
     },
     orderBy: {
       createdAt: order,
@@ -770,3 +773,21 @@ export const updateAccountDetails = CatchAsync(async (req, res, next) => {
     user: { ...newUser, password: undefined, verification: undefined },
   });
 });
+
+// export const getOnlineOfflineStatus = CatchAsync(async (req, res, next) => {
+//   const user = await prisma.users.update({
+//     where: {
+//       id: req.user.id,
+//     },
+//     select: {
+//       id: true,
+//       username: true,
+//       online: true,
+//     },
+//   });
+//   broadcastService.broadcast(user);
+//   return res.status(200).json({
+//     status: true,
+//     data: user,
+//   });
+// });

@@ -27,25 +27,25 @@ function AdminPanelHeader() {
             { name: 'Add New', link: '/panel/create' },
             { name: 'My Products', link: '/panel/my-products' },
             { name: 'Favorites', link: '/panel/favorites' },
-            // { name: 'Messages', link: '/panel/messages' },
-            // { name: 'My Orders', link: '/panel/my-orders' },
+            { name: 'Messages', link: '/panel/messages' },
+            { name: 'My Orders', link: '/panel/my-orders' },
             { name: 'Settings', link: '/panel/settings' },
         ]
     }
     if (user.donor) {
         UserNavLinkList = [
-            // { name: 'Add New', link: '/panel/create' },
+            { name: 'Add New', link: '/panel/create' },
             { name: 'My Products', link: '/panel/my-products' },
             { name: 'Favorites', link: '/panel/favorites' },
-            // { name: 'Messages', link: '/panel/messages' },
-            // { name: 'My Orders', link: '/panel/my-orders' },
+            { name: 'Messages', link: '/panel/messages' },
+            { name: 'My Orders', link: '/panel/my-orders' },
             { name: 'Settings', link: '/panel/settings' },
         ]
     }
     if (user.buyer) {
         UserNavLinkList = [
-            // { name: 'Add New', link: '/panel/create' },
-            // { name: 'My Products', link: '/panel/my-products' },
+            { name: 'Add New', link: '/panel/create' },
+            { name: 'My Products', link: '/panel/my-products' },
             { name: 'Favorites', link: '/panel/favorites' },
             { name: 'Messages', link: '/panel/messages' },
             { name: 'My Orders', link: '/panel/my-orders' },
@@ -54,7 +54,7 @@ function AdminPanelHeader() {
     }
     if (user.buyer && user.donor) {
         UserNavLinkList = [
-            // { name: 'Add New', link: '/panel/create' },
+            { name: 'Add New', link: '/panel/create' },
             { name: 'My Products', link: '/panel/my-products' },
             { name: 'Favorites', link: '/panel/favorites' },
             { name: 'Messages', link: '/panel/messages' },
@@ -67,8 +67,8 @@ function AdminPanelHeader() {
     if (user.seller && user.seller && user.seller) {
         UserNavLinkList = [
             { name: 'Add New', link: '/panel/create' },
-            // { name: 'Moderation', link: '/panel/moderation' },
-            // { name: 'Orders', link: '/panel/orders' },
+            { name: 'Moderation', link: '/panel/moderation' },
+            { name: 'Orders', link: '/panel/orders' },
             { name: 'My Products', link: '/panel/my-products' },
             { name: 'Favorites', link: '/panel/favorites' },
             { name: 'Messages', link: '/panel/messages' },
@@ -88,7 +88,7 @@ function AdminPanelHeader() {
                     <ul className='flex justify-start items-center gap-4'>
                         {[...user.role === 'ADMIN' ? AdminNavLinkList : UserNavLinkList].map((navLink, index) => (
                             <li key={index}><NavLink className={({ isActive }) => {
-                                return `text-nowrap text-lg font-semibold pb-6 px-2 pt-4 hover:text-[#537CD9] ${isActive ? "text-[#537CD9] border-b-[3px] border-[#537CD9]" : "text-[#374b5c]"}`
+                                return `text-nowrap text-sm md:text-base lg:text-lg font-semibold pb-6 px-2 pt-4 hover:text-[#537CD9] ${isActive ? "text-[#537CD9] border-b-[3px] border-[#537CD9]" : "text-[#374b5c]"}`
                             }} to={navLink.link}>{navLink.name}</NavLink></li>
                         ))}
                     </ul>

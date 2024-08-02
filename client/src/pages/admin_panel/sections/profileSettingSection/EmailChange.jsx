@@ -24,16 +24,16 @@ export const EmailChangeForm = ({ email }) => {
     };
 
     return (
-        <div className='grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-x-5 px-6'>
-            <div className='flex flex-col my-4'>
-                <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="currentEmail">{'Current Email'} <span></span></label>
+        <div className='grid grid-cols-1 lg:grid-cols-2 lg:items-center lg:gap-x-5 lg:px-6'>
+            <div className='col-span-2 lg:col-span-1 flex flex-col lg:my-4'>
+                <label className='text-primary lg:text-lg font-semibold mb-4 ml-4' htmlFor="currentEmail">{'Current Email'} <span></span></label>
                 <input type="Email" className='border border-[#D5E3EE] flex justify-between items-center p-4 gap-4 rounded-md focus:outline-none text-primary font-medium placeholder:font-medium placeholder:text-[#374b5c] text-base  disabled:text-light' name='oldPassword' placeholder='Enter your current email' disabled={true} value={formData.currentEmail} onChange={handleChange} />
             </div>
-            <div className='flex flex-col my-4'>
-                <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="newEmail">{'New Email'} <span></span></label>
+            <div className='col-span-2 lg:col-span-1 flex flex-col my-4'>
+                <label className='text-primary lg:text-lg font-semibold mb-4 ml-4' htmlFor="newEmail">{'New Email'} <span></span></label>
                 <input type="Email" className='border border-[#D5E3EE] flex justify-between items-center p-4 gap-4 rounded-md focus:outline-none placeholder:text-[#374b5c] text-base font-medium' name='newEmail' placeholder='Enter your new email' value={formData.newEmail} onChange={handleChange} />
             </div>
-            <div className='col-span-2 flex justify-end mt-5'>
+            <div className='col-span-2 flex justify-center lg:justify-end mt-5'>
                 <div>
                     <div className='post_product_button'>
                         <button onClick={(e) => handleSaveChanges(e)} className='bg-helper px-4  py-3 rounded-md flex items-center justify-between  gap-4 button'>

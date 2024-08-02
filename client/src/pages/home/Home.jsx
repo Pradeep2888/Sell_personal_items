@@ -6,14 +6,14 @@ import SellProducts from './sections/SellProducts'
 import Newsletter from './sections/Newsletter'
 import CustomerReviews from './sections/CustomerReviews'
 import ContactUs from './sections/ContactUs'
-import { useWebSocket } from '../../hooks/Hooks'
-import { webSocketUrl } from '../../utils/constants'
+// import { useWebSocket } from '../../hooks/Hooks'
+// import { webSocketUrl } from '../../utils/constants'
 
 function Home() {
 
-  const [notifications] = useWebSocket(webSocketUrl);
+  // const [notifications] = useWebSocket(webSocketUrl);
 
-  console.log(notifications);
+  // console.log(notifications);
 
 
   return (

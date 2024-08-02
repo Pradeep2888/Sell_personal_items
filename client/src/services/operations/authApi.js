@@ -1,5 +1,7 @@
 import { endpoints } from "../api";
 import responseHanlder from "../apiUtils";
+// authService.js
+import axios from 'axios';
 
 const {
   LOGIN_API,
@@ -28,3 +30,34 @@ export const AUTHENTICATEUSER = async () => {
 export const LOGOUTUSER = async () => {
   return await responseHanlder("POST", LOGOUT_USER_API, null, true, null);
 };
+
+
+
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:8000/api/v1"
+    : "https://sell-personal-items-server.vercel.app/api/v1";
+
+const register = async (email, password) => {
+  const response = await axios.post(`${API_URL}/register`, { email, password });
+  return response.data;
+};
+
+const login = async (body) => {
+  const response = await axios.post(`${API_URL}/login`, { ...body });
+  return response.data;
+};
+
+const refreshToken = async () => {
+  const response = await axios.post(`${API_URL}/refresh-token`, {}, { withCredentials: true });
+  return response.data;
+};
+
+const authService = {
+  register,
+  login,
+  refreshToken,
+};
+
+export default authService;
+

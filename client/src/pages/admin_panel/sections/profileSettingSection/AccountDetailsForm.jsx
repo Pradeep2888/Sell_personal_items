@@ -89,17 +89,17 @@ export const AccountDetailForm = ({ defaultData }) => {
     // console.log(formData, "form");
 
     return (
-        <div className='px-6'>
+        <div className='lg:px-6'>
             <div className='flex flex-col my-4'>
-                <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="name">{'Display Name'} <span></span></label>
+                <label className='text-primary lg:text-lg font-semibold lg:mb-4 mb-2 lg:ml-4 ml-2' htmlFor="name">{'Display Name'} <span></span></label>
                 <input type="text" className='border border-[#D5E3EE] flex justify-between items-center p-4 gap-4 rounded-md focus:outline-none font-medium text-primary' name='name' id="name" value={formData.name} onChange={handleChange} />
             </div>
             <div className='flex flex-col my-4'>
-                <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="productName">{'Account Type'} <span></span></label>
+                <label className='text-primary lg:text-lg font-semibold lg:mb-4 mb-2 lg:ml-4 ml-2' htmlFor="productName">{'Account Type'} <span></span></label>
                 <DropdownComponent options={options} onChange={handleChange} value={'Recipient'} className='p-4' />
             </div>
             <div className='flex flex-col my-4'>
-                <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="productName">{'Phone Number'} <span></span></label>
+                <label className='text-primary lg:text-lg font-semibold lg:mb-4 mb-2 lg:ml-4 ml-2' htmlFor="productName">{'Phone Number'} <span></span></label>
                 <PhoneNumber value={formData.contactNumber} onchange={(value) => setFormData((pre) => ({ ...pre, countryCode: value.split('-')[0], contactNumber: value.split('-')[1] }))} />
                 <div className='flex justify-start items-center font-medium my-2 ml-1'>
                     <input name='whatsApp' id="whatsApp" checked={formData.whatsApp} onChange={(e) => setFormData((pre) => ({ ...pre, whatsApp: e.target.checked }))} className='border transition ease-in-out size-[18px] border-[#D5E3EE] outline-[#D5E3EE] rounded-lg hover:outline-none focus:outline-none placeholder:text-[#374b5c] text-base font-medium' type="checkbox" placeholder="Email or Username" />
@@ -112,11 +112,11 @@ export const AccountDetailForm = ({ defaultData }) => {
             </div>
 
             <div className='flex flex-col my-4'>
-                <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="profileDescription">{'Profile Description'} <span></span></label>
-                <textarea name='profileDescription' id="profileDescription" value={formData.profileDescription} onChange={handleChange} className='w-full border text-sm lg:text-base border-[#D5E3EE] rounded py-3 min-h-24 px-8 focus:outline-none placeholder:text-[#374b5c] font-medium text-primary' type="text" placeholder="Write something about yourself" />
+                <label className='text-primary lg:text-lg font-semibold lg:mb-4 mb-2 lg:ml-4 ml-2' htmlFor="profileDescription">{'Profile Description'} <span></span></label>
+                <textarea name='profileDescription' id="profileDescription" value={formData.profileDescription} onChange={handleChange} className='w-full border text-sm lg:text-base border-[#D5E3EE] rounded py-3 min-h-24 p-2 lg:p-8 focus:outline-none placeholder:text-[#374b5c] font-medium text-primary' type="text" placeholder="Write something about yourself" />
             </div>
             <div className='flex flex-col my-4'>
-                <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="address">{'Address'} <span></span></label>
+                <label className='text-primary lg:text-lg font-semibold lg:mb-4 mb-2 lg:ml-4 ml-2' htmlFor="address">{'Address'} <span></span></label>
                 <input type="text" id="address" value={formData.address} onChange={handleChange} className='border border-[#D5E3EE] flex justify-between items-center p-4 gap-4 rounded-md focus:outline-none font-medium text-primary' name='address' />
             </div>
             <div className='relative ml-1'>

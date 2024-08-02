@@ -6,49 +6,30 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import path from "path";
 import multer from "multer";
-import { PrismaClient } from "@prisma/client";
-import { createServer } from "http";
-import { WebSocketServer } from "ws";
+import rateLimit from "express-rate-limit";
 import globalErrorHandlers from "./controllers/Error.Controllers.js";
 import userRoutes from "./routes/UserRoutes.js";
 import newsletterRoutes from "./routes/NewsletterRoutes.js";
 import purchaseRoutes from "./routes/RequestRoutes.js";
 import AppError from "./utils/appError.js";
 
-const app = express();
-const prisma = new PrismaClient();
+// Load environment variables
 dotenv.config();
 
-const port = process.env.PORT;
-const cookie_secret = process.env.COOKIE_SECRET;
+// Create an Express app
+const app = express();
+
+// Define constants from environment variables
+const port = process.env.PORT || 3000;
+const cookieSecret = process.env.COOKIE_SECRET || "default_secret";
+const isDevelopment = process.env.DEV === "Yes";
 const __dirname = path.resolve();
-const server = createServer(app);
-const wss = new WebSocketServer({ server });
 
-// WebSocket setup
-export const broadcast = (data) => {
-  wss.clients.forEach((client) => {
-    if (client.readyState === 1) { // 1: OPEN
-      client.send(JSON.stringify(data));
-    }
-  });
-};
-
-wss.on("connection", (ws) => {
-  console.log("Client connected");
-
-  ws.on("close", () => {
-    console.log("Client disconnected");
-  });
-});
-
-// Middleware setup
+// Middleware for serving static files
 app.use(express.static(`${__dirname}`));
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
-app.use(express.json());
+
+// Security middlewares
 app.use(helmet());
-app.use(cookieParser(cookie_secret));
 app.use(cors({
   origin: [
     "https://thepreview.pro",
@@ -58,52 +39,40 @@ app.use(cors({
   ],
   credentials: true,
 }));
+app.use(cookieParser(cookieSecret));
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Uploads folder on server
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Unique file name
-  },
+// Rate limiter middleware
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
 });
+app.use("/api", apiLimiter);
 
-const upload = multer({ storage: storage });
+// Parsing middleware
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
-let tempraryImageDirectory;
-if (process.env.DEV && process.env.DEV === "Yes") {
-  tempraryImageDirectory = path.join(__dirname, `/tmp`);
-} else {
-  tempraryImageDirectory = "/tmp";
-}
-app.use("/tmp", express.static(tempraryImageDirectory));
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/"), // Uploads folder on server
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`), // Unique file name
+});
+const upload = multer({ storage });
+
+// Serve temporary files
+const temporaryImageDirectory = isDevelopment
+  ? path.join(__dirname, `/tmp`)
+  : "/tmp";
+app.use("/tmp", express.static(temporaryImageDirectory));
 
 // Routes
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "I'am fine" });
-});
-
-app.get("/api/v1", (req, res) => {
-  res.status(200).json({ message: "I'am fine" });
-});
+app.get("/", (req, res) => res.status(200).json({ message: "I'm fine" }));
+app.get("/api/v1", (req, res) => res.status(200).json({ message: "I'm fine" }));
 
 app.use("/api/v1/newsletter", newsletterRoutes);
 app.use("/api/v1/purchase-requests", purchaseRoutes);
 app.use("/api/v1", userRoutes);
-
-// // Update Item route
-// app.put("/update-item/:id", async (req, res) => {
-//   const { id } = req.params;
-//   const { name, price } = req.body;
-
-//   const updatedItem = await prisma.item.update({
-//     where: { id: parseInt(id) },
-//     data: { name, price },
-//   });
-
-//   broadcast(updatedItem);
-//   res.json(updatedItem);
-// });
 
 // Handle undefined routes
 app.all("*", (req, res, next) => {
@@ -114,22 +83,18 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandlers);
 
 // Start the server
-server.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}...\nurl: http://localhost:${port}`);
 });
 
-// Handle unhandled rejections
+// Handle unhandled promise rejections
 process.on("unhandledRejection", (err) => {
-  console.log("UNHANDLED REJECTION! 💥 Shutting down...");
-  console.log(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
-  });
+  console.error("UNHANDLED REJECTION! 💥 Shutting down...", err);
+  server.close(() => process.exit(1));
 });
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (err) => {
-  console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");
-  console.log(err.name, err.message);
+  console.error("UNCAUGHT EXCEPTION! 💥 Shutting down...", err);
   process.exit(1);
 });

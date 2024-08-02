@@ -9,11 +9,13 @@ import FileUpload from '../../components/FileUpload';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { fileUploadEndpoints } from '../../services/api';
-import { GET_SINGLE_PRODUCTS } from '../../services/operations/productsApi';
+import { ADD_TO_FAVORITE, GET_SINGLE_PRODUCTS } from '../../services/operations/productsApi';
 import { useQueryData } from '../../hooks/Hooks';
 import EmailModal from '../../components/EmailModal';
 import { AuthContext } from '../../auth/AuthContext';
 import { SEND_PURCHASE_REQUEST } from '../../services/operations/PurchaseRequestApi';
+import UserStatus from './sections/UserStatus';
+import TooltipIcon from '../../components/Tooltip';
 
 
 const ProductDetail = () => {
@@ -165,7 +167,21 @@ const ProductDetail = () => {
         { name: product.name, link: null }
     ]
 
-    console.log(product);
+
+    const handleAddToFavorite = async (id) => {
+        if (user) {
+            const res = await ADD_TO_FAVORITE({
+                id
+            });
+            if (res.status) {
+                toast.success(res.message);
+            }
+        } else {
+            toast.error("Please login to add product to favorite");
+        }
+    }
+
+
 
 
     return (
@@ -264,9 +280,7 @@ const ProductDetail = () => {
                                             >
                                                 <path d="M14.9987 22.6139L21.21 26.3626C22.19 26.9539 23.3987 26.0751 23.1387 24.9614L21.49 17.8951L26.9787 13.1401C27.8437 12.3914 27.3812 10.9701 26.2412 10.8739L19.0162 10.2614L16.19 3.59264C15.7437 2.54139 14.2537 2.54139 13.8075 3.59264L10.9812 10.2614L3.75624 10.8739C2.61624 10.9701 2.15374 12.3914 3.01874 13.1401L8.50749 17.8951L6.85874 24.9614C6.59874 26.0751 7.80749 26.9539 8.78749 26.3626L14.9987 22.6139Z" />
                                             </svg>
-
                                         </div>
-
                                     </div>
                                     <div>
                                         <FileUpload className={'min-h-30'} progress={progress} onUploadFile={handleGallary} handleRemove={handleRemoveGallary} type={"images"} name={"Gallery"} files={gallery} setFiles={setGallery} id={'review-images'} />
@@ -296,7 +310,8 @@ const ProductDetail = () => {
                                         <div className=''>
                                             <p className='text-primary font-semibold'>{product.user.username}</p>
                                             <p className='text-primary font-medium text-sm'>{"Member since: 3 weeks"}</p>
-                                            <p to={`/user/${product.user.username}`} className='text-light font-medium text-sm flex items-center justify-start gap-2 '> <span className=' size-3 p-1 rounded-full bg-light'></span>User is offline</p>
+                                            {/* <p className='text-light font-medium text-sm flex items-center justify-start gap-2 '> <span className=' size-3 p-1 rounded-full bg-light'></span>User is offline</p> */}
+                                            <UserStatus userId={product.userId} />
                                             <Link
                                                 // to={`/user/${product.user.username}`} 
                                                 className='text-helper mt-3 font-medium text-lg flex items-center justify-start gap-2 underline underline-offset-2'>See all ads</Link>
@@ -311,7 +326,7 @@ const ProductDetail = () => {
                                         <>
                                             <div className='flex justify-start gap-5 items-center w-full font-medium text-primary text-lg'>
                                                 <div className='size-10 rounded-full bg-white cursor-pointer flex justify-center items-center'><MobileIcon className={'text-primary'} color={'#374b5c'} /></div>
-                                                <div><p className='text-center'><span>{product.user.countryCode}</span>{String(product.user.contactNumber).substring(0, 3)} <span className='text-center text-helper'> * * * * * * *</span></p></div>
+                                                <div><p className='text-center'><span>{product.user.countryCode} </span>{String(product.user.contactNumber).substring(0, 3)} <span className='text-center text-helper'> * * * * * * *</span></p></div>
                                             </div>
                                             <div onClick={() => handleShow(true)} className='size-10 rounded-full bg-secondary cursor-pointer flex justify-center items-center flex-shrink-0'><ViewIcon /></div>
                                         </>
@@ -363,19 +378,19 @@ const ProductDetail = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* <div className=' ml-10 mt-8 border border-bdr rounded-md bg-white flex justify-center py-4'>
+                            <div className=' ml-10 mt-8 border border-bdr rounded-md bg-white flex justify-center py-4'>
                                 <div className="grid grid-cols-3 items-center gap-4 w-fit ">
-                                    <div className="rounded-full border size-12  flex justify-center items-center cursor-pointer hover:border-[#537CD9]">
+                                    {/* <div className="rounded-full border size-12  flex justify-center items-center cursor-pointer hover:border-[#537CD9]">
                                         <ViewIcon />
                                     </div>
                                     <div className="rounded-full border size-12  flex justify-center items-center cursor-pointer hover:border-[#537CD9]">
                                         <CompareIcon />
-                                    </div>
-                                    <div className={`rounded-full border size-12   flex justify-center items-center cursor-pointer hover:border-[#537CD9] `}>
-                                        <LikeIcon />
-                                    </div>
+                                    </div> */}
+                                    <TooltipIcon IconComponent={ViewIcon} tooltipText="View More" id={'Like'} like={false} onClick={() => handleLike(product.post_id)} />
+                                    <TooltipIcon IconComponent={CompareIcon} tooltipText="Compare" id={'Like'} like={false} onClick={() => handleLike(product.post_id)} />
+                                    <TooltipIcon IconComponent={LikeIcon} tooltipText="Add To Favorite" id={'Like'} like={false} onClick={() => handleAddToFavorite(product.post_id)} />
                                 </div>
-                            </div> */}
+                            </div>
                             <div className=' ml-10 mt-8 flex justify-center items-center gap-4'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.91804 8.89643e-05C9.23321 0.00563136 8.55081 0.270265 8.03664 0.792843L0.762291 8.18722C-0.266032 9.23236 -0.252158 10.9347 0.792997 11.963L8.18738 19.2374C9.23252 20.2657 10.9349 20.2518 11.9632 19.2067L19.2375 11.8132C19.2379 11.8129 19.2382 11.8126 19.2385 11.8123C20.266 10.7667 20.252 9.06483 19.2068 8.03649L11.8125 0.762137C11.2899 0.247976 10.6029 -0.00545358 9.91804 8.89643e-05ZM9.93013 1.41997C10.2462 1.41742 10.5631 1.53768 10.8104 1.78099L18.2047 9.05535C18.6993 9.54195 18.7052 10.3161 18.2187 10.8111L10.9443 18.2046C10.4577 18.6991 9.68406 18.7052 9.18949 18.2185L1.7951 10.9442C1.30055 10.4576 1.29453 9.68391 1.78115 9.18933L9.0555 1.79495C9.2988 1.54767 9.61405 1.42253 9.93013 1.41997ZM9.98875 4.74917C9.79956 4.75213 9.61926 4.83 9.48739 4.9657C9.35552 5.1014 9.28286 5.28386 9.28532 5.47307V11.1898C9.28398 11.2845 9.30148 11.3785 9.33679 11.4664C9.3721 11.5543 9.42452 11.6343 9.49101 11.7017C9.5575 11.7691 9.63673 11.8227 9.72409 11.8592C9.81146 11.8958 9.90522 11.9146 9.99992 11.9146C10.0946 11.9146 10.1884 11.8958 10.2757 11.8592C10.3631 11.8227 10.4423 11.7691 10.5088 11.7017C10.5753 11.6343 10.6277 11.5543 10.663 11.4664C10.6984 11.3785 10.7159 11.2845 10.7145 11.1898V5.47307C10.7158 5.3775 10.6978 5.28265 10.6618 5.19414C10.6257 5.10563 10.5723 5.02525 10.5046 4.95775C10.4369 4.89026 10.3564 4.83702 10.2678 4.80119C10.1792 4.76537 10.0843 4.74768 9.98875 4.74917ZM9.99992 13.3336C9.74722 13.3336 9.50488 13.434 9.32619 13.6127C9.14751 13.7914 9.04712 14.0337 9.04712 14.2864C9.04712 14.5391 9.14751 14.7814 9.32619 14.9601C9.50488 15.1388 9.74722 15.2392 9.99992 15.2392C10.2526 15.2392 10.495 15.1388 10.6736 14.9601C10.8523 14.7814 10.9527 14.5391 10.9527 14.2864C10.9527 14.0337 10.8523 13.7914 10.6736 13.6127C10.495 13.434 10.2526 13.3336 9.99992 13.3336Z" fill="#ED5E4F"></path></svg>
                                 <p className='text-[#ED5E4F]'>Report abuse</p>

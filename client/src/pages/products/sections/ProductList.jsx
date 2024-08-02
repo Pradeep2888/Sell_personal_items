@@ -18,7 +18,7 @@ function ProductList({ products, isPending, handleLike }) {
 
 
   if (isPending) {
-    return <div className='grid grid-cols-3 gap-4'>
+    return <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
       {
         [...Array(6)].map((product, index) => {
           return (
@@ -46,7 +46,7 @@ function ProductList({ products, isPending, handleLike }) {
 
 
   return (
-    <div className='grid grid-cols-3 gap-4'>
+    <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-4'>
       {
         products?.length > 0 ? products?.map((product, index) => {
           return (

@@ -5,7 +5,7 @@ const isProd =
 
 // const isProd = "https://reviewsix.vercel.app/api/v1"
 
-const BASE_URL = isProd;
+export const BASE_URL = isProd;
 
 // AUTH ENDPOINTS
 export const endpoints = {
@@ -53,9 +53,13 @@ export const adminEndpoints = {
 
 export const productEndPoint = {
   getProducts_API: BASE_URL + "/products",
+  getFavoriteProducts_API: BASE_URL + "/favorite",
   getProduct_API: BASE_URL + "/product",
   getProductCategory_API: BASE_URL + "/product-categories",
   postLike_API: BASE_URL + "/like",
+  addToFavourite_API: BASE_URL + "/favorite",
+  promoteProduct_API:BASE_URL+"/promote"
+
 };
 
 export const newsLetterEndPoint = {

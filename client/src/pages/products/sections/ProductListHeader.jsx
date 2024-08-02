@@ -34,9 +34,9 @@ function ProductListHeader({ isPending, count }) {
     // }
 
     return (
-        <div className='flex justify-between items-center'>
-            {isPending ? <div className='min-h-10 animate-pulse bg-loader  rounded-3xl'></div> : <div className='flex gap-2 items-end justify-between'>
-                <h2 className='text-[#374B5C] text-2xl font-semibold'>{count} Results</h2>
+        <div className='flex flex-col-reverse lg:flex-row justify-between items-start lg:items-center'>
+            {isPending ? <div className='min-h-10 animate-pulse bg-loader  rounded-3xl'></div> : <div className='flex gap-2 items-end justify-start text-start mt-4 lg:mt-0'>
+                <h2 className='text-[#374B5C] text-xl md:text-2xl font-semibold'>{count} Results</h2>
                 <h3 className='text-[#FFB300]'>Classified Products</h3>
             </div>}
             <div className=' flex items-center justify-between gap-4'>
@@ -44,7 +44,7 @@ function ProductListHeader({ isPending, count }) {
                     <div className='flex items-center justify-between gap-4'>
                         <div className='text-[#000018] font-medium'>Sort By:</div>
                         <div ref={dropdownRef} className='relative' onClick={handleToggle}>
-                            <div className='border border-[#D5E3EE] flex justify-between items-center p-5 gap-4 rounded-md' >
+                            <div className='border border-[#D5E3EE] flex justify-between items-center p-2 md:p-3 lg:p-5 gap-4 rounded-md' >
                                 <div className='min-w-48 text-base font-medium text-[#3F5263]'>{sortValue}</div>
                                 <div>
                                     <svg
@@ -63,15 +63,15 @@ function ProductListHeader({ isPending, count }) {
                             </div>
                             <div className='hidden dropdownlist w-full border border-[#D5E3EE] px-5 py-3 absolute z-10 bg-white rounded-md'>
                                 <ul>
-                                    <li className={`min-w-48 text-base font-medium ${sortValue === 'Most Relevant' ? 'text-[#537CD9]' : 'text-[#3F5263] hover:text-[#FFB300]'} py-1 transition ease-in-out`} onClick={() => handleChange('Most Relevant')}>Most Relevant</li>
-                                    <li className={`min-w-48 text-base font-medium ${sortValue === 'Date Listed: Newest' ? 'text-[#537CD9]' : 'text-[#3F5263] hover:text-[#FFB300]'} py-1 transition ease-in-out`} onClick={() => handleChange('Date Listed: Newest')}>Date Listed: Newest</li>
+                                    <li className={`lg:min-w-48 text-base font-medium ${sortValue === 'Most Relevant' ? 'text-[#537CD9]' : 'text-[#3F5263] hover:text-[#FFB300]'} py-1 transition ease-in-out`} onClick={() => handleChange('Most Relevant')}>Most Relevant</li>
+                                    <li className={`lg:min-w-48 text-base font-medium ${sortValue === 'Date Listed: Newest' ? 'text-[#537CD9]' : 'text-[#3F5263] hover:text-[#FFB300]'} py-1 transition ease-in-out`} onClick={() => handleChange('Date Listed: Newest')}>Date Listed: Newest</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div className='bg-[#537CD9] p-6 rounded-md'>
+                <div className='hidden '>
+                    <div className='bg-[#537CD9] p-4 lg:p-6 rounded-md'>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width={16}
@@ -87,8 +87,8 @@ function ProductListHeader({ isPending, count }) {
 
                     </div>
                 </div>
-                <div>
-                    <div className='border border-[#D5E3EE] p-6 rounded-md group transition ease-in-out hover:border-[#537CD9]'>
+                <div className='hidden'>
+                    <div className='border border-[#D5E3EE] p-4 lg:p-6  rounded-md group transition ease-in-out hover:border-[#537CD9]'>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width={16}

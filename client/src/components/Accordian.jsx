@@ -15,7 +15,7 @@ const Accordion = ({ items }) => {
             {items?.map((item, index) => (
                 <div key={index} className='border border-bdr mb-8 transition ease-in-out duration-300 rounded-md shadow-sm hover:shadow-md bg-white relative'>
                     <button
-                        className="flex justify-between w-full py-8 px-12 text-left text-2xl font-bold tracking-tight text-primary relative"
+                        className="flex justify-between w-full py-8 lg:px-12 text-left lg:text-2xl font-bold tracking-tight text-primary relative"
                         onClick={() => toggleItem(index)}
                     >
                         <span>{item.title}</span>

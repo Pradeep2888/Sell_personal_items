@@ -59,7 +59,7 @@ const EmailModal = ({ isOpen, title, onClose, onConfirm, isLoading, product, cle
                                     ? 'bg-gray-300 text-gray-700 cursor-not-allowed'
                                     : 'text-white bg-indigo-600 hover:bg-indigo-700'
                                     }`}
-                                onClick={isLoading ? null : () => onConfirm(message)}
+                                onClick={isLoading ? null : () => onConfirm(message, product)}
                                 disabled={isLoading}
                             >
                                 send

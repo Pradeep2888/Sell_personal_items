@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 import Layout from "../layouts/Layout";
 import Home from "../pages/home/Home";
 import About from "../pages/about/About";

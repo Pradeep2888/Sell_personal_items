@@ -117,3 +117,26 @@ const Protected = ({ children }) => {
 };
 
 export default Protected;
+
+
+// ProtectedRoute.js
+// import React, { useContext } from 'react';
+// import { Navigate, Outlet, Route, Routes, } from 'react-router-dom';
+// import { AuthContext } from './AuthContext';
+
+// const Protected = () => {
+//     const { user } = useContext(AuthContext);
+
+//     return (
+      
+
+//             // <Route
+//             //     {...rest}
+//             //     render={(props) =>
+//                     user ? <Outlet/> : <Navigate to="/login-register?tab=login" />
+//             //     }
+//             // />
+//     );
+// };
+
+// export default Protected;

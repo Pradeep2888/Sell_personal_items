@@ -73,43 +73,100 @@ export function useDebounce(value, delay) {
 }
 
 // hooks/useWebSocket.js
-export const useWebSocket = (url) => {
-    const [messages, setMessages] = useState([]);
-    const ws = useRef(null);
+// export const useWebSocket = (url) => {
+//     const [messages, setMessages] = useState([]);
+//     const ws = useRef(null);
 
-    useEffect(() => {
-        ws.current = new WebSocket(url);
+//     useEffect(() => {
+//         ws.current = new WebSocket(url);
 
-        ws.current.onopen = () => {
-            console.log('WebSocket connected');
-        };
+//         ws.current.onopen = () => {
+//             console.log('WebSocket connected');
+//         };
 
-        ws.current.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            setMessages((prev) => [...prev, message]);
-        };
+//         ws.current.onmessage = (event) => {
+//             const message = JSON.parse(event.data);
+//             setMessages((prev) => [...prev, message]);
+//         };
 
-        ws.current.onclose = () => {
-            console.log('WebSocket disconnected');
-        };
+//         ws.current.onclose = () => {
+//             console.log('WebSocket disconnected');
+//         };
 
-        ws.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+//         ws.current.onerror = (error) => {
+//             console.error('WebSocket error:', error);
+//         };
 
-        return () => {
-            ws.current.close();
-        };
-    }, [url]);
+//         return () => {
+//             ws.current.close();
+//         };
+//     }, [url]);
 
-    const sendMessage = useCallback((message) => {
-        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            ws.current.send(JSON.stringify(message));
-        }
-    }, []);
+//     const sendMessage = useCallback((message) => {
+//         if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+//             ws.current.send(JSON.stringify(message));
+//         }
+//     }, []);
 
-    return [messages, sendMessage];
-};
+//     return [messages, sendMessage];
+// };
+
+// hooks/us
+
+// export const useWebSocketForUserStatus = (url, userId) => {
+//   const [status, setStatus] = useState('offline');
+//   const ws = useRef(null);
+
+//   useEffect(() => {
+//     ws.current = new WebSocket(url);
+
+//     // ws.current.onopen = () => {
+//     //   console.log('WebSocket connected');
+//     //   updateStatus('online');
+//     // };
+
+//     ws.current.onmessage = (event) => {
+//       const message = JSON.parse(event.data);
+//       console.log(message,"jjgh");
+//     };
+
+//     ws.current.onclose = () => {
+//       console.log('WebSocket disconnected');
+//       updateStatus('offline');
+//     };
+
+//     ws.current.onerror = (error) => {
+//       console.error('WebSocket error:', error);
+//     };
+
+//     return () => {
+//       updateStatus('offline');
+//       ws.current.close();
+//     };
+//   }, [url]);
+
+//   const updateStatus = useCallback((newStatus) => {
+//     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+//       ws.current.send(JSON.stringify({ userId, status: newStatus }));
+//       setStatus(newStatus);
+//     }
+//   }, [userId]);
+
+//   useEffect(() => {
+//     const handleOnline = () => updateStatus('online');
+//     const handleOffline = () => updateStatus('offline');
+
+//     window.addEventListener('online', handleOnline);
+//     window.addEventListener('offline', handleOffline);
+
+//     return () => {
+//       window.removeEventListener('online', handleOnline);
+//       window.removeEventListener('offline', handleOffline);
+//     };
+//   }, [updateStatus]);
+
+//   return status;
+// };
 
 
 

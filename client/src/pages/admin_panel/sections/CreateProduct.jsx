@@ -139,36 +139,36 @@ function CreateProduct() {
 
   return (
     <div className="relative bg-[#F8FAFD]">
-      <div className="max-w-[1200px] mx-auto py-14">
+      <div className="max-w-[1200px] mx-auto py-6 lg:py-14">
         <div className='relative'>
           <div className=''>
             <Topsection title={"Post Your Product"} />
-            <div className='bg-[#FDFDFE]  p-10 '>
+            <div className='bg-[#FDFDFE] px-2 py-4 lg:p-10 '>
               <form>
                 <div>
-                  <h3 className='text-3xl text-[#374B5C] font-semibold'>General info</h3>
-                  <div className='mt-8 flex flex-col'>
-                    <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor="productName">Product Name <span>*</span></label>
-                    <input type="text" className='border border-[#D5E3EE] flex justify-between items-center p-4 gap-4 rounded-md focus:outline-none' name='productName' value={productName} onChange={(e) => setProductName(e.target.value)} />
+                  <h3 className='lg:text-3xl text-[#374B5C] font-semibold'>General info</h3>
+                  <div className='mt-4 lg:mt-8 flex flex-col'>
+                    <label className='text-primary lg:text-lg font-semibold mb-2 lg:mb-4 ml-1 lg:ml-4' htmlFor="productName">Product Name <span>*</span></label>
+                    <input type="text" className='border border-[#D5E3EE] flex justify-between items-center p-2 lg:p-4 gap-4 rounded-md focus:outline-none' name='productName' value={productName} onChange={(e) => setProductName(e.target.value)} />
                   </div>
-                  <div className='mt-8 flex flex-col max-w-72'>
-                    <label className='text-primary text-lg font-semibold mb-4 ml-4'>Category <span>*</span></label>
+                  <div className='mt-4 lg:mt-8 flex flex-col lg:max-w-72'>
+                    <label className='text-primary lg:text-lg font-semibold mb-2 lg:mb-4 ml-1 lg:ml-4'>Category <span>*</span></label>
                     <Dropdown defaultValue={"Category"} label={"Category"} onChange={handleChange} setCategory={setCategory} category={category} onClear={handleClearDropdown} />
                   </div>
-                  <div className='mt-8 flex flex-col '>
-                    <label className='text-primary text-lg font-semibold mb-4 ml-4'>Description <span>*</span></label>
+                  <div className='mt-4 lg:mt-8 flex flex-col '>
+                    <label className='text-primary lg:text-lg font-semibold mb-2 lg:mb-4 ml-1 lg:ml-4'>Description <span>*</span></label>
                     {/* <TextEditor style={{ outerWidth: "100%" }} onEditorChange={handleTextEditor} defaultValue={''}/> */}
                     <EditorComponent data={description} onChange={handleEditorChange} style={{ outerWidth: "100%" }} id={'createProduct'} />
                   </div>
                   <div className='mt-8 flex flex-col '>
-                    <label className='text-primary text-lg font-semibold mb-4 ml-4'>Gallery <span>*</span></label>
+                    <label className='text-primary lg:text-lg font-semibold mb-2 lg:mb-4 ml-1 lg:ml-4'>Gallery <span>*</span></label>
                     <FileUpload progress={progress} onUploadFile={handleGallary} handleRemove={handleRemoveGallary} type={"images"} name={"Gallery"} id={"Gallery"} files={gallery} setFiles={setGallery} />
                   </div>
                   <div className='mt-8 flex flex-col '>
-                    <label className='text-primary text-lg font-semibold mb-4 ml-4'>Attachments </label>
+                    <label className='text-primary lg:text-lg font-semibold mb-2 lg:mb-4 ml-1 lg:ml-4'>Attachments </label>
                     <FileUpload progress={progress} onUploadFile={handleAttachments} handleRemove={handleRemoveAttachments} type={"files"} name={"Attachments"} id={"Attachments"} files={attachments} setFiles={setAttachment} />
                   </div>
-                  <div className='mt-8 flex justify-end'>
+                  <div className='mt-8 flex lg:justify-end justify-center'>
                     <div>
                       <div className='post_product_button'>
                         <button onClick={handlePostProduct} className='bg-helper px-4  py-3 rounded-md flex items-center justify-between  gap-4 button'>

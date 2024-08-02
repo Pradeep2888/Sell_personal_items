@@ -74,9 +74,9 @@ const Dropdown = ({defaultValue, children, setCategory, category, onChange, onCl
                     </svg>
                 </div>}
             </div>
-            <div className='hidden dropdownlist w-full border border-[#D5E3EE] px-5 py-3 absolute z-10 bg-white rounded-md shadow-lg'>
-                <input type="search" placeholder='Search...' onChange={handleSearch} className='relative border border-[#D5E3EE] focus:outline-none w-full rounded py-1 px-2' />
-                <ul className='mt-4 scroll-smooth max-h-96 select-none'>
+            <div className='hidden dropdownlist w-full border border-[#D5E3EE] px-5 py-3 absolute z-10 bg-white rounded-md shadow-lg '>
+                <input type="search" placeholder='Search...' onChange={handleSearch} className=' border border-[#D5E3EE] focus:outline-none w-full rounded py-1 px-2 sticky top-0' />
+                <ul className='mt-4 max-h-80 overflow-auto select-none'>
                     {
                         isPending ? [...Array(7)].map((list, i) =>
                             <li key={i} className='text-primary font-semibold py-1 cursor-pointer min-h-2 animate-pulse bg-loader'></li>

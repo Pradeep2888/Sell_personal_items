@@ -44,16 +44,6 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
         SetSearchParams((pre) => ({ ...queryParams, searchQuery: searchQuery }))
     };
 
-    // useEffect(() => {
-    //     const getData = setTimeout(() => {
-    //         if (searchQuery === '') {
-    //             SetSearchParams(() => ({ ...queryParams, searchQuery: '' }))
-    //         } else {
-    //             SetSearchParams((pre) => ({ ...queryParams, searchQuery: searchQuery }))
-    //         }
-    //     }, 500);
-    //     return () => clearTimeout(getData)
-    // }, [searchQuery])
 
     useEffect(() => {
         document.addEventListener('click', handleCloseSortSelect);
@@ -61,8 +51,8 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
     }, [sortValue]);
 
     return (
-        <div className='flex justify-between items-center'>
-            <div className='flex justify-start items-center gap-3'>
+        <div className='flex flex-col-reverse lg:flex-row lg:justify-between items-center gap-4'>
+            <div className='flex w-full justify-start items-center gap-3'>
                 {All > 0 && <div onClick={() => setActiveFilter(null)} className={`flex justify-center items-center text-[#374B5C] font-medium ${activeFilter === null ? "bg-secondary" : "bg-[#D5E3EE]"}  px-4 py-4 rounded cursor-pointer`}>
                     All <span className='flex justify-center items-center rounded-full size-4 p-3 bg-white ml-2'>{All}</span>
                 </div>}
@@ -76,11 +66,11 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
                     Draft <span className='flex justify-center items-center rounded-full size-4 p-3 bg-white ml-2'>{draft}</span>
                 </div>}
             </div>
-            <div className='flex gap-3'>
-                <div className='flex items-center justify-between gap-4'>
-                    <div className='text-[#000018] font-medium'>Sort By:</div>
-                    <div ref={dropdownRef} className='relative' onClick={handleToggle}>
-                        <div className='border border-[#D5E3EE] flex justify-between items-center px-4 py-4 gap-4 rounded-md' >
+            <div className='w-full  flex flex-col sm:flex-row gap-3 px-4'>
+                <div className='flex items-center justify-between gap-4 w-full lg:w-auto'>
+                    <div className='text-[#000018] font-medium text-nowrap'>Sort By:</div>
+                    <div ref={dropdownRef} className='relative w-full' onClick={handleToggle}>
+                        <div className='border border-[#D5E3EE] flex justify-between items-center px-2 lg:px-4 py-2 lg:py-4 gap-4 rounded-md' >
                             <div className='text-nowrap text-base font-medium text-[#3F5263]'>{sortValue}</div>
                             <div>
                                 <svg
@@ -105,8 +95,8 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
                         </div>
                     </div>
                 </div>
-                <div className='relative'>
-                    <input className='border pr-10 border-[#D5E3EE] flex justify-between items-center px-4 py-4 gap-4 rounded-md focus:outline-none placeholder:text-[#3F5263] placeholder:font-medium'
+                <div className='relative w-full'>
+                    <input className='border w-full pr-10 border-[#D5E3EE] flex justify-between items-center px-4 py-2 lg:py-4 gap-4 rounded-md focus:outline-none placeholder:text-[#3F5263] placeholder:font-medium'
                         type="search"
                         placeholder='Search...'
                         value={searchQuery}
@@ -120,7 +110,7 @@ function ProductFilter({ draft, All, Active, Pending, setActiveFilter, activeFil
                             }
                         }}
                     />
-                    <i onClick={handleSeach} className='fa fa-search cursor-pointer absolute text-white bg-helper p-2 top-3 right-2 rounded-md' />
+                    <i onClick={handleSeach} className='fa fa-search cursor-pointer absolute text-white bg-helper p-2 top-1.5 lg:top-3 right-2 rounded-md' />
                 </div>
             </div>
         </div>

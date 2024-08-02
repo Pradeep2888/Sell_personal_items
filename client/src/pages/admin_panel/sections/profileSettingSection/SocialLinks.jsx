@@ -31,13 +31,13 @@ console.log(links);
 
 
     return (
-        <div className='grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-y-4 gap-x-6 p-4'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 lg:items-center lg:gap-y-4 lg:gap-x-6 lg:p-4'>
             {
                 links.map((link, index) =>
-                    <div key={index} className='flex flex-col '>
-                        <label className='text-primary text-lg font-semibold mb-4 ml-4' htmlFor={link.label}>{link.label} <span></span></label>
+                    <div key={index} className='flex flex-col col-span-2 lg:col-span-1 mt-4'>
+                        <label className='text-primary lg:text-lg font-semibold  mb-2 lg:mb-4 ml-2 lg:ml-4' htmlFor={link.label}>{link.label} <span></span></label>
                         <div className='relative'>
-                            <input value={link.link} className='py-4 w-full px-16 border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c] text-base font-medium' type="text" placeholder={`Enter the url to your ${link.label} profile`} name={link.label} onChange={(e) => handleChange(e, index)} />
+                            <input value={link.link} className='py-4 w-full text-sm px-16 border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c] lg:text-base font-medium' type="text" placeholder={`Enter the url to your ${link.label} profile`} name={link.label} onChange={(e) => handleChange(e, index)} />
                             <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>
                                 {link.icons}
                             </span>
@@ -45,7 +45,7 @@ console.log(links);
                     </div>
                 )
             }
-            <div className='mt-8 col-span-2 flex justify-end'>
+            <div className='mt-8 col-span-2 flex justify-center lg:justify-end'>
                 <div>
                     <div className='post_product_button'>
                         <button onClick={(e) => handleSaveChanges(e)} className='bg-helper px-4  py-3 rounded-md flex items-center justify-between  gap-4 button'>

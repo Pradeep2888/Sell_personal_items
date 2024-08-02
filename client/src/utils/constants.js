@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { getAlert } from "./getAlert";
 
-export const webSocketUrl= 'ws://localhost:8000'
+export const webSocketUrl= import.meta.env.MODE === "development"?'ws://localhost:8000':'https://sellpersonalitem.vercel.app'
 export const BASEURL = "/";
 export const IMAGEURL = "";
 // import.meta.env.MODE === "development"

@@ -18,6 +18,7 @@ function Products() {
     const [products, setProducts] = useState([])
 
     const [pendingLike, setPendingLike] = useState(null);
+    const [show, setShow] = useState(false);
 
 
 
@@ -102,14 +103,20 @@ function Products() {
                 <div className="max-w-[1200px] mx-auto px-8">
                     <div className='py-14'>
                         <div className='grid grid-cols-4 gap-x-10'>
-                            <div className='col-span-1'>
+                            <div className='col-span-1 hidden lg:block'>
                                 <div className='relative bg-white border border-[#F2F4F8] p-6'>
                                     <ProductFilter />
                                 </div>
                             </div>
-                            <div className='col-span-3'>
-                                <div className='flex flex-col justify-start '>
-                                    <div>
+                            <div className='col-span-4 lg:col-span-3'>
+                                <div className='flex flex-col justify-start'>
+                                    <div className='relative w-full'>
+                                        <div className='lg:hidden w-full absolute  sm:right-0 -top-16 sm:-top-0'>
+                                            <button className='bg-helper absolute sm:right-0  text-white  top-0 z-20' onClick={()=>setShow(!show)}>Category</button>
+                                            <div className={show?'absolute top-14 right-0 w-full sm:w-1/2 z-20 bg-white border border-[#F2F4F8] p-6 max-h-64 overflow-y-auto':"hidden"}>
+                                                <ProductFilter />
+                                            </div>
+                                        </div>
                                         <ProductListHeader count={products?.length} category={products?.category} isPending={isPending} />
                                     </div>
                                     <div className='my-4'>

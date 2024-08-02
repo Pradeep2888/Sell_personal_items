@@ -64,7 +64,7 @@ const ProductFilter = () => {
     }
     const productCategories = categories?.productCategories
     return (
-        <div className='relative'>
+        <div className='relative '>
             <h3 className='text-base font-medium text-[#374B5C] flex justify-between items-center'><span>Category</span><div className='h-3 w-3 rounded-full bg-[#D5E3EE]'></div></h3>
             <ul className='mt-4'>
                 <li className='py-2'>
@@ -89,3 +89,5 @@ const ProductFilter = () => {
 }
 
 export default ProductFilter
+
+

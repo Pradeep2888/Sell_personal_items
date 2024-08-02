@@ -74,6 +74,7 @@ const EditorComponent = ({ data, onChange }) => {
             config={{
                 // CKEditor config if needed
             }}
+            
             data={data}
             onChange={(event, editor) => {
                 const newData = editor.getData();

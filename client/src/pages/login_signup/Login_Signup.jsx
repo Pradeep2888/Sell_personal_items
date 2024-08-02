@@ -179,14 +179,17 @@ function Login_Signup() {
         const res = await login({ ...formdata, accountType });
         if (res) {
             const from = location.state?.to;
+            console.log(from,res);
             if (from) {
                 navigate(from, { replace: true, state: location.state });
             } else if (accountType === 'BUYER') {
                 navigate('/products?type=sale', { replace: true, state: location.state });
             } else if (accountType === 'SELLER') {
                 navigate('/panel/create', { replace: true, state: location.state });
-            } else {
+            } else if (accountType === 'DONATE'){
                 navigate('/donate', { replace: true, state: location.state });
+            }else{
+                navigate('/', { replace: true, state: location.state });
             }
         }
     };

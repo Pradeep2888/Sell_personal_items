@@ -1,8 +1,11 @@
 import express from "express";
 import {
   AdminLogin,
+  // authenticate,
   authMiddleware,
   getValidUser,
+  // Login,
+  // RefreshToken,
   userLogin,
   userLogout,
   userSignUp,
@@ -37,10 +40,14 @@ import { createDonation } from "../controllers/Donation.Controller.js";
 import upload from "../utils/upload.js";
 import { PrismaClient } from "@prisma/client";
 import {
+  AddToFavorite,
   getAllProducts,
+  getFavoriteProducts,
   getProductCategories,
   getSingleProduct,
   postLike,
+  promoteProduct,
+  RemoveFromFavorite,
 } from "../controllers/Products.Controllers.js";
 const prisma = new PrismaClient();
 
@@ -86,6 +93,14 @@ router.route("/check-session").get(authMiddleware, async (req, res, next) => {
     res.status(401).json({ status: "expired", message: "Session is expired" });
   }
 });
+
+//
+// router.route("/login").post(Login);
+// router.route("/refresh-token").post(RefreshToken);
+// router.route("/protected").get(authenticate, (req, res) => {
+//   res.json({ message: "Hello from protected route" });
+// });
+
 router.route("/getValidUser").get(authMiddleware, getValidUser);
 router.route("/profile").get(authMiddleware, getProfile);
 router.route("/profile").put(authMiddleware, updateAccountDetails);
@@ -134,6 +149,13 @@ router
 
 router.route("/products/:userId?").get(getAllProducts);
 router.route("/like").post(authMiddleware, postLike);
+router.route("/promote").post(authMiddleware, promoteProduct);
+router.route("/promote").get(authMiddleware, promoteProduct);
+router
+  .route("/favorite")
+  .get(authMiddleware, getFavoriteProducts)
+  .post(authMiddleware, AddToFavorite)
+  .delete(authMiddleware, RemoveFromFavorite);
 router.route("/product/:slug").get(getSingleProduct);
 router.route("/product-categories").get(getProductCategories);
 

@@ -406,3 +406,8 @@ button {
 .ck .ck-powered-by {
   display: none !important;
 }
+
+
+.react-international-phone-country-selector-dropdown{
+  left: -10 !important;
+}

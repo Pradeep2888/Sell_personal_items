@@ -13,6 +13,7 @@ import { GridLoadingUI } from './ModerateProducts'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '../../../store/AuthStore'
 import { AuthContext } from '../../../auth/AuthContext'
+import { PROMOTE_PRODUCTS } from '../../../services/operations/productsApi'
 
 function MyProducts() {
 
@@ -33,7 +34,8 @@ function MyProducts() {
   const sort = SearchParams.get('sort')
   const { isLoading, error, data } = useQuery({
     queryKey: ['GET_My_PRODUCT', refresh, user, sort, searchQuery],
-    queryFn: async () => await GET_MY_PRODUCT({ sort, searchQuery })
+    queryFn: async () => await GET_MY_PRODUCT({ sort, searchQuery }),
+
   });
 
   const allProductsCount = useMemo(() => data?.products?.length, [data?.products?.length]);
@@ -48,7 +50,7 @@ function MyProducts() {
   }
 
   if (error) {
-    return <ErrorUi error={error.name}/>
+    return <ErrorUi error={error.name} />
   }
 
   const handleDelete = async (id) => {
@@ -62,8 +64,11 @@ function MyProducts() {
     }
   }
 
-  const handlePromote = () => {
-    // setRefresh(!refresh)
+  const handlePromote = async (postId) => {
+    const res = await PROMOTE_PRODUCTS({ postId, planId: 1 });
+    if (res?.status) {
+      toast.success(res.message)
+    }
   };
 
   const handleEdit = async (id) => {
@@ -76,79 +81,73 @@ function MyProducts() {
 
   return (
     <div className="relative bg-[#F8FAFD]">
-      <div className="max-w-[1200px] mx-auto py-14">
-
-
-        <div className="relative bg-[#F8FAFD]">
-          <div className="max-w-[1200px] mx-auto py-14">
-            <div className='relative'>
-              <div className=''>
-                <Topsection title={"My Products"} />
-                <div className='bg-[#FDFDFE]  p-10 mt-10'>
-                  <ProductFilter setActiveFilter={setActiveFilter} activeFilter={activeFilter} draft={draftProductsCount} All={allProductsCount} Active={activeProductsCount} Pending={pendingProductsCount} />
-                </div>
-                {
-                  data.products.length < 1 ?
-
-                    <div className='relative bg-white border border-[#D5E3EE] rounded flex justify-center items-center min-h-80'>
-                      <NoRecords title={"You don't have any products."} />
-                    </div> :
-                    <div className='bg-white border border-[#F2F4F8] rounded relative'>
-                      {data?.products.filter((item) => activeFilter ? item.status === activeFilter : item).map((item) => <div key={item.post_id} className='grid grid-cols-12'>
-                        <div className='col-span-10 border-r border-[#F2F4F8]'>
-                          <div className='grid grid-cols-3'>
-                            <Link to={location.pathname + "/" + item.post_id + "-" + item.name} className='col-span-1 rounded-lg flex justify-center items-center overflow-hidden mx-4 my-2 size-60'>
-                              <img className='rounded-lg object-cover w-full' src={IMAGEURL + item?.images[0]?.image} alt="" />
+      <div className="max-w-[1200px] mx-auto py-6 lg:py-14">
+        <div className='relative'>
+          <div className=''>
+            <Topsection title={"My Products"} />
+            <div className='bg-[#FDFDFE] py-4 lg:p-10 mt-10'>
+              <ProductFilter setActiveFilter={setActiveFilter} activeFilter={activeFilter} draft={draftProductsCount} All={allProductsCount} Active={activeProductsCount} Pending={pendingProductsCount} />
+            </div>
+            {
+              data.products.length < 1 ?
+                <div className='relative bg-white border border-[#D5E3EE] rounded flex justify-center items-center min-h-80'>
+                  <NoRecords title={"You don't have any products."} />
+                </div> :
+                <div className='bg-white border border-[#F2F4F8] rounded relative overflow-auto'>
+                  {data?.products.filter((item) => activeFilter ? item.status === activeFilter : item).map((item) => <div key={item.post_id} className='grid grid-cols-12'>
+                    <div className='col-span-10 border-r border-[#F2F4F8]'>
+                      <div className='grid grid-cols-3'>
+                        <Link to={location.pathname + "/" + item.post_id + "-" + item.name} className='col-span-1 rounded-lg flex justify-center items-center overflow-hidden mx-4 my-2 size-60'>
+                          <img className='rounded-lg object-cover w-full' src={IMAGEURL + item?.images[0]?.image} alt="" />
+                        </Link>
+                        <div className='col-span-2 flex justify-start items-start p-4'>
+                          <div className='flex flex-col justify-between items-start gap-2'>
+                            <Link to={location.pathname + "/" + item.post_id + "-" + item.name} className='text-primary font-medium text-2xl mb-2'>
+                              <h3 >{item.name}</h3>
                             </Link>
-                            <div className='col-span-2 flex justify-start items-start p-4'>
-                              <div className='flex flex-col justify-between items-start gap-2'>
-                                <Link to={location.pathname + "/" + item.post_id + "-" + item.name} className='text-primary font-medium text-2xl mb-2'>
-                                  <h3 >{item.name}</h3>
-                                </Link>
-                                <div className='flex flex-col justify-start items-start gap-2'>
-                                  <p className='text-primary font-normal border border-[#F2F4F8] py-2 px-6 rounded-md'>{item.category.name}</p>
-                                  <div className='flex justify-evenly gap-4 items-center'>
-                                    <p className='text-helper font-medium'>Added: <span className='text-light font-normal'>{getFormatedDate(item.createdAt)}</span></p>
-                                    <p className='text-helper font-medium'>Expires: <span className='text-light font-normal'>{item.expires ? getFormatedDate(item.expires) : "Never"}</span></p>
-                                  </div>
-                                  <div className='bg-[#F2F4F8] flex justify-between items-center px-2 py-1 rounded-md gap-4'>
-                                    <div className=' flex justify-between items-center gap-2 cursor-pointer'>
-                                      <ViewIcon className='fill-light' />
-                                      <span className='text-light font-medium'>{item.views.length}</span>
-                                    </div>
-                                    <div className=' flex justify-between items-center gap-2 cursor-pointer'>
-                                      <MobileIcon className='fill-light' />
-                                      <span className='text-light font-medium'>3</span>
-                                    </div>
-                                    <div className=' flex justify-between items-center gap-2 cursor-pointer'>
-                                      <LikeIcon className='fill-light' />
-                                      <span className='text-light font-medium'>0</span>
-                                    </div>
-                                  </div>
+                            <div className='flex flex-col justify-start items-start gap-2'>
+                              <p className='text-primary font-normal border border-[#F2F4F8] py-2 px-6 rounded-md'>{item.category.name}</p>
+                              <div className='flex justify-evenly gap-4 items-center'>
+                                <p className='text-helper font-medium'>Added: <span className='text-light font-normal'>{getFormatedDate(item.createdAt)}</span></p>
+                                <p className='text-helper font-medium'>Expires: <span className='text-light font-normal'>{item.expires ? getFormatedDate(item.expires) : "Never"}</span></p>
+                                <p className='text-helper font-medium'>Status: <span className='text-light font-normal'>{item.status}</span></p>
+                              </div>
+                              <div className='bg-[#F2F4F8] flex justify-between items-center px-2 py-1 rounded-md gap-4'>
+                                <div className=' flex justify-between items-center gap-2 cursor-pointer'>
+                                  <ViewIcon className='fill-light' />
+                                  <span className='text-light font-medium'>{item._count.views}</span>
+                                </div>
+                                <div className=' flex justify-between items-center gap-2 cursor-pointer'>
+                                  <MobileIcon className='fill-light' />
+                                  <span className='text-light font-medium'>{item._count.comments}</span>
+                                </div>
+                                <div className=' flex justify-between items-center gap-2 cursor-pointer'>
+                                  <LikeIcon className='fill-light' />
+                                  <span className='text-light font-medium'>{item._count.likes}</span>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div className='col-span-2 relative p-4 flex justify-between items-start flex-col'>
-                          <ul>
-                            <li onClick={() => handleEdit(item.post_id)} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><EditIcon />Edit</li>
-                            <li onClick={() => handleDelete(item.post_id)} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><DeleteIcon />Delete</li>
-                          </ul>
-                          <div className='mx-auto'>
-                            {/* {user.role === 'USER' &&  */}
-                            <button onClick={() => handlePromote(item.post_id, 'Pending')} className='bg-helper text-white font-semibold'>
-                              Promote
-                            </button>
-                            {/* } */}
-                          </div>
-                        </div>
-                      </div>)}
-                    </div>}
-                <div className='mt-4'>
-                  {/* <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>3</span> of <span className='text-[#374B5C] font-semibold'>6</span> results</p> */}
-                </div>
-              </div>
+                      </div>
+                    </div>
+                    <div className='col-span-2 relative p-4 flex justify-between items-start flex-col'>
+                      <ul>
+                        <li onClick={() => handleEdit(item.post_id)} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><EditIcon />Edit</li>
+                        <li onClick={() => handleDelete(item.post_id)} className={`cursor-pointer text-base font-medium text-[#3F5263] hover:text-[#FFB300] py-1 transition ease-in-out flex justify-start gap-2 items-center`} ><DeleteIcon />Delete</li>
+                      </ul>
+                      <div className='mx-auto'>
+                        {/* {user.role === 'USER' &&  */}
+                        <button onClick={() => handlePromote(item.post_id, 'Pending')} className='bg-helper text-white font-semibold'>
+                          Promote
+                        </button>
+                        {/* } */}
+                      </div>
+                    </div>
+                  </div>)}
+                </div>}
+            <div className='mt-4'>
+              {/* <p className='text-[#73819E]'>Showing <span className='text-[#374B5C] font-semibold'>1</span> to <span className='text-[#374B5C] font-semibold'>3</span> of <span className='text-[#374B5C] font-semibold'>6</span> results</p> */}
             </div>
           </div>
         </div>

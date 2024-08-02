@@ -4,7 +4,7 @@ import React from 'react'
 function NoRecords({ title, icon }) {
     return (
         <div className='flex flex-col justify-center items-center gap-5'>
-            <h2 className='text-2xl font-bold text-[#374B5C]'>{title}</h2>
+            <h2 className='lg:text-2xl font-bold text-[#374B5C]'>{title}</h2>
             {icon ? icon : <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={180}

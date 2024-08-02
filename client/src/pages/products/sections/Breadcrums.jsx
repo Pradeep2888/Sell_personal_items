@@ -9,7 +9,7 @@ function Breadcrums({ data }) {
                 {
                     breadcrumData.map((item, index) => {
                         return item.link ?
-                            <li className='flex items-center justify-between gap-4'>
+                            <li key={index} className='flex items-center justify-between gap-4'>
                                 <Link className='text-base font-medium text-[#904B5C]' to={`${item.link}`}>{item.name}</Link>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@ function Breadcrums({ data }) {
                                         fill="#F09965"
                                     />
                                 </svg>
-                            </li> : <li className='text-[#B18B8C] text-base font-medium'>{item.name}</li>
+                            </li> : <li key={index} className='text-[#B18B8C] text-base font-medium'>{item.name}</li>
                     })
                 }
 

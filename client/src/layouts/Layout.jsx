@@ -19,6 +19,8 @@ const token = localStorage.getItem('_sell_Token');
 function Layout() {
     const { user, logout, checkSession, loading } = useContext(AuthContext);
 
+    const [sidebarOpen,setSidebarOpen] = useState(false)
+
     // useBrowserFocus(() => {
     //     checkSession();
     // });
@@ -33,7 +35,7 @@ function Layout() {
 
     return (
         <div>
-            <Navbar />
+            <Navbar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen}/>
             <Outlet />
             <Footer />
         </div>

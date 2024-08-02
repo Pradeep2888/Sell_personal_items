@@ -85,3 +85,50 @@ const AuthProvider = ({ children }) => {
 };
 
 export { AuthContext, AuthProvider };
+
+// AuthContext.js
+// import React, { createContext, useState, useEffect } from 'react';
+
+// import { GlobalLoader } from '../components/backdropLoader/BackdropLoader';
+// import authService from '../services/operations/authApi';
+
+// export const AuthContext = createContext();
+
+// export const AuthProvider = ({ children }) => {
+//   const [user, setUser] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   const login = async (bodyData) => {
+//     const data = await authService.login(bodyData);
+//     setUser({ ...data.data });
+//     setLoading(false)
+//     return data
+//   };
+
+//   const logout = () => {
+//     setUser(null);
+//     setLoading(false)
+//   };
+
+//   const refreshAccessToken = async () => {
+//     const data = await authService.refreshToken();
+//     setUser({ accessToken: data.accessToken });
+//     setLoading(false)
+//     return data
+//   };
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       refreshAccessToken();
+//     }, 14 * 60 * 1000); // Refresh the token every 14 minutes
+//     setLoading(false)
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   return (
+//     <AuthContext.Provider value={{ user, login, logout }}>
+//       {loading ? <GlobalLoader /> : children}
+//     </AuthContext.Provider>
+//   );
+// };
+

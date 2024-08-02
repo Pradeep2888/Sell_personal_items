@@ -38,10 +38,10 @@ export default function Main() {
 
   return (
 
-    // <Suspense fallback={<GlobalLoader/>}>
-    <div>
-      {content}
-    </div>
-    // </Suspense>
+    <Suspense fallback={<GlobalLoader />}>
+      <div>
+        {content}
+      </div>
+    </Suspense>
   );
 }

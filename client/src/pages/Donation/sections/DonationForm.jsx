@@ -160,9 +160,9 @@ function DonationForm() {
         <form className='flex flex-col justify-between items-start'
         // onSubmit={handleSubmit(handleDonation)}
         >
-            <div className='grid grid-cols-1 w-full gap-5 md:grid-cols-2 lg:grid-cols-3'>
+            <div className='grid grid-cols-1 w-full gap-5  lg:grid-cols-3'>
                 {/* {!user ? <> */}
-                <div className='relative'>
+                <div className='relative col-span-3 md:col-span-1'>
                     <input
                         name='name'
                         onChange={handleChange}
@@ -174,7 +174,7 @@ function DonationForm() {
                         <UserNameIcon color={"#475B6B"} />
                     </span>
                 </div>
-                <div className='relative'>
+                <div className='relative col-span-3 md:col-span-1'>
                     <input
                         name='email'
                         onChange={handleChange}
@@ -186,7 +186,7 @@ function DonationForm() {
                         <EmailIcon color={"#475B6B"} />
                     </span>
                 </div>
-                <div className='relative flex'>
+                <div className='relative col-span-3 md:col-span-1'>
                     {/* <SelectCountryCode /> */}
                     <input
                         name='phone'
@@ -199,7 +199,7 @@ function DonationForm() {
                         <MobileIcon color={"#475B6B"} />
                     </span>
                 </div>
-                <div className='relative'>
+                <div className='relative col-span-3 md:col-span-1'>
                     <input
                         name='pickupAddress'
                         onChange={handleChange}
@@ -211,7 +211,7 @@ function DonationForm() {
                         <LocationIcon color={"#475B6B"} />
                     </span>
                 </div>
-                <div className='relative'>
+                <div className='relative col-span-3 md:col-span-1'>
                     <label htmlFor='pickupDate' className={`${formData.pickupDate ? "hidden" : 'absolute mb-2 block ml-2 pb-1 font-medium text-primary bg-white z-20 left-12 top-4 w-1/2'}`}>Pickup Date *</label>
                     <input value={formData.pickupDate} name='pickupDate' id='pickupDate' onChange={handleChange} className='py-4 w-full pl-14 pr-2 text-sm lg:text-base border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c] font-medium' type="date" placeholder="Pickup Date *" />
                     <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>
@@ -224,7 +224,7 @@ function DonationForm() {
                 <div className='relative col-span-3 text-primary mt-2'>
                     <h3 className='font-semibold ml-5'>Add Items *</h3>
                 </div>
-                <div className='relative text-primary'>
+                <div className='relative text-primary col-span-3 md:col-span-1'>
                     <div className="w-full">
                         <label className="mb-2 block ml-2 font-medium text-primary">
                             Product Name *
@@ -290,13 +290,13 @@ function DonationForm() {
                         </span>
                     </div>
                 </div> */}
-                <div className='relative'>
+                <div className='relative col-span-3 md:col-span-1'>
                     <label className="mb-2 block ml-2 font-medium text-primary">
                         Product Category *
                     </label>
                     <DropdownList label={'Select Product Category'} value={itemsData.category} onChange={(value) => setItemData((prev) => ({ ...prev, category: value.id, categoryName: value.name }))} />
                 </div>
-                <div className='relative text-primary'>
+                <div className='relative text-primary col-span-3 md:col-span-1'>
                     <div className="w-full">
                         <label className="mb-2 block ml-2 font-medium text-primary">
                             Quantity *
@@ -327,7 +327,7 @@ function DonationForm() {
                 </div> */}
                 <div className='relative col-span-3'>
                     <label className='text-primary text-sm font-bold text-nowrap' htmlFor="selectAmout">Select Amount (Optional)</label>
-                    <div className='bg-white border border-gray-200 px-5 py-3 rounded flex justify-start items-center gap-5 w-fit relative mt-2'>
+                    <div className='bg-white border border-gray-200 px-5 py-3 rounded flex justify-start items-center gap-5 w-fit relative mt-2 flex-wrap lg:flex-nowrap'>
                         <div>
                             <input className='opacity-0 absolute' type="radio" name="amount" id="10" value={'10'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
                             <label className={`cursor-pointer size-11 p-2 ${formData.amount === '10' ? " bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="10">$ 10</label>
