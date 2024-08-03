@@ -16,6 +16,7 @@ import { AuthContext } from '../../auth/AuthContext';
 import { SEND_PURCHASE_REQUEST } from '../../services/operations/PurchaseRequestApi';
 import UserStatus from './sections/UserStatus';
 import TooltipIcon from '../../components/Tooltip';
+import RatingComponent from '../../components/RatingComponent';
 
 
 const ProductDetail = () => {
@@ -229,7 +230,7 @@ const ProductDetail = () => {
                                                 <p className='text-light font-medium text-sm'>{"Your opinion matters"}</p>
                                             </div>
                                         </div>
-                                        <div className=' flex '>
+                                        {/* <div className=' flex '>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width={30}
@@ -280,7 +281,8 @@ const ProductDetail = () => {
                                             >
                                                 <path d="M14.9987 22.6139L21.21 26.3626C22.19 26.9539 23.3987 26.0751 23.1387 24.9614L21.49 17.8951L26.9787 13.1401C27.8437 12.3914 27.3812 10.9701 26.2412 10.8739L19.0162 10.2614L16.19 3.59264C15.7437 2.54139 14.2537 2.54139 13.8075 3.59264L10.9812 10.2614L3.75624 10.8739C2.61624 10.9701 2.15374 12.3914 3.01874 13.1401L8.50749 17.8951L6.85874 24.9614C6.59874 26.0751 7.80749 26.9539 8.78749 26.3626L14.9987 22.6139Z" />
                                             </svg>
-                                        </div>
+                                        </div> */}
+                                        <RatingComponent/>
                                     </div>
                                     <div>
                                         <FileUpload className={'min-h-30'} progress={progress} onUploadFile={handleGallary} handleRemove={handleRemoveGallary} type={"images"} name={"Gallery"} files={gallery} setFiles={setGallery} id={'review-images'} />

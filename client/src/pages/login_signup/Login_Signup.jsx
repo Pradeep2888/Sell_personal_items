@@ -341,7 +341,7 @@ function Login_Signup() {
                                             <input id='rememberMe' onChange={(e) => setRememberMe(e.target.checked)} checked={rememberMe} className='border size-4 border-[#D5E3EE] outline-[#D5E3EE] rounded hover:outline-none focus:outline-none placeholder:text-[#374b5c] text-base font-medium' type="checkbox" placeholder="Email or Username" />
                                             <label htmlFor='rememberMe' className='ml-2 text-[#374b5c]'>Remember me</label>
                                         </div>
-                                        <div><Link className='text-[#ffb300] font-semibold' to={'/forget-password'}>Forget Password?</Link></div>
+                                        {/* <div><Link className='text-[#ffb300] font-semibold' to={'/forget-password'}>Forget Password?</Link></div> */}
                                     </div>
                                     <button onClick={handleLogin} className='rounded w-full px-8 py-4 bg-[#537CD9] text-white font-bold'>{loading ? "Loading..." : "Login"}</button>
                                     {/* <button
