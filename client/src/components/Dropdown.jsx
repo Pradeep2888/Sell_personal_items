@@ -37,9 +37,9 @@ const Dropdown = ({defaultValue, children, setCategory, category, onChange, onCl
     };
 
     const handleSearch = (e) => {
-        console.log(e.target.value, lists);
+        console.log(e.target.value, data.categories);
         const searchValue = e.target.value.toLowerCase();
-        const filteredList = lists.filter((item) => item.name.toLowerCase().includes(searchValue));
+        const filteredList = data.categories.filter((item) => item.name.toLowerCase().includes(searchValue));
         setFilteredList(filteredList)
     }
 

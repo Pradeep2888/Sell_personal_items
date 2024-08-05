@@ -16,6 +16,9 @@ export const endpoints = {
   LOGOUT_USER_API: BASE_URL + "/logout",
   SIGNIN_API: BASE_URL + "/signup",
   UPDATE_PASSOWRD_API: BASE_URL + "/updatePassword",
+  ValidateOtp: BASE_URL + "/validate-otp",
+  SendOTP: BASE_URL + "/send-otp",
+  change_password: BASE_URL + "/change-password",
 };
 
 export const membershipEndpoints = {
@@ -58,8 +61,7 @@ export const productEndPoint = {
   getProductCategory_API: BASE_URL + "/product-categories",
   postLike_API: BASE_URL + "/like",
   addToFavourite_API: BASE_URL + "/favorite",
-  promoteProduct_API:BASE_URL+"/promote"
-
+  promoteProduct_API: BASE_URL + "/promote",
 };
 
 export const newsLetterEndPoint = {

@@ -1,7 +1,7 @@
 import { endpoints } from "../api";
 import responseHanlder from "../apiUtils";
 // authService.js
-import axios from 'axios';
+import axios from "axios";
 
 const {
   LOGIN_API,
@@ -9,7 +9,10 @@ const {
   AUTHENTICATE_USER_API,
   LOGOUT_USER_API,
   GETUSER,
+  change_password,
   SET_COOKIES,
+  SendOTP,
+  ValidateOtp
 } = endpoints;
 
 export const LOGIN = async (formdata) => {
@@ -30,8 +33,15 @@ export const AUTHENTICATEUSER = async () => {
 export const LOGOUTUSER = async () => {
   return await responseHanlder("POST", LOGOUT_USER_API, null, true, null);
 };
-
-
+export const SEND_OTP = async (bodyData) => {
+  return await responseHanlder("POST", SendOTP, bodyData, true, null);
+};
+export const VALIDATE_OTP = async (bodyData) => {
+  return await responseHanlder("POST", ValidateOtp, bodyData, true, null);
+};
+export const CHANGE_PASSWORD = async (bodyData) => {
+  return await responseHanlder("POST", change_password, bodyData, true, null);
+};
 
 const API_URL =
   import.meta.env.MODE === "development"
@@ -49,7 +59,11 @@ const login = async (body) => {
 };
 
 const refreshToken = async () => {
-  const response = await axios.post(`${API_URL}/refresh-token`, {}, { withCredentials: true });
+  const response = await axios.post(
+    `${API_URL}/refresh-token`,
+    {},
+    { withCredentials: true }
+  );
   return response.data;
 };
 
@@ -60,4 +74,3 @@ const authService = {
 };
 
 export default authService;
-

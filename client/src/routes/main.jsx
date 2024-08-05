@@ -32,6 +32,10 @@ import ProductDetail from "../pages/products/ProductDetail";
 import QualifiedItemsList from "../pages/QualifiedListItems/QualifiedItemsList";
 import AdminLogin from "../pages/admin_panel/AdminLogin";
 import AdminLayout from "../layouts/AdminLayout";
+import ForgetPassword from "../pages/login_signup/ForgetPassword";
+import ForgetPasswordLayout from "../pages/login_signup/ForgetPasswordLayout";
+import OtpVerification from "../pages/login_signup/OtpVerification";
+import ChangePassword from "../pages/login_signup/ChangePassword";
 
 
 const routes = [
@@ -66,6 +70,24 @@ const routes = [
             {
                 path: "login-signup-review",
                 element: <LoginSignupReview />,
+            },
+            {
+                path: "forget-password",
+                element: <ForgetPasswordLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <ForgetPassword />
+                    },
+                    {
+                        path: "otp-verification",
+                        element:<OtpVerification/>
+                    },
+                    {
+                        path: "change-password",
+                        element:<ChangePassword/>
+                    }
+                ]
             },
             {
                 path: "products",
