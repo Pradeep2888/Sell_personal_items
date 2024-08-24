@@ -11,25 +11,28 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { AuthProvider } from './auth/AuthContext.jsx'
+import { NextUIProvider } from '@nextui-org/react'
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
-  <AuthProvider>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <BackdropLoaderProvider>
-          <BackdropLoader>
-            <Main />
-          </BackdropLoader>
-        </BackdropLoaderProvider>
+  <React.StrictMode>
+    <NextUIProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <BackdropLoaderProvider>
+              <BackdropLoader>
+                <Main />
+              </BackdropLoader>
+            </BackdropLoaderProvider>
 
-        {/* <BackdropLoader /> */}
-        <Toaster position="top-center" theme='light' richColors />
-      </BrowserRouter>
-    </QueryClientProvider>
-  </AuthProvider>
-  //</React.StrictMode>
+            {/* <BackdropLoader /> */}
+            <Toaster position="top-center" theme='light' richColors />
+          </BrowserRouter>
+        </QueryClientProvider>
+      </AuthProvider>
+    </NextUIProvider>
+  </React.StrictMode>
 )
 
 export default function Main() {

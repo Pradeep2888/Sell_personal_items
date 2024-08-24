@@ -3,7 +3,7 @@ import { CrossIcon } from './Icons';
 import { GET_PRODUCT_CATEGORY } from '../services/operations/productsApi';
 import { useQuery } from '@tanstack/react-query';
 
-const Dropdown = ({defaultValue, children, setCategory, category, onChange, onClear, required, search, label }) => {
+const Dropdown = ({ defaultValue, children, setCategory, category, onChange, onClear, required, search, label }) => {
 
     const dropdownRef = useRef(null)
     // const [sortValue, setSortvalue] = useState('');
@@ -298,10 +298,10 @@ export const DropdownList = ({ value, onChange, label }) => {
         setFilteredList(filteredList)
     }
 
-    const handleClear = (e) => {
-        e.stopPropagation()
+    const handleClear = () => {
         handleSearch('')
         setSortvalue({ value: "", name: "" })
+        // onClear(setSortvalue)
         onChange({ value: "", name: "" })
     }
 
@@ -313,7 +313,8 @@ export const DropdownList = ({ value, onChange, label }) => {
     return (
         <div ref={dropdownRef} className='relative' >
             <div className='border border-[#D5E3EE] flex justify-between items-center p-3 gap-4 rounded-md' onClick={handleToggle}>
-                <div className='min-w-48 text-base font-medium text-[#3F5263] select-none'>{sortValue.value !== '' ? sortValue.name : label}</div>
+                <input type="text" defaultValue={sortValue.name} className={`w-full focus:outline-none ${sortValue.value === '' ? "hidden" : ""}`} name='category'/>
+                <div className={`min-w-48 text-base font-medium text-[#A9C5CB] select-none ${sortValue.value !== '' ? "hidden" : ""}`}>{sortValue.value !== '' ? sortValue.name : label}</div>
                 {sortValue.value !== '' ? <CrossIcon onClick={(e) => handleClear(e)} /> : <div>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

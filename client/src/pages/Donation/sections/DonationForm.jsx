@@ -10,6 +10,7 @@ import EditorComponent from '../../../components/CKEEditor';
 import FileUpload from '../../../components/FileUpload';
 import { AuthContext } from '../../../auth/AuthContext';
 import Table from '../../../components/Table';
+import PhoneNumber from '../../../components/PhoneNumber';
 
 
 const donationSchema = yup
@@ -27,14 +28,7 @@ const donationSchema = yup
 
 function DonationForm() {
 
-    const { user } = useContext(AuthContext);
-
-
-    const [error, setError] = useState('')
-
     const [formData, setFormData] = useState({
-        otherAmount: false,
-        amount: '',
         name: "",
         email: '',
         countryCode: "+91",
@@ -52,53 +46,23 @@ function DonationForm() {
         image: []
     });
 
-    const [selectedOption, setSelectedOption] = useState("");
-    const [isOptionSelected, setIsOptionSelected] = useState(false);
-    const [category, setCategory] = useState('')
-
-    const changeTextColor = () => {
-        setIsOptionSelected(true);
-    };
-
-
-    console.log(itemsData, "itemsData");
-    // const {
-    //     register,
-    //     handleSubmit,
-    //     formState: { errors },
-    // } = useForm({
-    //     resolver: yupResolver(donationSchema),
-    // })
-
     const handleChange = (e) => {
         const { value, name } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
-    console.log(items, "itemsmms");
 
     const handleDonation = async (e) => {
         e.preventDefault();
-        let res = await CREATEDONATION({ ...formData, items: items.length !== 0 ? items : [itemsData] });
+        let res = await CREATEDONATION({ ...formData, items: items.length !== 0 ? items : [itemsData],type:"ITEMS" });
         if (res) {
-            setFormData({
-                otherAmount: false,
-                amount: '10',
-                name: "",
-                email: '',
-                countryCode: "",
-                phone: '',
-                pickupAddress: '',
-                pickupDate: '',
-            })
             toast.success(res.message);
+            handleReset()
         }
     }
 
     const handleGallary = async (files) => {
-
         if (!files || files.length === 0) return;
-
         try {
             const promises = Array.from(files).map(file => {
                 return new Promise((resolve, reject) => {
@@ -121,24 +85,22 @@ function DonationForm() {
 
     const handleRemoveGallary = async (e, i) => {
         let list = [...itemsData.image];
-        // let res = await DELETEUPLOADS(list[i].filename);
-        // if (res.status) {
         list.splice(i, 1);
         setItemData((prev) => ({ ...prev, image: list }))
         toast.success('Image removed successfully')
-        // }
     }
 
     const handleReset = () => {
         setItemData((prev) => ({
+            ...prev,
             name: '',
             category: "",
             quantity: '',
             description: '',
             image: []
         }));
+        // setSearchValue({ name: "", value: "" })
         setItemData((prev) => ({ ...prev, category: '', categoryName: '' }))
-
     }
 
 
@@ -147,19 +109,9 @@ function DonationForm() {
         || itemsData.quantity === '' || itemsData.name === '' || itemsData.image.length === 0;
 
 
-    const handleAddNew = (e) => {
-        e.preventDefault();
-        setItems((prev) => ([{ ...itemsData }, ...prev]));
-        handleReset()
-    }
-
-    // const handleDelete
-    // console.log(disable);
 
     return (
-        <form className='flex flex-col justify-between items-start'
-        // onSubmit={handleSubmit(handleDonation)}
-        >
+        <form className='flex flex-col justify-between items-start'>
             <div className='grid grid-cols-1 w-full gap-5  lg:grid-cols-3'>
                 {/* {!user ? <> */}
                 <div className='relative col-span-3 md:col-span-1'>
@@ -186,19 +138,7 @@ function DonationForm() {
                         <EmailIcon color={"#475B6B"} />
                     </span>
                 </div>
-                <div className='relative col-span-3 md:col-span-1'>
-                    {/* <SelectCountryCode /> */}
-                    <input
-                        name='phone'
-                        onChange={handleChange}
-                        className='py-4 w-full pl-14 pr-2 text-sm lg:text-base border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c]  font-medium'
-                        type="tel"
-                        placeholder="Phone *"
-                    />
-                    <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>
-                        <MobileIcon color={"#475B6B"} />
-                    </span>
-                </div>
+                <PhoneNumber onchange={(value) => setFormData((prev) => ({ ...prev, phone: value.split("-")[1], countryCode: value.split("-")[0] }))} value={formData.phone} />
                 <div className='relative col-span-3 md:col-span-1'>
                     <input
                         name='pickupAddress'
@@ -216,7 +156,6 @@ function DonationForm() {
                     <input value={formData.pickupDate} name='pickupDate' id='pickupDate' onChange={handleChange} className='py-4 w-full pl-14 pr-2 text-sm lg:text-base border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c] font-medium' type="date" placeholder="Pickup Date *" />
                     <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'>
                         <CalenderIcon color={"#475B6B"} />
-
                     </span>
 
                 </div>
@@ -238,63 +177,11 @@ function DonationForm() {
                         />
                     </div>
                 </div>
-
-                {/* <div className='relative'>
-                    <label className="mb-2 block text-primary ml-2 font-medium">
-                        {" "}
-                        Product Category{" "}
-                    </label>
-
-                    <div className="relative z-20 bg-transparent dark:bg-form-input">
-                        <select
-                            value={selectedOption}
-                            onChange={(e) => {
-                                setSelectedOption(e.target.value);
-                                changeTextColor();
-                            }}
-                            className={`relative z-20 w-full appearance-none font-medium rounded border border-stroke text-primary bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark  ${isOptionSelected ? "text-black" : ""
-                                }`}
-                        >
-                            <option value="" className="text-body dark:text-bodydark font-medium">
-                                Select Product Category
-                            </option>
-                            <option value="USA" className="text-body dark:text-bodydark">
-                                USA
-                            </option>
-                            <option value="UK" className="text-body dark:text-bodydark">
-                                UK
-                            </option>
-                            <option value="Canada" className="text-body dark:text-bodydark">
-                                Canada
-                            </option>
-                        </select>
-
-                        <span className="absolute right-4 top-1/2 z-30 -translate-y-1/2">
-                            <svg
-                                className="fill-current"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <g opacity="0.8">
-                                    <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                                        fill=""
-                                    ></path>
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                </div> */}
                 <div className='relative col-span-3 md:col-span-1'>
                     <label className="mb-2 block ml-2 font-medium text-primary">
                         Product Category *
                     </label>
-                    <DropdownList label={'Select Product Category'} value={itemsData.category} onChange={(value) => setItemData((prev) => ({ ...prev, category: value.id, categoryName: value.name }))} />
+                    <DropdownList label={'Select Product Category'} value={itemsData.category} onClear={handleReset} onChange={(value) => setItemData((prev) => ({ ...prev, category: value.id, categoryName: value.name }))} />
                 </div>
                 <div className='relative text-primary col-span-3 md:col-span-1'>
                     <div className="w-full">
@@ -322,56 +209,8 @@ function DonationForm() {
                     </label>
                     <FileUpload files={itemsData.image} progress={0} onUploadFile={handleGallary} handleRemove={handleRemoveGallary} type={"images"} name={"Gallery"} id={"Gallery"} setFiles={(img) => setItemData((prev) => ({ ...prev, image: [...prev.image, img] }))} />
                 </div>
-                {/* <div className='relative'>
-                    <textarea name='items' onChange={handleChange} className='w-full border text-sm lg:text-base border-[#D5E3EE] rounded py-3 min-h-24 px-8 focus:outline-none placeholder:text-[#374b5c]  font-medium' type="text" placeholder="Items *" />
-                </div> */}
-                <div className='relative col-span-3'>
-                    <label className='text-primary text-sm font-bold text-nowrap' htmlFor="selectAmout">Select Amount (Optional)</label>
-                    <div className='bg-white border border-gray-200 px-5 py-3 rounded flex justify-start items-center gap-5 w-fit relative mt-2 flex-wrap lg:flex-nowrap'>
-                        <div>
-                            <input className='opacity-0 absolute' type="radio" name="amount" id="10" value={'10'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '10' ? " bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="10">$ 10</label>
-                        </div>
-                        <div >
-                            <input className='opacity-0 absolute' type="radio" name="amount" id="20" value={'20'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '20' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="20">$ 20</label>
-                        </div>
-                        <div >
-                            <input className='opacity-0 absolute' type="radio" name="amount" id="30" value={'30'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '30' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="30">$ 30</label>
-                        </div>
-                        <div >
-                            <input className='opacity-0 absolute' type="radio" name="amount" id="40" value={'40'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '40' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="40">$ 40</label>
-                        </div>
-                        <div >
-                            <input className='opacity-0 absolute' type="radio" name="amount" id="50" value={'50'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '50' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="50">$ 50</label>
-                        </div>
-                        <div >
-                            <input className='opacity-0 absolute' type="radio" name="amount" id="100" value={'100'} onChange={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: e.target.value }))} />
-                            <label className={`cursor-pointer size-11 p-2 ${formData.amount === '100' ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} htmlFor="100">$ 100</label>
-                        </div>
-                        <div>
-                            <span onClick={(e) => setFormData((prev) => ({ ...prev, otherAmount: !formData.otherAmount, amount: '' }))} className={`cursor-pointer py-2 px-4 ${formData.otherAmount === true ? "bg-helper text-white" : "text-primary"} text-sm font-bold text-nowrap shadow-md bg-[#F0F4FA] rounded-full  flex justify-center items-center`} >Other</span>
-                        </div>
-                        {formData.amount && <div>
-                            <span onClick={(e) => setFormData((prev) => ({ ...prev, otherAmount: false, amount: '' }))} className={`cursor-pointer py-2 px-4 text-red-500 text-sm font-bold text-nowrap   flex justify-center items-center`}><CrossIcon /><span className='ml-1'>clear</span></span>
-                        </div>}
-                        {formData.otherAmount === true &&
-                            <div className='relative flex-grow'>
-                                <input className='py-4 w-full pl-14 pr-2 text-sm lg:text-base border border-[#D5E3EE] rounded focus:outline-none placeholder:text-[#374b5c]  font-medium' type="number" placeholder="Enter Amount *" name='amount' maxLength={5} onChange={handleChange} />
-                                <span className='absolute top-[13px] left-3 w-8 h-8 rounded-md bg-[#d5e3ee] flex justify-center items-center'></span>
-                            </div>}
-                    </div>
-                </div>
-                {/* <div className='relative col-span-1'>
-                    <button onClick={handleAddNew} className='bg-secondary text-white font-semibold'>Add New Item</button>
-                </div> */}
 
-                {items.length > 0 && <div className='relative col-span-3'>
-                    <Table setItems={setItems} items={items} />
-                </div>}
+
 
             </div>
             <button onClick={handleDonation} disabled={disable} className='mt-10 block w-full rounded-md bg-indigo-600 disabled:bg-opacity-50 disabled:hover:bg-opacity-50 disabled:cursor-not-allowed px-3 py-2 text-center text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>Donate Now</button>

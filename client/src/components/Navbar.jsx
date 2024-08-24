@@ -6,8 +6,6 @@ import { toast } from 'sonner';
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../auth/AuthContext';
 import ClickOutside from './Clickoutside';
-// import { useWebSocket } from '../hooks/Hooks';
-// import { webSocketUrl } from '../utils/constants';
 
 
 // const cookies = new Cookies();
@@ -50,55 +48,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
             { icons: <SettingIcon />, name: 'Settings', link: '/panel/settings' },
         ]
     }
-
-    // let UserNavLinkList;
-
-    // if (user) {
-    //     if (user.buyer) {
-    //         UserNavLinkList = [
-    //             { icons: <AddIcon />, name: 'Add New', link: '/panel/create' },
-    //             { icons: <OrdersIcon />, name: 'My Products', link: '/panel/my-products' },
-    //             { icons: <LikeIcon />, name: 'Favorites', link: '/panel/favorites' },
-    //             { icons: <MessageIcon />, name: 'Messages', link: '/panel/messages' },
-    //             { icons: <OrdersIcon />, name: 'My Orders', link: '/panel/my-orders' },
-    //             { icons: <SettingIcon />, name: 'Settings', link: '/panel/settings' },
-    //         ]
-    //     }
-    //     if (user.donor) {
-    //         UserNavLinkList = [
-    //             { icons: <AddIcon />, name: 'Add New', link: '/panel/create' },
-    //             { icons: <OrdersIcon />, name: 'My Products', link: '/panel/my-products' },
-    //             { icons: <LikeIcon />, name: 'Favorites', link: '/panel/favorites' },
-    //             { icons: <MessageIcon />, name: 'Messages', link: '/panel/messages' },
-    //             { icons: <OrdersIcon />, name: 'My Orders', link: '/panel/my-orders' },
-    //             { icons: <SettingIcon />, name: 'Settings', link: '/panel/settings' },
-    //         ]
-    //     }
-    //     if (user.seller) {
-    //         UserNavLinkList = [
-    //             { icons: <AddIcon />, name: 'Add New', link: '/panel/create' },
-    //             { icons: <OrdersIcon />, name: 'My Products', link: '/panel/my-products' },
-    //             { icons: <LikeIcon />, name: 'Favorites', link: '/panel/favorites' },
-    //             { icons: <MessageIcon />, name: 'Messages', link: '/panel/messages' },
-    //             { icons: <OrdersIcon />, name: 'My Orders', link: '/panel/my-orders' },
-    //             { icons: <SettingIcon />, name: 'Settings', link: '/panel/settings' },
-    //         ]
-    //     }
-    //     // if (user.seller && user.donor && user.buyer) {
-    //     //     UserNavLinkList = [
-    //     //         { icons: <AddIcon />, name: 'Add New', link: '/panel/create' },
-    //     //         { icons: <OrdersIcon />, name: 'My Products', link: '/panel/my-products' },
-    //     //         { icons: <LikeIcon />, name: 'Favorites', link: '/panel/favorites' },
-    //     //         { icons: <MessageIcon />, name: 'Messages', link: '/panel/messages' },
-    //     //         { icons: <OrdersIcon />, name: 'My Orders', link: '/panel/my-orders' },
-    //     //         { icons: <SettingIcon />, name: 'Settings', link: '/panel/settings' },
-    //     //     ]
-    //     // }
-    // }
-
-
-    // console.log(openMenuBar);
-
 
     return (
         <header className="bg-white py-4 flex items-center box-border w-full mx-auto sticky top-0 z-30 md:px-4 shadow-xl">
@@ -146,35 +95,13 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                             <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear ">
                                 {/* <!-- Sidebar Menu --> */}
                                 <nav className=" px-4 py-4 lg:mt-9 lg:px-6">
-
-
-
-                                    {user ? <ul className='flex flex-col items-start '>
+                                    <ul className='flex flex-col items-start '>
                                         <li className='font-[lexend deca] text-primary font-medium text-base py-2 '><Link to={''}>Home</Link></li>
                                         <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/memberships'}>Memberships</Link></li>
                                         <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/qualified-items-list'}>Qualified Items</Link></li>
                                         <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={user ? '/donate' : "/login-register?tab=login"} state={user ? { to: "/" } : { to: "/donate" }}>Donate Items</Link></li>
-                                        {user.donor && <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={user ? '/donate' : "/login-register?tab=login"} state={user ? { to: "/" } : { to: "/donate" }}>Donate Items</Link></li>}
-                                        {/* <><li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/products?type=donation'}>Items for Donation</Link></li></> */}
-
-                                        {/* <li className='font-[lexend deca] font-medium text-base py-2  '><Link to={'/blogs'}>Blog</Link></li>
-                            <li className='font-[lexend deca] font-medium text-base py-2  '><Link to={'/contact-us'}>Contact US</Link></li> */}
-                                    </ul> :
-                                        <ul className=''>
-                                            <li className='font-[lexend deca] text-primary font-medium text-base py-2 '><Link to={''}>Home</Link></li>
-                                            <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/memberships'}>Memberships</Link></li>
-                                            <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/qualified-items-list'}>Qualified Items</Link></li>
-                                            <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={user ? '/donate' : "/login-register?tab=login"} state={{ to: "/donate", "for": 'donor' }}>Donate Items</Link></li>
-                                            {/* <><li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
-                                    <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={'/products?type=donation'}>Items for Donation</Link></li></> */}
-
-                                            {/* <li className='font-[lexend deca] font-medium text-base py-4  '><Link to={'/blogs'}>Blog</Link></li>
-                        <li className='font-[lexend deca] font-medium text-base py-4  '><Link to={'/contact-us'}>Contact US</Link></li> */}
-                                        </ul>
-                                    }
-
-
+                                        <li className='font-[lexend deca] text-primary font-medium text-base py-2  '><Link to={user ? '/donate/money' : "/login-register?tab=login"} state={user ? { to: "/" } : { to: "/donate/money" }}>Donate Money</Link></li>
+                                    </ul>
                                 </nav>
                                 {/* <!-- Sidebar Menu --> */}
                             </div>
@@ -184,30 +111,13 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                 <div className="hidden lg:flex items-center gap-8 w-full">
                     <Link to={'/'} className="logo"><img width={"100"} height={"100"} src={logo} /></Link>
                     <nav className='ml-[45px]'>
-                        {user ? <ul className='flex items-center '>
+                        <ul className='flex items-center '>
                             <li className='font-[lexend deca] text-primary font-medium text-base py-2 '><Link to={''}>Home</Link></li>
                             <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/memberships'}>Memberships</Link></li>
                             <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/qualified-items-list'}>Qualified Items</Link></li>
                             <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={user ? '/donate' : "/login-register?tab=login"} state={user ? { to: "/" } : { to: "/donate" }}>Donate Items</Link></li>
-                            {user.donor && <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={user ? '/donate' : "/login-register?tab=login"} state={user ? { to: "/" } : { to: "/donate" }}>Donate Items</Link></li>}
-                            {/* <><li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=donation'}>Items for Donation</Link></li></> */}
-
-                            {/* <li className='font-[lexend deca] font-medium text-base py-2 ml-[45px] '><Link to={'/blogs'}>Blog</Link></li>
-                            <li className='font-[lexend deca] font-medium text-base py-2 ml-[45px] '><Link to={'/contact-us'}>Contact US</Link></li> */}
-                        </ul> :
-                            <ul className='flex items-center '>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 '><Link to={''}>Home</Link></li>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/memberships'}>Memberships</Link></li>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/qualified-items-list'}>Qualified Items</Link></li>
-                                <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={user ? '/donate' : "/login-register?tab=login"} state={{ to: "/donate", "for": 'donor' }}>Donate Items</Link></li>
-                                {/* <><li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=sale'}>Items for Sale</Link></li>
-                                    <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={'/products?type=donation'}>Items for Donation</Link></li></> */}
-
-                                {/* <li className='font-[lexend deca] font-medium text-base py-4 ml-[45px] '><Link to={'/blogs'}>Blog</Link></li>
-                        <li className='font-[lexend deca] font-medium text-base py-4 ml-[45px] '><Link to={'/contact-us'}>Contact US</Link></li> */}
-                            </ul>
-                        }
+                            <li className='font-[lexend deca] text-primary font-medium text-base py-2 ml-[45px] '><Link to={user ? '/donate/money' : "/login-register?tab=login"} state={user ? { to: "/" } : { to: "/donate/money" }}>Donate Money</Link></li>
+                        </ul>
                     </nav>
                 </div>
                 <div className='hidden lg:block'>
@@ -255,16 +165,16 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
                         </div>
 
-                        {user && <div className='post_product_button'>
-                            <Link to={loggedIn ? '/panel/create' : '/login-register?tab=login'} state={{ to: "/panel/create" }} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
+                        { <div className='post_product_button'>
+                            <Link to={user ? '/panel/create' : '/login-register?tab=login'} state={{ to: "/panel/create" }} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
                                 <span className='text-nowrap text-primary'>Sell</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M5.00488 11.525V7.075H0.854883V5.125H5.00488V0.65H7.00488V5.125H11.1549V7.075H7.00488V11.525H5.00488Z" fill="#000"></path></svg>
                             </Link>
                         </div>}
-                        {!user && <Link to={loggedIn ? '/panel/create' : '/login-register?tab=login'} state={{ to: "/panel/create", "for": "sell" }} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
+                        {/* {!user && <Link to={loggedIn ? '/panel/create' : '/login-register?tab=login'} state={{ to: "/panel/create", "for": "sell" }} className='bg-btn-primay px-4 py-3 rounded-md flex items-center justify-between w-full gap-4 button'>
                             <span className='text-nowrap text-primary'>Sell</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M5.00488 11.525V7.075H0.854883V5.125H5.00488V0.65H7.00488V5.125H11.1549V7.075H7.00488V11.525H5.00488Z" fill="#000"></path></svg>
-                        </Link>}
+                        </Link>} */}
                     </div>
                 </div>
                 <div className='block lg:hidden'>
@@ -321,11 +231,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                     {/* <!-- Sidebar Menu --> */}
                                     <nav className="  ">
                                         <ul className='py-2   bg-white shadow-lg min-w-60 flex flex-col justify-between items-start'>
-                                            {/* <Link to={'/'} className='px-10 w-full flex items-start gap-2 border-b-2 pb-5'>
-                                                <AdminIcon className={'fill-primary '} />
-                                                <span className='text-sm font-medium text-helper'>{user?.username}</span>
-                                            </Link>
-                                            <hr className='text-primary relative mt-2' /> */}
                                             {[user?.role === 'ADMIN' ? [...AdminNavLinkList] : [...UserNavLinkList]][0].map((list, i) => <li key={i} className='py-2 w-full hover:bg-[#f8fafd] text-nowrap flex justify-between items-start '>
                                                 <Link to={list.link} className='px-10 w-full flex items-start gap-2'>
                                                     {list.icons}
@@ -340,9 +245,6 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
                                                 </button>
                                             </li>
                                         </ul>
-
-
-
                                     </nav>
                                     {/* <!-- Sidebar Menu --> */}
                                 </div>

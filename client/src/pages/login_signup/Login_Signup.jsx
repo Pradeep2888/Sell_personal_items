@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { AdminIcon, EmailIcon, LockIcon, MobileIcon, UserNameIcon } from '../../components/Icons';
-import Dropdown from '../../components/Dropdown';
-import { LOGIN, SIGNUP } from '../../services/operations/authApi';
-import { BASEURL, getFormData } from '../../utils/constants';
-import Cookies from 'js-cookie';
+import { AdminIcon, EmailIcon, LockIcon, UserNameIcon } from '../../components/Icons';
+import { SIGNUP } from '../../services/operations/authApi';
+import { getFormData } from '../../utils/constants';
+
 import { toast } from 'sonner';
 import { useGlobalState } from '../../store/AuthStore';
 import { AuthContext } from '../../auth/AuthContext';
@@ -179,16 +178,16 @@ function Login_Signup() {
         const res = await login({ ...formdata, accountType });
         if (res) {
             const from = location.state?.to;
-            console.log(from,res);
+            console.log(from, res);
             if (from) {
                 navigate(from, { replace: true, state: location.state });
             } else if (accountType === 'BUYER') {
                 navigate('/products?type=sale', { replace: true, state: location.state });
             } else if (accountType === 'SELLER') {
                 navigate('/panel/create', { replace: true, state: location.state });
-            } else if (accountType === 'DONATE'){
+            } else if (accountType === 'DONATE') {
                 navigate('/donate', { replace: true, state: location.state });
-            }else{
+            } else {
                 navigate('/', { replace: true, state: location.state });
             }
         }
@@ -297,7 +296,7 @@ function Login_Signup() {
                                     {/* <button onClick={handleNext} className='rounded w-full px-8 py-4 bg-[#537CD9] text-white font-bold mt-10'>Next</button> */}
                                 </div>
                                 <div className='flex w-full flex-col gap-6'>
-                                    <h1 className='text-primary text-xl md:text-2xl lg:text-2xl font-bold text-center'>Login 
+                                    <h1 className='text-primary text-xl md:text-2xl lg:text-2xl font-bold text-center'>Login
                                         {/* With {accountType === 'DONOR' ? "Donor" : accountType === 'SELLER' ? "Seller" : "Buyer"} Account */}
                                     </h1>
                                     <div className='relative mt-10'>

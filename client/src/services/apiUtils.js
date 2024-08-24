@@ -1,7 +1,5 @@
 import { toast } from "sonner";
 import { apiConnector } from "./axiosConfig";
-import { BASEURL } from "../utils/constants";
-import { Navigate } from "react-router-dom";
 
 const responseHanlder = async (
   method,
@@ -11,7 +9,6 @@ const responseHanlder = async (
   params,
   header
 ) => {
-  let data;
   // let processing;
   if (loading) {
     toast.loading("loading...");

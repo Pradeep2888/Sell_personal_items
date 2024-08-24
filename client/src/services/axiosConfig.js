@@ -1,11 +1,6 @@
 import axios from "axios";
 import { toast } from "sonner";
 
-const baseURL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/v1"
-    : "https://sell-personal-items-server.vercel.app/api/v1";
-
 const axiosInstance = axios.create({
   // baseURL: baseURL,
 });
@@ -23,7 +18,7 @@ axiosInstance.interceptors.response.use(
     console.log(error, "hjghfgh");
     if (error.code === "ERR_NETWORK") {
       toast.error(error.message);
-      window.location.href = "/server-error";
+      // window.location.href = "/server-error";
     }
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");

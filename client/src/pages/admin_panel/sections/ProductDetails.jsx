@@ -1,20 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react'
-import { UPDATEPRODUCT, DELETEUPLOADS, GET_MODERATION_PRODUCTByID } from '../../../services/operations/adminApi';
-import { redirect, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {  useState } from 'react'
+import { UPDATEPRODUCT,  GET_MODERATION_PRODUCTByID } from '../../../services/operations/adminApi';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import Topsection from './components/Topsection';
 import Dropdown from '../../../components/Dropdown';
 import FileUpload from '../../../components/FileUpload';
-import axios from 'axios';
-import { fileUploadEndpoints } from '../../../services/api';
 import EditorComponent from '../../../components/CKEEditor';
 import { GET_PRODUCT_CATEGORY } from '../../../services/operations/productsApi';
 import ErrorUi from '../../../components/ErrorUi';
 
 function ProductDetails() {
-
-    const params = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation()
     const navigate = useNavigate()
@@ -86,30 +82,6 @@ function ProductDetails() {
         setCategory(value);
     }
 
-    // const handleGallary = async (file) => {
-    //     // console.log(file, "handleGallary")
-    //     if (!file) {
-    //         return
-    //     }
-    //     toast.loading('Uploading...')
-    //     if (file.length > 0) {
-    //         let files = file.map((item) => {
-    //             return ({ url: URL.createObjectURL(item), name: item.name, liveUrl: null, loading: true, progress: 0 })
-    //         });
-    //         setGallery([...gallery, ...files]);
-    //     }
-
-    //     let newArr = [];
-
-    //     for (let index = 0; index < file.length; index++) {
-    //         const element = file[index];
-    //         const _resData = await Uploadfiletoserver(element);
-    //         newArr.push({ ..._resData.file, url: `${_resData.file.filename}`, name: _resData.file.originalname, progress: 0 })
-    //     }
-    //     toast.dismiss()
-    //     setGallery([...gallery, ...newArr]);
-    //     toast.success('Images uploaded successfully.')
-    // }
 
     const handleGallary = async (files) => {
 
@@ -156,53 +128,6 @@ function ProductDetails() {
     }
 
 
-    // const Uploadfiletoserver = async (item) => {
-    //     try {
-    //         let progress = 0
-    //         const formData = new FormData();
-    //         formData.append('file', item);
-    //         const res = await axios.post(fileUploadEndpoints.fileUpload_API, formData, {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data'
-    //             },
-    //             withCredentials: true,
-    //             onUploadProgress: (progressEvent) => {
-    //                 const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-    //                 // setProgress(percentCompleted);
-    //                 progress = percentCompleted;
-    //             }
-    //         });
-    //         if (res.status === 200) {
-    //             setProgress(0)
-    //             return { ...res.data, file: { ...res.data.file, progress } }
-    //         }
-    //     } catch (error) {
-    //         return error
-    //     }
-    // }
-
-
-    // const handleAttachments = async (file) => {
-    //     if (!file) {
-    //         return
-    //     }
-    //     toast.loading('Uploading...')
-    //     if (file.length > 0) {
-    //         let files = file.map((item) => ({ url: URL.createObjectURL(item), name: item.name }));
-    //         setAttachment([...attachments, ...files]);
-    //     }
-
-    //     let newArr = [];
-
-    //     for (let index = 0; index < file.length; index++) {
-    //         const element = file[index];
-    //         const _resData = await Uploadfiletoserver(element);
-    //         newArr.push({ ..._resData.file, url: `${_resData.file.filename}`, name: _resData.file.originalname, progress: 0 })
-    //     }
-    //     toast.dismiss()
-    //     setAttachment([...attachments, ...newArr]);
-    //     toast.success('Images uploaded successfully.')
-    // }
     const handleAttachments = async (files) => {
 
         if (!files || files.length === 0) return;

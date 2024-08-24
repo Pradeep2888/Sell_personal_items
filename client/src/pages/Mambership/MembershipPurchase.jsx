@@ -5,12 +5,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-function MembershipPurchase() {
+function MembershipPurchase({ _planID }) {
 
 
     const [SearchParams, setSearchParams] = useSearchParams()
 
-    const planID = SearchParams.get('planId')
+    const planID = _planID ? _planID : SearchParams.get('planId')
 
     const { isPending, error, data } = useQuery({
         queryKey: ['getplans'],
@@ -35,7 +35,7 @@ function MembershipPurchase() {
 
     return (
 
-        <div className="bg-white py-12 sm:py-16">
+        <div className={`bg-white  ${_planID ? "" : "py-12 sm:py-16"}`}>
             <div className="mx-auto max-w-7xl px-6 lg:px-8 ">
                 <div className='w-full flex justify-center'>
                     <div className="modal">

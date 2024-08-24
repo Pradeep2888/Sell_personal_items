@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import sendMail from "../services/Email.js";
+import fs from "fs";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { CatchAsync } from "../utils/CatchAsync.js";
@@ -98,7 +99,7 @@ export const userSignUp = CatchAsync(async (req, res, next) => {
 
     const __dirname = path.resolve();
 
-    let x = fs.readFileSync(__dirname + "/templates/emailTemp.html", "utf8");
+    let x = await fs.readFileSync(__dirname + "/templates/emailTemp.html", "utf8");
 
     let y = x
       .replace("{{name}}", user.username)
@@ -155,6 +156,7 @@ export const userLogin = CatchAsync(async (req, res, next) => {
       role: true,
       userType: true,
       active: true,
+      isSubscribed: true,
       ...checkAccountPermission,
     },
     where: {

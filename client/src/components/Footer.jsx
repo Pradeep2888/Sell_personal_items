@@ -1,7 +1,6 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import logoImage from '../assets/Logo-w-1.png'
-import { EmailIcon, MessageIcon } from './Icons'
+import {  MessageIcon } from './Icons'
 
 function Footer() {
     return (

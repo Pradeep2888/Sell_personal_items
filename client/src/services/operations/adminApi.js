@@ -1,4 +1,3 @@
-import { BASEURL } from "../../utils/constants";
 import { adminEndpoints, fileUploadEndpoints } from "../api";
 import responseHanlder from "../apiUtils";
 

@@ -1,13 +1,19 @@
-import path from "path"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { visualizer } from "rollup-plugin-visualizer";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+  plugins: [
+    react(),
+    visualizer({
+      filename: "./dist/stats.html",
+      open: true,
+    }),
+  ],
+  build: {
+    sourcemap: true, // Generate sourcemaps for use with source-map-explorer
+    rollupOptions: {
+      // Additional Rollup options if needed
     },
   },
-})
+});

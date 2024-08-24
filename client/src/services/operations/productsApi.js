@@ -22,7 +22,7 @@ export const GET_ALL_PRODUCTS = async (searchParams, userId) => {
     searchParams
   );
 };
-export const GET_FAVORITE_PRODUCTS = async (searchParams, userId) => {
+export const GET_FAVORITE_PRODUCTS = async (searchParams) => {
   return await responseHanlder(
     "GET",
    getFavoriteProducts_API,

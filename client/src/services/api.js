@@ -23,6 +23,7 @@ export const endpoints = {
 
 export const membershipEndpoints = {
   GET_MEMBERSHIP_API: BASE_URL + "/membership",
+  CREATEMEMBERSHIP_API: BASE_URL + "/membership",
   GETPLANS_API: BASE_URL + "/plans",
 };
 

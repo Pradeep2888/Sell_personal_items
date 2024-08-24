@@ -1,41 +1,46 @@
-import Layout from "../layouts/Layout";
-import Home from "../pages/home/Home";
-import About from "../pages/about/About";
-import Products from "../pages/products/Products";
-import Blog from "../pages/Blog/Blog";
-import ContactUs from "../pages/contactus/ContactUs";
-import Login_Signup from "../pages/login_signup/Login_Signup";
-import AdminPanel from "../pages/admin_panel/AdminPanel";
-import CreateProduct from "../pages/admin_panel/sections/CreateProduct";
-import ModerateProducts from "../pages/admin_panel/sections/ModerateProducts";
-import Orders from "../pages/admin_panel/sections/Orders";
-import MyProducts from "../pages/admin_panel/sections/MyProducts";
-import Favorites from "../pages/admin_panel/sections/Favorites";
-import Messages from "../pages/admin_panel/sections/Messages";
-import MyOrders from "../pages/admin_panel/sections/MyOrders";
-import Settings from "../pages/admin_panel/sections/Settings";
-import Membership from "../pages/Mambership/Membership";
-import Donation from "../pages/Donation/Donation";
-import Unauthorised from "../components/Unauthorised";
-import ErrorUi from "../components/ErrorUi";
-import ProductDetails from "../pages/admin_panel/sections/ProductDetails";
-import ProductPage from "../pages/admin_panel/sections/ProductPage";
-import Donations from "../pages/admin_panel/sections/Donations";
-import MembershipPlans from "../pages/Mambership/MembershipPlans";
-import MembershipPurchase from "../pages/Mambership/MembershipPurchase";
-import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
-import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
-import RefundPolicy from "../pages/RefundPolicy/RefundPolicy";
-import Protected from "../auth/Protected";
-import LoginSignupReview from "../pages/login_signup/LoginSignupReview";
-import ProductDetail from "../pages/products/ProductDetail";
-import QualifiedItemsList from "../pages/QualifiedListItems/QualifiedItemsList";
-import AdminLogin from "../pages/admin_panel/AdminLogin";
-import AdminLayout from "../layouts/AdminLayout";
-import ForgetPassword from "../pages/login_signup/ForgetPassword";
-import ForgetPasswordLayout from "../pages/login_signup/ForgetPasswordLayout";
-import OtpVerification from "../pages/login_signup/OtpVerification";
-import ChangePassword from "../pages/login_signup/ChangePassword";
+import {
+    Home,
+    About,
+    Products,
+    Blog,
+    ContactUs,
+    Login_Signup,
+    AdminPanel,
+    CreateProduct,
+    ModerateProducts,
+    Orders,
+    MyProducts,
+    Favorites,
+    Messages,
+    MyOrders,
+    Settings,
+    Membership,
+    Donation,
+    Unauthorised,
+    ErrorUi,
+    ProductDetails,
+    ProductPage,
+    Donations,
+    MembershipPlans,
+    MembershipPurchase,
+    PrivacyPolicy,
+    TermsAndConditions,
+    RefundPolicy,
+    Protected,
+    LoginSignupReview,
+    ProductDetail,
+    QualifiedItemsList,
+    AdminLogin,
+    AdminLayout,
+    ForgetPassword,
+    ForgetPasswordLayout,
+    OtpVerification,
+    ChangePassword,
+    Layout,
+    DonationForm,
+    DonateMoney
+} from "./AllComponents";
+
 
 
 const routes = [
@@ -81,11 +86,11 @@ const routes = [
                     },
                     {
                         path: "otp-verification",
-                        element:<OtpVerification/>
+                        element: <OtpVerification />
                     },
                     {
                         path: "change-password",
-                        element:<ChangePassword/>
+                        element: <ChangePassword />
                     }
                 ]
             },
@@ -137,6 +142,20 @@ const routes = [
             },
             {
                 path: "donate",
+                element: <Donation />,
+                children: [
+                    {
+                        path: "",
+                        element: <DonationForm />
+                    },
+                    {
+                        path: "money",
+                        element: <DonateMoney />
+                    },
+                ]
+            },
+            {
+                path: "donate/money",
                 element: <Donation />,
             },
             {

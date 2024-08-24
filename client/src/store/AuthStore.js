@@ -1,9 +1,6 @@
 import { create } from "zustand";
-import { createJSONStorage, devtools, persist } from "zustand/middleware";
-
-import Cookies from "js-cookie";
+import {devtools, persist } from "zustand/middleware";
 const token = localStorage.getItem("_sell_Token");
-// // const user = localStorage.getItem("user");
 const _token = token ? true : false;
 
 // console.log(_token,"token");
@@ -37,8 +34,8 @@ export const useGlobalState = create(
     loggedIn: _token,
     loading: false,
     error: false,
-    login: (userData) => {
-      set((state) => ({ loggedIn: true }));
+    login: () => {
+      set(() => ({ loggedIn: true }));
     },
     logout: () => {
       localStorage.removeItem('_sell_Token')

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import Breadcrums from '../../products/sections/Breadcrums'
 import { useQuery } from '@tanstack/react-query';
 import { DELETEUPLOADS, GET_MY_PRODUCT_BY_ID } from '../../../services/operations/adminApi';
