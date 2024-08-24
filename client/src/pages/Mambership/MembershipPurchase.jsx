@@ -1,18 +1,28 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import './MembershipPurchase.css'
-import { GETPLANSBYID } from '../../services/operations/membershipApi';
+import { CREATEMEMBERSHIP, GETPLANSBYID } from '../../services/operations/membershipApi';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs, useDisclosure } from '@nextui-org/react';
+import { AuthContext } from '../../auth/AuthContext';
 
 function MembershipPurchase({ _planID }) {
 
+    const { user, setUser } = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const handleOpen = () => {
+        onOpen();
+    }
 
     const [SearchParams, setSearchParams] = useSearchParams()
 
     const planID = _planID ? _planID : SearchParams.get('planId')
 
-    const { isPending, error, data } = useQuery({
+    const { isPending, data } = useQuery({
         queryKey: ['getplans'],
         queryFn: async () => await GETPLANSBYID(planID)
     });
@@ -29,9 +39,23 @@ function MembershipPurchase({ _planID }) {
 
     const handleCheckout = (e) => {
         e.preventDefault()
-        console.log('checkout')
-        toast.error('There is no payment gateway to checkout!')
+        handleOpen()
     }
+    const handlePayment = async () => {
+        setIsLoading(true);
+        const amount = PaymentType === "onetime" ? data?.plans?.offerValue : data?.plans?.price
+        const res = await CREATEMEMBERSHIP({ planId: Number(planID), amount: amount });
+        if (res?.status) {
+            setUser({ ...user, isSubscribed: true });
+            onClose();
+            setIsLoading(false);
+            toast.success(res.message);
+        } else {
+            onClose();
+            setIsLoading(false);
+            // toast.error(res.message);
+        }
+    };
 
     return (
 
@@ -138,6 +162,39 @@ function MembershipPurchase({ _planID }) {
                                     </div>}
                             </div>
                         </form>
+                        <Modal
+                            size={"3xl"}
+                            isOpen={isOpen}
+                            onClose={() => {
+                                onClose()
+                            }}
+                            isDismissable={false} isKeyboardDismissDisabled={true}
+                        >
+                            <ModalContent>
+                                {(onClose) => (
+                                    <>
+                                        <ModalHeader className="flex flex-col gap-1"><h2 className="text-lg text-primary font-bold">Subscribe Now</h2></ModalHeader>
+                                        <ModalBody>
+                                            <div className='flex justify-center items-center w-full mt-4'>
+                                                <div className='grid grid-cols-2 w-full gap-4'>
+                                                    <p className=" text-light font-bold ">Plane Name: <span className='text-lg font-medium text-primary '>{data?.plans?.name}</span></p>
+                                                    <p className=" text-light font-bold ">Offer Type: <span className='text-lg font-medium text-primary '>{"Payment"}</span></p>
+                                                    <p className=" text-light font-bold ">Payment Type: <span className='text-lg font-medium text-primary '>{PaymentType}</span></p>
+                                                    <p className=" text-light font-bold ">Plan Duration: <span className='text-lg font-medium text-primary '>{`${data?.plans?.duration} ${data?.plans?.priceRate}`}</span></p>
+                                                    <p className=" text-light font-bold ">Payable Amount: <span className='text-lg font-medium text-primary '>{` $${PaymentType === "onetime" ? data?.plans?.offerValue : data?.plans?.price}`}</span></p>
+                                                    <Button isLoading={isLoading} className='col-span-2 mx-40 mt-10' variant='shadow' color='primary' onClick={handlePayment}>Proceed To Payment</Button>
+                                                </div>
+                                            </div>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <Button color="danger" isLoading={false} variant="light" onPress={onClose}>
+                                                <p>Close</p>
+                                            </Button>
+                                        </ModalFooter>
+                                    </>
+                                )}
+                            </ModalContent>
+                        </Modal>
                     </div>
                 </div>
             </div>

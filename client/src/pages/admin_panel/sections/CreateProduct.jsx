@@ -2,20 +2,16 @@ import { useContext, useEffect, useState } from 'react'
 import Topsection from './components/Topsection'
 import Dropdown from '../../../components/Dropdown'
 import FileUpload from '../../../components/FileUpload'
-import { ADDPRODUCT, DELETEUPLOADS, UPLOADS } from '../../../services/operations/adminApi'
-import axios from 'axios'
-import { fileUploadEndpoints } from '../../../services/api'
+import { ADDPRODUCT } from '../../../services/operations/adminApi'
+
 import { toast } from 'sonner'
 import EditorComponent from '../../../components/CKEEditor'
-import { GET_PRODUCT_CATEGORY } from '../../../services/operations/productsApi'
-import { useQuery } from '@tanstack/react-query'
-import ErrorUi from '../../../components/ErrorUi'
-import { GET_VALID_USER } from '../../../services/operations/authApi'
+
 import { AuthContext } from '../../../auth/AuthContext'
 
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, RadioGroup, Radio, Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import { CREATEMEMBERSHIP, GETPLANS } from '../../../services/operations/membershipApi'
-import MembershipPurchase from '../../Mambership/MembershipPurchase'
+
 
 
 function CreateProduct() {
@@ -31,13 +27,8 @@ function CreateProduct() {
   const [description, setDescription] = useState('')
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [size, setSize] = useState('5xl')
 
-  const sizes = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "full"];
-
-
-  const handleOpen = (size) => {
-    setSize(size)
+  const handleOpen = () => {
     onOpen();
   }
 
@@ -205,7 +196,7 @@ function CreateProduct() {
                   </div>
                 </div>
               </form>
-              <SubscriptionModal handleOpen={handleOpen} isOpen={isOpen} onClose={onClose} onOpen={onOpen} size={size} sizes={sizes} />
+              <SubscriptionModal handleOpen={handleOpen} isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
             </div>
           </div>
         </div>
@@ -237,7 +228,7 @@ export const SubscriptionModal = ({ isOpen, onClose, children }) => {
     setIsLoading(true);
     const amount = PaymentType === "onetime" ? plans[0]?.offerValue : plans[0]?.price
     const res = await CREATEMEMBERSHIP({ planId: selectedPlan, amount: amount });
-    if (res.status) {
+    if (res?.status) {
       setUser({ ...user, isSubscribed: true });
       onClose();
       setIsLoading(false);
@@ -245,7 +236,6 @@ export const SubscriptionModal = ({ isOpen, onClose, children }) => {
     } else {
       onClose();
       setIsLoading(false);
-      toast.error(res.message);
     }
   }
 
