@@ -58,7 +58,7 @@ function FileUpload({ className, onUploadFile, handleRemove, type, files, setFil
         >
             <input className='opacity-0 absolute' type="file" name={name} id={id} multiple onChange={(e) => handleFileChange(e)} />
             {files?.length > 0 && <div className='w-full relative flex justify-start items-center gap-5 mb-5'>
-                {files.map((file, i) =>
+                {files?.map((file, i) =>
                     <div key={i} className='relative  '>
                         <img src={file.liveUrl ? IMAGEURL + file.liveUrl : IMAGEURL + file.url} alt="Preview" className='size-48 rounded border' />
                         <span onClick={(e) => handleRemove(e, i)} className='absolute cursor-pointer top-3 right-3 p-2 size-5 flex justify-center items-center bg-secondary text-base font-medium rounded-full text-white'>X</span>

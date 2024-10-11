@@ -91,12 +91,14 @@ function Login_Signup() {
 
     // remember me feature
     useEffect(() => {
-        const savedEmail = localStorage.getItem('usernameoremail');
-        const savedPassword = localStorage.getItem('password');
-        if (savedEmail && savedPassword) {
-            inputrefs.current[0].value = savedEmail
-            inputrefs.current[1].value = savedPassword
-            setRememberMe(true)
+        if (loginActive) {
+            const savedEmail = localStorage.getItem('usernameoremail');
+            const savedPassword = localStorage.getItem('password');
+            if (savedEmail && savedPassword) {
+                inputrefs.current[0].value = savedEmail
+                inputrefs.current[1].value = savedPassword
+                setRememberMe(true)
+            }
         }
         // if (location.state?.for === 'sell') {
         //     setAccountType('SELLER')

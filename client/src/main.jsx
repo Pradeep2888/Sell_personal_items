@@ -2,7 +2,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 // import './App.css'
 import './index.css'
-import { BrowserRouter, Navigate, useNavigate, useRoutes } from 'react-router-dom'
+import { BrowserRouter, useRoutes } from 'react-router-dom'
 import { BackdropLoader, BackdropLoaderProvider, GlobalLoader } from './components/backdropLoader/BackdropLoader.jsx'
 import { Toaster } from 'sonner'
 import router from "./routes/main.jsx";
