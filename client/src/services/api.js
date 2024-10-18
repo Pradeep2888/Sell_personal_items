@@ -1,6 +1,6 @@
 const isProd =
   import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/v1"
+    ? "https://sell-personal-items-server.vercel.app/api/v1"
     : "https://sell-personal-items-server.vercel.app/api/v1";
 
 // const isProd = "https://reviewsix.vercel.app/api/v1"
